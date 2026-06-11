@@ -471,3 +471,4 @@ Variable	Valor inicial
 `base_url`	`https://chicaiza-motos.uaeftt-ute.site/api`
 `access_token`	(se llena automáticamente al hacer Login)
 `refresh_token`	(se llena automáticamente al hacer Login)
+"# venta_motos" 
