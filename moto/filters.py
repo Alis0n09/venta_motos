@@ -1,7 +1,7 @@
 # moto/filters.py
 
 import django_filters
-from moto.models import Cliente, Vendedor, Moto, Venta, DetalleVenta
+from moto.models import Cliente, Staff, Moto, Venta, DetalleVenta
 
 
 class ClienteFilter(django_filters.FilterSet):
@@ -16,15 +16,16 @@ class ClienteFilter(django_filters.FilterSet):
 
 
 class VendedorFilter(django_filters.FilterSet):
-    nombre = django_filters.CharFilter(field_name='nombre', lookup_expr='icontains')
-    apellido = django_filters.CharFilter(field_name='apellido', lookup_expr='icontains')
-    cedula = django_filters.CharFilter(field_name='cedula', lookup_expr='icontains')
-    correo = django_filters.CharFilter(field_name='correo', lookup_expr='icontains')
-    telefono = django_filters.CharFilter(field_name='telefono', lookup_expr='icontains')
+    nombre   = django_filters.CharFilter(field_name='usuario__first_name', lookup_expr='icontains')
+    apellido = django_filters.CharFilter(field_name='usuario__last_name', lookup_expr='icontains')
+    cedula   = django_filters.CharFilter(field_name='usuario__cedula', lookup_expr='icontains')
+    correo   = django_filters.CharFilter(field_name='usuario__email', lookup_expr='icontains')
+    telefono = django_filters.CharFilter(field_name='usuario__telefono', lookup_expr='icontains')
+    rol      = django_filters.CharFilter(field_name='rol', lookup_expr='icontains')
 
     class Meta:
-        model = Vendedor
-        fields = ['nombre', 'apellido', 'cedula', 'correo', 'telefono']
+        model = Staff
+        fields = ['rol']
 
 
 class MotoFilter(django_filters.FilterSet):

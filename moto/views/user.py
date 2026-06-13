@@ -1,7 +1,4 @@
-# moto/views/user.py
-
-from django.contrib.auth.models import User
-from django.db.models import Count
+from moto.models.usuario import Usuario
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -17,7 +14,7 @@ from moto.pagination import StandardPagination
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset         = User.objects.all()
+    queryset         = Usuario.objects.all()
     serializer_class = UserSerializer
     pagination_class = StandardPagination
     filter_backends  = [SearchFilter, OrderingFilter]
@@ -30,100 +27,56 @@ class UserViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsAdminUser]
-
         return [permission() for permission in permission_classes]
 
     def get_serializer_class(self):
         if self.action == 'profile':
             return UserProfileSerializer
-
         if self.action == 'change_password':
             return ChangePasswordSerializer
-
         return UserSerializer
 
     def get_queryset(self):
-        qs = User.objects.all()
+        qs = Usuario.objects.all()
 
         is_staff = self.request.query_params.get('is_staff')
         is_active = self.request.query_params.get('is_active')
 
         if is_staff is not None:
             qs = qs.filter(is_staff=is_staff.lower() == 'true')
-
         if is_active is not None:
             qs = qs.filter(is_active=is_active.lower() == 'true')
 
         return qs
 
-    @action(
-        detail=False,
-        methods=['get', 'patch'],
-        url_path='profile',
-        permission_classes=[IsAuthenticated]
-    )
+    @action(detail=False, methods=['get', 'patch'], url_path='profile', permission_classes=[IsAuthenticated])
     def profile(self, request):
         user = request.user
-
         if request.method == 'GET':
             serializer = self.get_serializer(user)
             return Response(serializer.data)
-
-        serializer = self.get_serializer(
-            user,
-            data=request.data,
-            partial=True
-        )
+        serializer = self.get_serializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-
         return Response(serializer.data)
 
-    @action(
-        detail=False,
-        methods=['post'],
-        url_path='change-password',
-        permission_classes=[IsAuthenticated]
-    )
+    @action(detail=False, methods=['post'], url_path='change-password', permission_classes=[IsAuthenticated])
     def change_password(self, request):
-        serializer = self.get_serializer(
-            data=request.data,
-            context={'request': request}
-        )
+        serializer = self.get_serializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        return Response({'message': 'Password changed successfully.'}, status=status.HTTP_200_OK)
 
-        return Response(
-            {'message': 'Password changed successfully.'},
-            status=status.HTTP_200_OK
-        )
-
-    @action(
-        detail=True,
-        methods=['post'],
-        url_path='toggle-active',
-        permission_classes=[IsAdminUser]
-    )
+    @action(detail=True, methods=['post'], url_path='toggle-active', permission_classes=[IsAdminUser])
     def toggle_active(self, request, pk=None):
         user = self.get_object()
         user.is_active = not user.is_active
         user.save()
+        return Response({'id': user.id, 'username': user.username, 'is_active': user.is_active})
 
-        return Response({
-            'id': user.id,
-            'username': user.username,
-            'is_active': user.is_active,
-        })
-
-    @action(
-        detail=False,
-        methods=['get'],
-        url_path='stats',
-        permission_classes=[IsAdminUser]
-    )
+    @action(detail=False, methods=['get'], url_path='stats', permission_classes=[IsAdminUser])
     def stats(self, request):
-        qs = User.objects.all()
-
+        qs = Usuario.objects.all()
         return Response({
             'total': qs.count(),
             'active': qs.filter(is_active=True).count(),

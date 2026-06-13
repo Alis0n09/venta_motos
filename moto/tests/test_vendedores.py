@@ -2,15 +2,17 @@
 
 from django.test import TestCase
 from rest_framework import status
+from rest_framework.test import APIClient
 
-from .helpers import create_user, create_staff, auth_client, create_vendedor
+from moto.models import Staff
+from .helpers import create_user, create_staff_user, auth_client, create_vendedor
 
 
 class VendedorPermissionTests(TestCase):
 
     def setUp(self):
         self.user     = create_user('eve')
-        self.staff    = create_staff()
+        self.staff    = create_staff_user()
         self.vendedor = create_vendedor()
 
     def test_authenticated_user_can_list(self):
@@ -18,29 +20,25 @@ class VendedorPermissionTests(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_unauthenticated_returns_401(self):
-        from rest_framework.test import APIClient
         resp = APIClient().get('/api/vendedores/')
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_regular_user_cannot_create(self):
         resp = auth_client(self.user).post('/api/vendedores/', {
-            'nombre': 'Luis',
-            'apellido': 'Mora',
-            'cedula': '9999999999',
-            'telefono': '0999999999',
-            'correo': 'luis@test.com',
-            'direccion': 'Dirección de prueba'
+            'rol': Staff.Rol.VENDEDOR,
         })
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_staff_can_create(self):
+        # El serializer de Vendedor es de solo lectura para los campos
+        # de usuario (nombre, apellido, cedula, etc), así que solo
+        # probamos que el staff pueda crear un Staff vinculado a un
+        # usuario ya existente.
+        nuevo_usuario = create_user('nuevoVendedor', email='nuevo@test.com')
+
         resp = auth_client(self.staff).post('/api/vendedores/', {
-            'nombre': 'Ana',
-            'apellido': 'Torres',
-            'cedula': '8888888888',
-            'telefono': '0988888888',
-            'correo': 'ana@test.com',
-            'direccion': 'Dirección vendedor'
+            'usuario': nuevo_usuario.id,
+            'rol': Staff.Rol.VENDEDOR,
         })
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
 
@@ -55,21 +53,21 @@ class VendedorFilterTests(TestCase):
         self.client = auth_client(create_user('filters'))
 
         create_vendedor(
+            username='carlosg',
             nombre='Carlos',
             apellido='Gómez',
             cedula='0102030405',
             telefono='0999999999',
             correo='carlos@test.com',
-            direccion='Dirección Carlos'
         )
 
         create_vendedor(
+            username='mariat',
             nombre='María',
             apellido='Torres',
             cedula='1102030405',
             telefono='0988888888',
             correo='maria@test.com',
-            direccion='Dirección María'
         )
 
     def test_search_by_name(self):

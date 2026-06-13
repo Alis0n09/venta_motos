@@ -1,10 +1,82 @@
-# Python-generated files
+# =========================
+# Python
+# =========================
 __pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
+*.py[cod]
+*$py.class
 
-# Virtual environments
-.venv
+# =========================
+# Virtual Environment
+# =========================
+.venv/
+venv/
+env/
+.env/
+ENV/
+
+# =========================
+# Django
+# =========================
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Media & static generated files
+media/
+staticfiles/
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+.venv/
+venv/
+!.env.example
+
+# =========================
+# VS Code / IDEs
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Pytest / Coverage
+# =========================
+.pytest_cache/
+.coverage
+htmlcov/
+
+# =========================
+# Migrations (opcional)
+# Descomenta si NO quieres subir migraciones
+# =========================
+# **/migrations/
+# !**/migrations/__init__.py
+
+# =========================
+# Node / Frontend (si usas React/Vite)
+# =========================
+node_modules/
+dist/
+build/
+
+# =========================
+# Docker
+# =========================
+*.pid
+*.seed
+*.pid.lock
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log

@@ -96,7 +96,7 @@ DATABASES = {
         'HOST':     config('DB_HOST', default='localhost'),
         'PORT':     config('DB_PORT', default='5432'),
         'TEST': {
-            'NAME': config('TEST_DB_NAME', default='chicaiza_motos_test_db'),
+            'NAME': config('TEST_DB_NAME', default='venta_motos_test_db'),
         },
     }
 }
@@ -125,9 +125,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Guayaquil'
 
 USE_I18N = True
 
@@ -153,3 +153,5 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
 }
+
+AUTH_USER_MODEL = 'moto.Usuario'

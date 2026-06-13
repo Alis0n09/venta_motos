@@ -3,14 +3,14 @@
 from django.test import TestCase
 from rest_framework import status
 
-from .helpers import create_user, create_staff, auth_client, create_cliente
+from .helpers import create_user, create_staff_user, auth_client, create_cliente
 
 
 class ClientePermissionTests(TestCase):
 
     def setUp(self):
         self.user    = create_user('eve')
-        self.staff   = create_staff()
+        self.staff   = create_staff_user()
         self.cliente = create_cliente()
 
     def test_authenticated_user_can_list(self):

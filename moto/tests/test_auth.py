@@ -17,6 +17,10 @@ class RegisterTests(TestCase):
             'email':     'john@test.com',
             'password':  'Pass1234!',
             'password2': 'Pass1234!',
+            'nombre':    'John',
+            'apellido':  'Doe',
+            'cedula':    '0999999999',
+            'telefono':  '0999999999',
         }
 
     def test_register_returns_jwt(self):

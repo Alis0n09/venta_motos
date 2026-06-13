@@ -1,15 +1,24 @@
 # moto/tests/helpers.py
 
-from django.contrib.auth.models import User
+import itertools
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from moto.models import Cliente, Vendedor, Moto, Venta, DetalleVenta
+from moto.models import Usuario, Cliente, Staff, Moto, Venta, DetalleVenta
+
+
+_cedula_counter = itertools.count(1)
+
+
+def _generar_cedula():
+    """Genera una cédula de prueba única tipo '0000000001', '0000000002', etc."""
+    return str(next(_cedula_counter)).zfill(10)
 
 
 def create_user(username='user', email=None, password='Pass1234!', **kwargs):
     email = email or f'{username}@test.com'
-    return User.objects.create_user(
+    kwargs.setdefault('cedula', _generar_cedula())
+    return Usuario.objects.create_user(
         username=username,
         email=email,
         password=password,
@@ -17,12 +26,14 @@ def create_user(username='user', email=None, password='Pass1234!', **kwargs):
     )
 
 
-def create_staff(username='staff', email=None, password='Admin1234!'):
+def create_staff_user(username='staffuser', email=None, password='Admin1234!'):
+    """Crea un Usuario con is_staff=True (para permisos a nivel Django/DRF)."""
     email = email or f'{username}@test.com'
-    return User.objects.create_user(
+    return Usuario.objects.create_user(
         username=username,
         email=email,
         password=password,
+        cedula=_generar_cedula(),
         is_staff=True
     )
 
@@ -47,8 +58,10 @@ def create_cliente(
     correo=None,
     email=None,
     direccion="Quito",
+    usuario=None,
 ):
     return Cliente.objects.create(
+        usuario=usuario,
         nombre=nombre,
         apellido=apellido,
         cedula=cedula,
@@ -59,21 +72,32 @@ def create_cliente(
 
 
 def create_vendedor(
+    username='vendedor1',
     nombre="Carlos",
     apellido="Lopez",
-    cedula="0203040506",
+    cedula=None,
     telefono="0988888888",
     correo=None,
     email=None,
-    direccion=None,
+    rol=Staff.Rol.VENDEDOR,
+    password='Pass1234!',
 ):
-    return Vendedor.objects.create(
-        nombre=nombre,
-        apellido=apellido,
+    """Crea un Usuario + su perfil Staff asociado."""
+    correo = correo or email or "carlos.lopez@gmail.com"
+    cedula = cedula or _generar_cedula()
+
+    usuario = Usuario.objects.create_user(
+        username=username,
+        email=correo,
+        password=password,
+        first_name=nombre,
+        last_name=apellido,
         cedula=cedula,
         telefono=telefono,
-        correo=correo or email or "carlos.lopez@gmail.com",
+        is_staff=True,
     )
+
+    return Staff.objects.create(usuario=usuario, rol=rol)
 
 
 def create_moto(

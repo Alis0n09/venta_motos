@@ -1,7 +1,7 @@
 # moto/serializers/user.py
 
 from rest_framework import serializers
-from django.contrib.auth.models import User
+from moto.models import Usuario, Cliente
 
 
 class RegisterSerializer(serializers.Serializer):
@@ -9,17 +9,24 @@ class RegisterSerializer(serializers.Serializer):
     email     = serializers.EmailField()
     password  = serializers.CharField(min_length=8, write_only=True)
     password2 = serializers.CharField(write_only=True)
+    nombre    = serializers.CharField(max_length=100, write_only=True)
+    apellido  = serializers.CharField(max_length=100, write_only=True)
+    cedula    = serializers.CharField(max_length=10, write_only=True)
+    telefono  = serializers.CharField(max_length=15, write_only=True, required=False, allow_blank=True)
 
     def validate_username(self, value):
-        if User.objects.filter(username=value).exists():
+        if Usuario.objects.filter(username=value).exists():
             raise serializers.ValidationError('This username is already taken.')
-
         return value
 
     def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
+        if Usuario.objects.filter(email=value).exists():
             raise serializers.ValidationError('This email is already registered.')
+        return value
 
+    def validate_cedula(self, value):
+        if Cliente.objects.filter(cedula=value).exists():
+            raise serializers.ValidationError('This cedula is already registered.')
         return value
 
     def validate(self, data):
@@ -27,19 +34,40 @@ class RegisterSerializer(serializers.Serializer):
             raise serializers.ValidationError({
                 'password2': 'Passwords do not match.'
             })
-
         return data
 
     def create(self, validated_data):
         validated_data.pop('password2')
 
-        return User.objects.create_user(**validated_data)
+        nombre = validated_data.pop('nombre')
+        apellido = validated_data.pop('apellido')
+        cedula = validated_data.pop('cedula')
+        telefono = validated_data.pop('telefono', '')
+
+        usuario = Usuario.objects.create_user(
+            **validated_data,
+            first_name=nombre,
+            last_name=apellido,
+            cedula=cedula,
+            telefono=telefono,
+        )
+
+        Cliente.objects.create(
+            usuario=usuario,
+            nombre=nombre,
+            apellido=apellido,
+            cedula=cedula,
+            telefono=telefono,
+            correo=usuario.email,
+        )
+
+        return usuario
 
 
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = User
+        model = Usuario
         fields = [
             'id',
             'username',
@@ -56,7 +84,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = User
+        model = Usuario
         fields = [
             'id',
             'username',
@@ -69,7 +97,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def validate_email(self, value):
         request = self.context.get('request')
 
-        if request and User.objects.filter(email=value).exclude(pk=request.user.pk).exists():
+        if request and Usuario.objects.filter(email=value).exclude(pk=request.user.pk).exists():
             raise serializers.ValidationError('This email is already in use.')
 
         return value

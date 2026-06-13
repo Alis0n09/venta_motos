@@ -1,7 +1,7 @@
 # moto/admin.py
 
 from django.contrib import admin
-from moto.models import Cliente, Vendedor, Moto, Venta, DetalleVenta
+from moto.models import Cliente, Usuario, Staff, Moto, Venta, DetalleVenta
 
 
 @admin.register(Cliente)
@@ -10,10 +10,17 @@ class ClienteAdmin(admin.ModelAdmin):
     search_fields = ['nombre', 'apellido', 'cedula', 'telefono']
 
 
-@admin.register(Vendedor)
-class VendedorAdmin(admin.ModelAdmin):
-    list_display  = ['id', 'nombre', 'apellido', 'cedula', 'telefono']
-    search_fields = ['nombre', 'apellido', 'cedula', 'telefono']
+@admin.register(Usuario)
+class UsuarioAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'username', 'first_name', 'last_name', 'telefono', 'cedula']
+    search_fields = ['username', 'first_name', 'last_name', 'email']
+
+
+@admin.register(Staff)
+class StaffAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'usuario', 'rol']
+    search_fields = ['usuario__username', 'usuario__first_name', 'usuario__last_name']
+    list_filter   = ['rol']
 
 
 @admin.register(Moto)
@@ -37,9 +44,9 @@ class VentaAdmin(admin.ModelAdmin):
         'cliente__nombre',
         'cliente__apellido',
         'cliente__cedula',
-        'vendedor__nombre',
-        'vendedor__apellido',
-        'vendedor__cedula',
+        'vendedor__usuario__username',
+        'vendedor__usuario__first_name',
+        'vendedor__usuario__last_name',
     ]
     inlines = [DetalleVentaInline]
 

@@ -3,7 +3,7 @@
 from django.test import TestCase
 from rest_framework import status
 
-from .helpers import create_user, create_staff, auth_client
+from .helpers import create_user, create_staff_user, auth_client
 
 
 class ProfileTests(TestCase):
@@ -44,7 +44,7 @@ class ProfileTests(TestCase):
 class UserStaffTests(TestCase):
 
     def setUp(self):
-        self.staff  = create_staff()
+        self.staff  = create_staff_user()
         self.user   = create_user('diana')
         self.client = auth_client(self.staff)
 

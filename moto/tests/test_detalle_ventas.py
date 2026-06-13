@@ -5,7 +5,7 @@ from rest_framework import status
 
 from .helpers import (
     create_user,
-    create_staff,
+    create_staff_user,
     auth_client,
     create_cliente,
     create_vendedor,
@@ -19,7 +19,7 @@ class DetalleVentaPermissionTests(TestCase):
 
     def setUp(self):
         self.user      = create_user('eve')
-        self.staff     = create_staff()
+        self.staff     = create_staff_user()
         self.cliente   = create_cliente()
         self.vendedor  = create_vendedor()
         self.moto      = create_moto()
@@ -94,12 +94,12 @@ class DetalleVentaFilterTests(TestCase):
         )
 
         vendedor_1 = create_vendedor(
+            username='pedromena',
             nombre='Pedro',
             apellido='Mena',
             cedula='1102030405',
             telefono='0988888888',
             email='pedro@test.com',
-            direccion='Dirección Pedro'
         )
 
         moto_1 = create_moto(
@@ -135,12 +135,12 @@ class DetalleVentaFilterTests(TestCase):
         )
 
         vendedor_2 = create_vendedor(
+            username='sofialopez',
             nombre='Sofía',
             apellido='López',
             cedula='1203040506',
             telefono='0966666666',
             email='sofia@test.com',
-            direccion='Dirección Sofía'
         )
 
         moto_2 = create_moto(
@@ -177,12 +177,12 @@ class DetalleVentaFilterTests(TestCase):
         )
 
         vendedor = create_vendedor(
+            username='andrescastro',
             nombre='Andrés',
             apellido='Castro',
             cedula='1304050607',
             telefono='0944444444',
             email='andres@test.com',
-            direccion='Dirección Andrés'
         )
 
         moto = create_moto(
@@ -224,12 +224,12 @@ class DetalleVentaFilterTests(TestCase):
         )
 
         vendedor = create_vendedor(
+            username='mateoruiz',
             nombre='Mateo',
             apellido='Ruiz',
             cedula='1405060708',
             telefono='0922222222',
             email='mateo@test.com',
-            direccion='Dirección Mateo'
         )
 
         moto = create_moto(
@@ -278,4 +278,3 @@ class DetalleVentaFilterTests(TestCase):
 
         for field in ['total', 'detail']:
             self.assertIn(field, resp.data)
-

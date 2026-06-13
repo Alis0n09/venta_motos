@@ -12,7 +12,7 @@ from moto.filters import VentaFilter
 
 
 class VentaViewSet(viewsets.ModelViewSet):
-    queryset = Venta.objects.all()
+    queryset = Venta.objects.select_related('cliente', 'vendedor', 'vendedor__usuario').all()
     serializer_class = VentaSerializer
     permission_classes = [IsStaffOrReadOnly]
     pagination_class = StandardPagination
@@ -25,10 +25,10 @@ class VentaViewSet(viewsets.ModelViewSet):
         'cliente__apellido',
         'cliente__cedula',
         'cliente__correo',
-        'vendedor__nombre',
-        'vendedor__apellido',
-        'vendedor__cedula',
-        'vendedor__correo',
+        'vendedor__usuario__first_name',
+        'vendedor__usuario__last_name',
+        'vendedor__usuario__cedula',
+        'vendedor__usuario__email',
         'metodo_pago',
     ]
 
@@ -45,7 +45,7 @@ class VentaViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def stats(self, request):
-        ventas = Venta.objects.all()
+        ventas = Venta.objects.select_related('cliente', 'vendedor', 'vendedor__usuario').all()
 
         return Response({
             'total': ventas.count(),
@@ -55,7 +55,7 @@ class VentaViewSet(viewsets.ModelViewSet):
                     'cliente': v.cliente.id if v.cliente else None,
                     'cliente_nombre': f"{v.cliente.nombre} {v.cliente.apellido}" if v.cliente else None,
                     'vendedor': v.vendedor.id if v.vendedor else None,
-                    'vendedor_nombre': f"{v.vendedor.nombre} {v.vendedor.apellido}" if v.vendedor else None,
+                    'vendedor_nombre': f"{v.vendedor.usuario.first_name} {v.vendedor.usuario.last_name}" if v.vendedor else None,
                     'fecha_venta': v.fecha_venta,
                     'metodo_pago': v.metodo_pago,
                     'total': v.total,

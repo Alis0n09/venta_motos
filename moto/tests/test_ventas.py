@@ -5,7 +5,7 @@ from rest_framework import status
 
 from .helpers import (
     create_user,
-    create_staff,
+    create_staff_user,
     auth_client,
     create_cliente,
     create_vendedor,
@@ -17,7 +17,7 @@ class VentaPermissionTests(TestCase):
 
     def setUp(self):
         self.user      = create_user('eve')
-        self.staff     = create_staff()
+        self.staff     = create_staff_user()
         self.cliente   = create_cliente()
         self.vendedor  = create_vendedor()
         self.venta     = create_venta(
@@ -54,12 +54,12 @@ class VentaPermissionTests(TestCase):
         )
 
         vendedor = create_vendedor(
+            username='luismora',
             nombre='Luis',
             apellido='Mora',
             cedula='7777777777',
             telefono='0977777777',
             email='luis@test.com',
-            direccion='Dirección vendedor'
         )
 
         resp = auth_client(self.staff).post('/api/ventas/', {
@@ -89,12 +89,12 @@ class VentaFilterTests(TestCase):
         )
 
         vendedor_1 = create_vendedor(
+            username='pedromena',
             nombre='Pedro',
             apellido='Mena',
             cedula='1102030405',
             telefono='0988888888',
             email='pedro@test.com',
-            direccion='Dirección Pedro'
         )
 
         cliente_2 = create_cliente(
@@ -107,12 +107,12 @@ class VentaFilterTests(TestCase):
         )
 
         vendedor_2 = create_vendedor(
+            username='sofialopez',
             nombre='Sofía',
             apellido='López',
             cedula='1203040506',
             telefono='0966666666',
             email='sofia@test.com',
-            direccion='Dirección Sofía'
         )
 
         create_venta(
@@ -138,12 +138,12 @@ class VentaFilterTests(TestCase):
         )
 
         vendedor = create_vendedor(
+            username='andrescastro',
             nombre='Andrés',
             apellido='Castro',
             cedula='1304050607',
             telefono='0944444444',
             email='andres@test.com',
-            direccion='Dirección Andrés'
         )
 
         create_venta(
@@ -168,12 +168,12 @@ class VentaFilterTests(TestCase):
         )
 
         vendedor = create_vendedor(
+            username='mateoruiz',
             nombre='Mateo',
             apellido='Ruiz',
             cedula='1405060708',
             telefono='0922222222',
             email='mateo@test.com',
-            direccion='Dirección Mateo'
         )
 
         create_venta(

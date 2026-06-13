@@ -29,7 +29,7 @@ class VentaSerializer(serializers.ModelSerializer):
 
     def get_vendedor_nombre(self, obj):
         if obj.vendedor:
-            return f"{obj.vendedor.nombre} {obj.vendedor.apellido}"
+            return f"{obj.vendedor.usuario.first_name} {obj.vendedor.usuario.last_name}"
         return None
 
     def validate_total(self, value):

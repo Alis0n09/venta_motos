@@ -1,6 +1,6 @@
 from django.db import models
 from .cliente import Cliente
-from .vendedor import Vendedor
+from .staff import Staff
 
 
 class Venta(models.Model):
@@ -13,12 +13,12 @@ class Venta(models.Model):
 
     cliente = models.ForeignKey(
         Cliente,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='ventas'
     )
     vendedor = models.ForeignKey(
-        Vendedor,
-        on_delete=models.CASCADE,
+        Staff,
+        on_delete=models.PROTECT,
         related_name='ventas_realizadas'
     )
     fecha_venta = models.DateTimeField(auto_now_add=True)
