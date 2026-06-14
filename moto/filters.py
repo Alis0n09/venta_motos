@@ -1,7 +1,7 @@
 # moto/filters.py
 
 import django_filters
-from moto.models import Cliente, Staff, Moto, Venta, DetalleVenta
+from moto.models import Cliente, Staff, Moto, Venta, DetalleVenta, Sucursal, Direccion, Proveedor
 
 
 class ClienteFilter(django_filters.FilterSet):
@@ -67,3 +67,33 @@ class DetalleVentaFilter(django_filters.FilterSet):
     class Meta:
         model  = DetalleVenta
         fields = ['venta', 'moto', 'cantidad', 'precio_unitario']
+
+
+class SucursalFilter(django_filters.FilterSet):
+    nombre = django_filters.CharFilter(lookup_expr='icontains')
+    ciudad = django_filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model  = Sucursal
+        fields = ['nombre', 'ciudad']
+
+
+class DireccionFilter(django_filters.FilterSet):
+    cliente   = django_filters.NumberFilter(field_name='cliente_id')
+    ciudad    = django_filters.CharFilter(lookup_expr='icontains')
+    provincia = django_filters.CharFilter(lookup_expr='icontains')
+    principal = django_filters.BooleanFilter()
+
+    class Meta:
+        model  = Direccion
+        fields = ['cliente', 'ciudad', 'provincia', 'principal']
+
+
+class ProveedorFilter(django_filters.FilterSet):
+    empresa  = django_filters.CharFilter(lookup_expr='icontains')
+    pais     = django_filters.CharFilter(lookup_expr='icontains')
+    contacto = django_filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model  = Proveedor
+        fields = ['empresa', 'pais']

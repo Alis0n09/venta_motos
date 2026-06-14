@@ -12,3 +12,6 @@ from moto.serializers.vendedor import VendedorSerializer
 from moto.serializers.moto import MotoSerializer
 from moto.serializers.venta import VentaSerializer
 from moto.serializers.detalle_venta import DetalleVentaSerializer
+from moto.serializers.sucursal import SucursalSerializer
+from moto.serializers.direccion import DireccionSerializer
+from moto.serializers.proveedor import ProveedorSerializer
