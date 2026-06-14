@@ -1,7 +1,7 @@
 # moto/filters.py
 
 import django_filters
-from moto.models import Cliente, Staff, Moto, Venta, DetalleVenta
+from moto.models import Cliente, Staff, Moto, Venta, DetalleVenta, Marca, Categoria, Repuesto
 
 
 class ClienteFilter(django_filters.FilterSet):
@@ -67,3 +67,34 @@ class DetalleVentaFilter(django_filters.FilterSet):
     class Meta:
         model  = DetalleVenta
         fields = ['venta', 'moto', 'cantidad', 'precio_unitario']
+
+
+class MarcaFilter(django_filters.FilterSet):
+    nombre      = django_filters.CharFilter(lookup_expr='icontains')
+    pais_origen = django_filters.CharFilter(lookup_expr='icontains')
+    activa      = django_filters.BooleanFilter()
+
+    class Meta:
+        model  = Marca
+        fields = ['nombre', 'pais_origen', 'activa']
+
+
+class CategoriaFilter(django_filters.FilterSet):
+    nombre = django_filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model  = Categoria
+        fields = ['nombre']
+
+
+class RepuestoFilter(django_filters.FilterSet):
+    nombre              = django_filters.CharFilter(lookup_expr='icontains')
+    marca_compatible    = django_filters.NumberFilter(field_name='marca_compatible_id')
+    stock_min           = django_filters.NumberFilter(field_name='stock', lookup_expr='gte')
+    stock_max           = django_filters.NumberFilter(field_name='stock', lookup_expr='lte')
+    precio_min          = django_filters.NumberFilter(field_name='precio', lookup_expr='gte')
+    precio_max          = django_filters.NumberFilter(field_name='precio', lookup_expr='lte')
+
+    class Meta:
+        model  = Repuesto
+        fields = ['nombre', 'marca_compatible']

@@ -1,7 +1,7 @@
 # moto/admin.py
 
 from django.contrib import admin
-from moto.models import Cliente, Usuario, Staff, Moto, Venta, DetalleVenta
+from moto.models import Cliente, Usuario, Staff, Moto, Venta, DetalleVenta, Marca, Categoria, Repuesto
 
 
 @admin.register(Cliente)
@@ -56,3 +56,25 @@ class DetalleVentaAdmin(admin.ModelAdmin):
     list_display  = ['id', 'venta', 'moto', 'cantidad', 'precio_unitario']
     list_filter   = ['moto']
     search_fields = ['moto__marca', 'moto__modelo', 'venta__id']
+
+
+@admin.register(Marca)
+class MarcaAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'nombre', 'pais_origen', 'activa']
+    search_fields = ['nombre', 'pais_origen']
+    list_filter   = ['activa']
+    list_editable = ['activa']
+
+
+@admin.register(Categoria)
+class CategoriaAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'nombre', 'descripcion']
+    search_fields = ['nombre']
+
+
+@admin.register(Repuesto)
+class RepuestoAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'nombre', 'marca_compatible', 'stock', 'precio']
+    search_fields = ['nombre', 'marca_compatible__nombre']
+    list_filter   = ['marca_compatible']
+    list_editable = ['stock', 'precio']
