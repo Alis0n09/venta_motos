@@ -1,7 +1,7 @@
 # moto/admin.py
 
 from django.contrib import admin
-from moto.models import Cliente, Usuario, Staff, Moto, Venta, DetalleVenta, Marca, Categoria, Repuesto
+from moto.models import Cliente, Usuario, Staff, Moto, Venta, DetalleVenta, Sucursal, Direccion, Proveedor
 
 
 @admin.register(Cliente)
@@ -58,23 +58,22 @@ class DetalleVentaAdmin(admin.ModelAdmin):
     search_fields = ['moto__marca', 'moto__modelo', 'venta__id']
 
 
-@admin.register(Marca)
-class MarcaAdmin(admin.ModelAdmin):
-    list_display  = ['id', 'nombre', 'pais_origen', 'activa']
-    search_fields = ['nombre', 'pais_origen']
-    list_filter   = ['activa']
-    list_editable = ['activa']
+@admin.register(Sucursal)
+class SucursalAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'nombre', 'ciudad', 'direccion', 'telefono']
+    search_fields = ['nombre', 'ciudad']
+    list_filter   = ['ciudad']
 
 
-@admin.register(Categoria)
-class CategoriaAdmin(admin.ModelAdmin):
-    list_display  = ['id', 'nombre', 'descripcion']
-    search_fields = ['nombre']
+@admin.register(Direccion)
+class DireccionAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'cliente', 'calle', 'ciudad', 'provincia', 'principal']
+    search_fields = ['calle', 'ciudad', 'provincia']
+    list_filter   = ['ciudad', 'provincia', 'principal']
 
 
-@admin.register(Repuesto)
-class RepuestoAdmin(admin.ModelAdmin):
-    list_display  = ['id', 'nombre', 'marca_compatible', 'stock', 'precio']
-    search_fields = ['nombre', 'marca_compatible__nombre']
-    list_filter   = ['marca_compatible']
-    list_editable = ['stock', 'precio']
+@admin.register(Proveedor)
+class ProveedorAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'empresa', 'contacto', 'correo', 'pais']
+    search_fields = ['empresa', 'contacto', 'pais']
+    list_filter   = ['pais']

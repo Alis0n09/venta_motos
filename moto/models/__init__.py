@@ -6,9 +6,9 @@ from .usuario import Usuario
 from .moto import Moto
 from .venta import Venta
 from .detalle_venta import DetalleVenta
-from .marca import Marca
-from .categoria import Categoria
-from .repuesto import Repuesto
+from .sucursal import Sucursal
+from .direccion import Direccion
+from .proveedor import Proveedor
 
 __all__ = [
     'Cliente',
@@ -17,7 +17,7 @@ __all__ = [
     'Moto',
     'Venta',
     'DetalleVenta',
-    'Marca',
-    'Categoria',
-    'Repuesto',
+    'Sucursal',
+    'Direccion',
+    'Proveedor',
 ]

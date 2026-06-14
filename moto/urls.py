@@ -12,9 +12,9 @@ from moto.views.vendedor      import VendedorViewSet
 from moto.views.moto          import MotoViewSet
 from moto.views.venta         import VentaViewSet
 from moto.views.detalle_venta import DetalleVentaViewSet
-from moto.views.marca         import MarcaViewSet
-from moto.views.categoria     import CategoriaViewSet
-from moto.views.repuesto      import RepuestoViewSet
+from moto.views.sucursal      import SucursalViewSet
+from moto.views.direccion     import DireccionViewSet
+from moto.views.proveedor     import ProveedorViewSet
 from moto.serializers.auth    import CustomTokenView
 
 
@@ -25,9 +25,9 @@ router.register('vendedores',      VendedorViewSet,     basename='vendedor')
 router.register('motos',           MotoViewSet,         basename='moto')
 router.register('ventas',          VentaViewSet,        basename='venta')
 router.register('detalle-ventas',  DetalleVentaViewSet, basename='detalle-venta')
-router.register('marcas',          MarcaViewSet,        basename='marca')
-router.register('categorias',      CategoriaViewSet,    basename='categoria')
-router.register('repuestos',       RepuestoViewSet,     basename='repuesto')
+router.register('sucursales',      SucursalViewSet,     basename='sucursal')
+router.register('direcciones',     DireccionViewSet,    basename='direccion')
+router.register('proveedores',     ProveedorViewSet,    basename='proveedor')
 
 
 urlpatterns = [
