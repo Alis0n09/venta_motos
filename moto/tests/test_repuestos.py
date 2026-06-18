@@ -73,7 +73,7 @@ class RepuestoFilterTests(TestCase):
         Repuesto.objects.create(nombre='Cable de embrague', marca_compatible=self.yamaha, stock=2, precio=12.00)
 
     def test_search_by_nombre(self):
-        resp = self.client.get('/api/repuestos/?search=bujia')
+        resp = self.client.get('/api/repuestos/?search=Buj')
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(resp.data['count'], 1)
 
