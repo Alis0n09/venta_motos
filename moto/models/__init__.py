@@ -15,6 +15,8 @@ from .mantenimiento import Mantenimiento
 from .categoria import Categoria
 from .marca import Marca
 from .repuesto import Repuesto
+from .inventario import Inventario
+from .sucursal_staff import SucursalStaff
 
 __all__ = [
     'Cliente',
@@ -32,4 +34,6 @@ __all__ = [
     'Categoria',
     'Marca',
     'Repuesto',
+    'Inventario',
+    'SucursalStaff',
 ]

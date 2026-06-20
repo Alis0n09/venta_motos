@@ -3,7 +3,7 @@
 from django.test import TestCase
 from rest_framework import status
 
-from .helpers import create_user, create_staff_user, auth_client, create_moto
+from .helpers import create_user, create_staff_user, auth_client, create_moto, create_marca
 
 
 class MotoPermissionTests(TestCase):
@@ -23,8 +23,9 @@ class MotoPermissionTests(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_regular_user_cannot_create(self):
+        marca = create_marca()
         resp = auth_client(self.user).post('/api/motos/', {
-            'marca': 'Honda',
+            'marca': marca.id,
             'modelo': 'CBR',
             'anio': 2024,
             'color': 'Rojo',
@@ -34,8 +35,9 @@ class MotoPermissionTests(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_staff_can_create(self):
+        marca = create_marca()
         resp = auth_client(self.staff).post('/api/motos/', {
-            'marca': 'Yamaha',
+            'marca': marca.id,
             'modelo': 'FZ',
             'anio': 2024,
             'color': 'Negro',
@@ -54,8 +56,11 @@ class MotoFilterTests(TestCase):
     def setUp(self):
         self.client = auth_client(create_user('filters'))
 
+        self.yamaha = create_marca(nombre='Yamaha')
+        self.honda = create_marca(nombre='Honda')
+
         create_moto(
-            marca='Yamaha',
+            marca=self.yamaha,
             modelo='FZ',
             anio=2024,
             color='Negro',
@@ -64,7 +69,7 @@ class MotoFilterTests(TestCase):
         )
 
         create_moto(
-            marca='Honda',
+            marca=self.honda,
             modelo='CBR',
             anio=2023,
             color='Rojo',
@@ -83,10 +88,10 @@ class MotoFilterTests(TestCase):
         self.assertEqual(resp.data['count'], 1)
 
     def test_filter_by_marca(self):
-        resp = self.client.get('/api/motos/?marca=Yamaha')
+        resp = self.client.get(f'/api/motos/?marca={self.yamaha.id}')
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(resp.data['count'], 1)
-        self.assertEqual(resp.data['results'][0]['marca'], 'Yamaha')
+        self.assertEqual(resp.data['results'][0]['marca_nombre'], 'Yamaha')
 
     def test_filter_by_anio(self):
         resp = self.client.get('/api/motos/?anio=2024')

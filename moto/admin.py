@@ -6,6 +6,7 @@ from moto.models import (
     Sucursal, Direccion, Proveedor,
     Posventa, Garantia, Mantenimiento,
     Categoria, Marca, Repuesto,
+    Inventario, SucursalStaff,
 )
 
 
@@ -30,9 +31,9 @@ class StaffAdmin(admin.ModelAdmin):
 
 @admin.register(Moto)
 class MotoAdmin(admin.ModelAdmin):
-    list_display  = ['id', 'marca', 'modelo', 'anio', 'color', 'precio', 'stock']
-    search_fields = ['marca', 'modelo', 'color']
-    list_filter   = ['marca', 'anio', 'color']
+    list_display  = ['id', 'marca', 'categoria', 'modelo', 'anio', 'color', 'precio', 'stock']
+    search_fields = ['marca__nombre', 'modelo', 'color']
+    list_filter   = ['marca', 'categoria', 'anio', 'color']
     list_editable = ['precio', 'stock']
 
 
@@ -60,7 +61,7 @@ class VentaAdmin(admin.ModelAdmin):
 class DetalleVentaAdmin(admin.ModelAdmin):
     list_display  = ['id', 'venta', 'moto', 'cantidad', 'precio_unitario']
     list_filter   = ['moto']
-    search_fields = ['moto__marca', 'moto__modelo', 'venta__id']
+    search_fields = ['moto__marca__nombre', 'moto__modelo', 'venta__id']
 
 
 @admin.register(Sucursal)
@@ -123,3 +124,18 @@ class RepuestoAdmin(admin.ModelAdmin):
     list_display  = ['id', 'nombre', 'marca_compatible', 'stock', 'precio']
     search_fields = ['nombre', 'marca_compatible__nombre']
     list_filter   = ['marca_compatible']
+
+
+@admin.register(Inventario)
+class InventarioAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'moto', 'sucursal', 'cantidad', 'ubicacion_bodega']
+    search_fields = ['moto__modelo', 'moto__marca__nombre', 'sucursal__nombre']
+    list_filter   = ['sucursal']
+    list_editable = ['cantidad']
+
+
+@admin.register(SucursalStaff)
+class SucursalStaffAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'staff', 'sucursal', 'fecha_asignacion']
+    search_fields = ['staff__usuario__first_name', 'staff__usuario__last_name', 'sucursal__nombre']
+    list_filter   = ['sucursal']

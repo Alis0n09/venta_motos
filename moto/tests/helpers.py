@@ -6,11 +6,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from moto.models import (
     Usuario, Cliente, Staff, Moto, Venta, DetalleVenta,
-    Posventa, Garantia, Mantenimiento,
+    Posventa, Garantia, Mantenimiento, Marca, Categoria,
 )
 
 
 _cedula_counter = itertools.count(1)
+_marca_counter = itertools.count(1)
 
 
 def _generar_cedula():
@@ -103,8 +104,22 @@ def create_vendedor(
     return Staff.objects.create(usuario=usuario, rol=rol)
 
 
+def create_marca(nombre=None, pais_origen="Japón", activa=True):
+    """Crea una Marca de prueba, con nombre único si no se especifica."""
+    if nombre is None:
+        nombre = f"Marca-{next(_marca_counter)}"
+    return Marca.objects.create(nombre=nombre, pais_origen=pais_origen, activa=activa)
+
+
+def create_categoria(nombre=None, descripcion="Categoría de prueba"):
+    if nombre is None:
+        nombre = f"Categoria-{next(_marca_counter)}"
+    return Categoria.objects.create(nombre=nombre, descripcion=descripcion)
+
+
 def create_moto(
-    marca="Honda",
+    marca=None,
+    categoria=None,
     modelo="CBR 500R",
     anio=2023,
     color="Rojo",
@@ -114,8 +129,17 @@ def create_moto(
     estado="disponible",
     descripcion=None,
 ):
+    if marca is None:
+        marca = create_marca()
+    elif isinstance(marca, str):
+        marca, _ = Marca.objects.get_or_create(nombre=marca, defaults={'pais_origen': 'Japón'})
+
+    if isinstance(categoria, str):
+        categoria, _ = Categoria.objects.get_or_create(nombre=categoria)
+
     return Moto.objects.create(
         marca=marca,
+        categoria=categoria,
         modelo=modelo,
         anio=anio,
         color=color,

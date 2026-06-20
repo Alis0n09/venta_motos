@@ -21,3 +21,5 @@ from moto.serializers.mantenimiento import MantenimientoSerializer
 from moto.serializers.categoria import CategoriaSerializer
 from moto.serializers.marca import MarcaSerializer
 from moto.serializers.repuesto import RepuestoSerializer
+from moto.serializers.inventario import InventarioSerializer
+from moto.serializers.sucursal_staff import SucursalStaffSerializer

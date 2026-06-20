@@ -12,7 +12,7 @@ from moto.filters import MotoFilter
 
 
 class MotoViewSet(viewsets.ModelViewSet):
-    queryset = Moto.objects.all()
+    queryset = Moto.objects.select_related('marca', 'categoria').all()
     serializer_class = MotoSerializer
     permission_classes = [IsStaffOrReadOnly]
     pagination_class = StandardPagination
@@ -21,7 +21,7 @@ class MotoViewSet(viewsets.ModelViewSet):
     filterset_class = MotoFilter
 
     search_fields = [
-        'marca',
+        'marca__nombre',
         'modelo',
         'color',
         'estado',
@@ -42,14 +42,15 @@ class MotoViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def stats(self, request):
-        motos = Moto.objects.all()
+        motos = Moto.objects.select_related('marca', 'categoria').all()
 
         return Response({
             'total': motos.count(),
             'detail': [
                 {
                     'id': m.id,
-                    'marca': m.marca,
+                    'marca': m.marca.nombre if m.marca else None,
+                    'categoria': m.categoria.nombre if m.categoria else None,
                     'modelo': m.modelo,
                     'anio': m.anio,
                     'color': m.color,
