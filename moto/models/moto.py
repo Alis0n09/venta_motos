@@ -1,4 +1,6 @@
 from django.db import models
+from .marca import Marca
+from .categoria import Categoria
 
 
 class Moto(models.Model):
@@ -8,7 +10,18 @@ class Moto(models.Model):
         ('reservada', 'Reservada'),
     ]
 
-    marca = models.CharField(max_length=100)
+    marca = models.ForeignKey(
+        Marca,
+        on_delete=models.PROTECT,
+        related_name='motos'
+    )
+    categoria = models.ForeignKey(
+        Categoria,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='motos'
+    )
     modelo = models.CharField(max_length=100)
     anio = models.IntegerField()
     cilindraje = models.CharField(max_length=20)

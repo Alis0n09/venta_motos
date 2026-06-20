@@ -21,6 +21,8 @@ from moto.views.mantenimiento import MantenimientoViewSet
 from moto.views.categoria     import CategoriaViewSet
 from moto.views.marca         import MarcaViewSet
 from moto.views.repuesto      import RepuestoViewSet
+from moto.views.inventario    import InventarioViewSet
+from moto.views.sucursal_staff import SucursalStaffViewSet
 from moto.serializers.auth    import CustomTokenView
 
 
@@ -40,6 +42,8 @@ router.register('mantenimientos',  MantenimientoViewSet, basename='mantenimiento
 router.register('categorias',      CategoriaViewSet,     basename='categoria')
 router.register('marcas',          MarcaViewSet,         basename='marca')
 router.register('repuestos',       RepuestoViewSet,      basename='repuesto')
+router.register('inventario',      InventarioViewSet,    basename='inventario')
+router.register('sucursal-staff',  SucursalStaffViewSet, basename='sucursal-staff')
 
 
 urlpatterns = [

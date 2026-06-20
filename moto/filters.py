@@ -6,6 +6,7 @@ from moto.models import (
     Sucursal, Direccion, Proveedor,
     Posventa, Garantia, Mantenimiento,
     Categoria, Marca, Repuesto,
+    Inventario, SucursalStaff,
 )
 
 
@@ -34,19 +35,21 @@ class VendedorFilter(django_filters.FilterSet):
 
 
 class MotoFilter(django_filters.FilterSet):
-    marca      = django_filters.CharFilter(lookup_expr='icontains')
-    modelo     = django_filters.CharFilter(lookup_expr='icontains')
-    color      = django_filters.CharFilter(lookup_expr='icontains')
-    precio_min = django_filters.NumberFilter(field_name='precio', lookup_expr='gte')
-    precio_max = django_filters.NumberFilter(field_name='precio', lookup_expr='lte')
-    stock_min  = django_filters.NumberFilter(field_name='stock', lookup_expr='gte')
-    stock_max  = django_filters.NumberFilter(field_name='stock', lookup_expr='lte')
-    anio_min   = django_filters.NumberFilter(field_name='anio', lookup_expr='gte')
-    anio_max   = django_filters.NumberFilter(field_name='anio', lookup_expr='lte')
+    marca        = django_filters.NumberFilter(field_name='marca_id')
+    marca_nombre = django_filters.CharFilter(field_name='marca__nombre', lookup_expr='icontains')
+    categoria    = django_filters.NumberFilter(field_name='categoria_id')
+    modelo       = django_filters.CharFilter(lookup_expr='icontains')
+    color        = django_filters.CharFilter(lookup_expr='icontains')
+    precio_min   = django_filters.NumberFilter(field_name='precio', lookup_expr='gte')
+    precio_max   = django_filters.NumberFilter(field_name='precio', lookup_expr='lte')
+    stock_min    = django_filters.NumberFilter(field_name='stock', lookup_expr='gte')
+    stock_max    = django_filters.NumberFilter(field_name='stock', lookup_expr='lte')
+    anio_min     = django_filters.NumberFilter(field_name='anio', lookup_expr='gte')
+    anio_max     = django_filters.NumberFilter(field_name='anio', lookup_expr='lte')
 
     class Meta:
         model  = Moto
-        fields = ['marca', 'modelo', 'anio', 'color']
+        fields = ['marca', 'categoria', 'modelo', 'anio', 'color']
 
 
 class VentaFilter(django_filters.FilterSet):
@@ -66,7 +69,7 @@ class DetalleVentaFilter(django_filters.FilterSet):
     cantidad_max        = django_filters.NumberFilter(field_name='cantidad', lookup_expr='lte')
     precio_unitario_min = django_filters.NumberFilter(field_name='precio_unitario', lookup_expr='gte')
     precio_unitario_max = django_filters.NumberFilter(field_name='precio_unitario', lookup_expr='lte')
-    moto_marca          = django_filters.CharFilter(field_name='moto__marca', lookup_expr='icontains')
+    moto_marca          = django_filters.CharFilter(field_name='moto__marca__nombre', lookup_expr='icontains')
     moto_modelo         = django_filters.CharFilter(field_name='moto__modelo', lookup_expr='icontains')
 
     class Meta:
@@ -175,3 +178,24 @@ class MantenimientoFilter(django_filters.FilterSet):
             'posventa', 'moto', 'estado', 'tipo_mantenimiento',
             'fecha_programada', 'fecha_realizacion', 'costo'
         ]
+
+
+class InventarioFilter(django_filters.FilterSet):
+    moto          = django_filters.NumberFilter(field_name='moto_id')
+    sucursal      = django_filters.NumberFilter(field_name='sucursal_id')
+    cantidad_min  = django_filters.NumberFilter(field_name='cantidad', lookup_expr='gte')
+    cantidad_max  = django_filters.NumberFilter(field_name='cantidad', lookup_expr='lte')
+
+    class Meta:
+        model  = Inventario
+        fields = ['moto', 'sucursal', 'cantidad']
+
+
+class SucursalStaffFilter(django_filters.FilterSet):
+    staff             = django_filters.NumberFilter(field_name='staff_id')
+    sucursal          = django_filters.NumberFilter(field_name='sucursal_id')
+    fecha_asignacion  = django_filters.DateFilter(field_name='fecha_asignacion')
+
+    class Meta:
+        model  = SucursalStaff
+        fields = ['staff', 'sucursal', 'fecha_asignacion']
