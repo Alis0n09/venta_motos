@@ -7,6 +7,7 @@ from moto.models import (
     Posventa, Garantia, Mantenimiento,
     Categoria, Marca, Repuesto,
     Inventario, SucursalStaff,
+    Compra, DetalleCompra,
 )
 
 
@@ -199,3 +200,28 @@ class SucursalStaffFilter(django_filters.FilterSet):
     class Meta:
         model  = SucursalStaff
         fields = ['staff', 'sucursal', 'fecha_asignacion']
+
+
+class CompraFilter(django_filters.FilterSet):
+    proveedor        = django_filters.NumberFilter(field_name='proveedor_id')
+    sucursal_destino = django_filters.NumberFilter(field_name='sucursal_destino_id')
+    fecha            = django_filters.DateFilter(field_name='fecha')
+    total_min        = django_filters.NumberFilter(field_name='total', lookup_expr='gte')
+    total_max        = django_filters.NumberFilter(field_name='total', lookup_expr='lte')
+
+    class Meta:
+        model  = Compra
+        fields = ['proveedor', 'sucursal_destino', 'fecha', 'total']
+
+
+class DetalleCompraFilter(django_filters.FilterSet):
+    compra           = django_filters.NumberFilter(field_name='compra_id')
+    moto             = django_filters.NumberFilter(field_name='moto_id')
+    cantidad_min     = django_filters.NumberFilter(field_name='cantidad', lookup_expr='gte')
+    cantidad_max     = django_filters.NumberFilter(field_name='cantidad', lookup_expr='lte')
+    precio_costo_min = django_filters.NumberFilter(field_name='precio_costo', lookup_expr='gte')
+    precio_costo_max = django_filters.NumberFilter(field_name='precio_costo', lookup_expr='lte')
+
+    class Meta:
+        model  = DetalleCompra
+        fields = ['compra', 'moto', 'cantidad', 'precio_costo']
