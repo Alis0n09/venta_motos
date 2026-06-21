@@ -17,6 +17,8 @@ from .marca import Marca
 from .repuesto import Repuesto
 from .inventario import Inventario
 from .sucursal_staff import SucursalStaff
+from .compra import Compra
+from .detalle_compra import DetalleCompra
 
 __all__ = [
     'Cliente',
@@ -36,4 +38,6 @@ __all__ = [
     'Repuesto',
     'Inventario',
     'SucursalStaff',
+    'Compra',
+    'DetalleCompra',
 ]

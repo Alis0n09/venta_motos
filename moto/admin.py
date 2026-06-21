@@ -7,6 +7,7 @@ from moto.models import (
     Posventa, Garantia, Mantenimiento,
     Categoria, Marca, Repuesto,
     Inventario, SucursalStaff,
+    Compra, DetalleCompra,
 )
 
 
@@ -139,3 +140,24 @@ class SucursalStaffAdmin(admin.ModelAdmin):
     list_display  = ['id', 'staff', 'sucursal', 'fecha_asignacion']
     search_fields = ['staff__usuario__first_name', 'staff__usuario__last_name', 'sucursal__nombre']
     list_filter   = ['sucursal']
+
+
+class DetalleCompraInline(admin.TabularInline):
+    model  = DetalleCompra
+    extra  = 0
+    fields = ['moto', 'cantidad', 'precio_costo']
+
+
+@admin.register(Compra)
+class CompraAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'proveedor', 'sucursal_destino', 'fecha', 'total']
+    search_fields = ['proveedor__empresa', 'sucursal_destino__nombre']
+    list_filter   = ['sucursal_destino', 'fecha']
+    inlines       = [DetalleCompraInline]
+
+
+@admin.register(DetalleCompra)
+class DetalleCompraAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'compra', 'moto', 'cantidad', 'precio_costo']
+    search_fields = ['moto__marca__nombre', 'moto__modelo']
+    list_filter   = ['moto']

@@ -7,3 +7,5 @@ from moto.views.mantenimiento import MantenimientoViewSet
 from moto.views.categoria import CategoriaViewSet
 from moto.views.marca import MarcaViewSet
 from moto.views.repuesto import RepuestoViewSet
+from moto.views.compra import CompraViewSet
+from moto.views.detalle_compra import DetalleCompraViewSet
