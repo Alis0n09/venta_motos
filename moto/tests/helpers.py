@@ -7,6 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from moto.models import (
     Usuario, Cliente, Staff, Moto, Venta, DetalleVenta,
     Posventa, Garantia, Mantenimiento, Marca, Categoria,
+    Financiamiento, CuotaPago,
 )
 
 
@@ -248,4 +249,51 @@ def create_mantenimiento(
         costo=costo,
         estado=estado,
         descripcion=descripcion
+    )
+
+
+def create_financiamiento(
+    venta=None,
+    monto_financiado=5000.00,
+    tasa_interes=5.00,
+    plazo_meses=12,
+    fecha_inicio=None,
+    estado='activo'
+):
+    from datetime import date
+    if venta is None:
+        cliente = create_cliente(cedula=_generar_cedula())
+        username = f'vendedor_{_generar_cedula()}'
+        vendedor = create_vendedor(username=username, cedula=_generar_cedula())
+        venta = create_venta(cliente=cliente, vendedor=vendedor, total=monto_financiado)
+    if fecha_inicio is None:
+        fecha_inicio = date.today()
+    return Financiamiento.objects.create(
+        venta=venta,
+        monto_financiado=monto_financiado,
+        tasa_interes=tasa_interes,
+        plazo_meses=plazo_meses,
+        fecha_inicio=fecha_inicio,
+        estado=estado
+    )
+
+
+def create_cuota_pago(
+    financiamiento=None,
+    numero_cuota=1,
+    fecha_vencimiento=None,
+    monto=500.00,
+    estado='pendiente'
+):
+    from datetime import date
+    if financiamiento is None:
+        financiamiento = create_financiamiento()
+    if fecha_vencimiento is None:
+        fecha_vencimiento = date.today()
+    return CuotaPago.objects.create(
+        financiamiento=financiamiento,
+        numero_cuota=numero_cuota,
+        fecha_vencimiento=fecha_vencimiento,
+        monto=monto,
+        estado=estado
     )

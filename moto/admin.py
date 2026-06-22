@@ -8,6 +8,7 @@ from moto.models import (
     Categoria, Marca, Repuesto,
     Inventario, SucursalStaff,
     Compra, DetalleCompra,
+    Financiamiento, CuotaPago,
 )
 
 
@@ -161,3 +162,24 @@ class DetalleCompraAdmin(admin.ModelAdmin):
     list_display  = ['id', 'compra', 'moto', 'cantidad', 'precio_costo']
     search_fields = ['moto__marca__nombre', 'moto__modelo']
     list_filter   = ['moto']
+
+
+class CuotaPagoInline(admin.TabularInline):
+    model  = CuotaPago
+    extra  = 0
+    fields = ['numero_cuota', 'fecha_vencimiento', 'monto', 'estado']
+
+
+@admin.register(Financiamiento)
+class FinanciamientoAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'venta', 'monto_financiado', 'tasa_interes', 'plazo_meses', 'fecha_inicio', 'estado']
+    search_fields = ['estado']
+    list_filter   = ['estado']
+    inlines       = [CuotaPagoInline]
+
+
+@admin.register(CuotaPago)
+class CuotaPagoAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'financiamiento', 'numero_cuota', 'fecha_vencimiento', 'monto', 'estado']
+    search_fields = ['estado']
+    list_filter   = ['estado']

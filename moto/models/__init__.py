@@ -19,6 +19,8 @@ from .inventario import Inventario
 from .sucursal_staff import SucursalStaff
 from .compra import Compra
 from .detalle_compra import DetalleCompra
+from .financiamiento import Financiamiento
+from .cuota_pago import CuotaPago
 
 __all__ = [
     'Cliente',
@@ -40,4 +42,6 @@ __all__ = [
     'SucursalStaff',
     'Compra',
     'DetalleCompra',
+    'Financiamiento',
+    'CuotaPago',
 ]

@@ -9,3 +9,5 @@ from moto.views.marca import MarcaViewSet
 from moto.views.repuesto import RepuestoViewSet
 from moto.views.compra import CompraViewSet
 from moto.views.detalle_compra import DetalleCompraViewSet
+from moto.views.financiamiento import FinanciamientoViewSet
+from moto.views.cuota_pago import CuotaPagoViewSet

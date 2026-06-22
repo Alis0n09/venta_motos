@@ -23,8 +23,10 @@ from moto.views.marca         import MarcaViewSet
 from moto.views.repuesto      import RepuestoViewSet
 from moto.views.inventario    import InventarioViewSet
 from moto.views.sucursal_staff  import SucursalStaffViewSet
-from moto.views.compra          import CompraViewSet
-from moto.views.detalle_compra  import DetalleCompraViewSet
+from moto.views.compra            import CompraViewSet
+from moto.views.detalle_compra    import DetalleCompraViewSet
+from moto.views.financiamiento    import FinanciamientoViewSet
+from moto.views.cuota_pago        import CuotaPagoViewSet
 from moto.serializers.auth      import CustomTokenView
 
 
@@ -46,8 +48,10 @@ router.register('marcas',          MarcaViewSet,         basename='marca')
 router.register('repuestos',       RepuestoViewSet,      basename='repuesto')
 router.register('inventario',      InventarioViewSet,    basename='inventario')
 router.register('sucursal-staff',  SucursalStaffViewSet, basename='sucursal-staff')
-router.register('compras',         CompraViewSet,        basename='compra')
-router.register('detalle-compras', DetalleCompraViewSet, basename='detalle-compra')
+router.register('compras',         CompraViewSet,          basename='compra')
+router.register('detalle-compras', DetalleCompraViewSet,   basename='detalle-compra')
+router.register('financiamientos', FinanciamientoViewSet,  basename='financiamiento')
+router.register('cuotas-pago',     CuotaPagoViewSet,       basename='cuota-pago')
 
 
 urlpatterns = [
