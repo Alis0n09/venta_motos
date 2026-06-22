@@ -8,6 +8,7 @@ from moto.models import (
     Categoria, Marca, Repuesto,
     Inventario, SucursalStaff,
     Compra, DetalleCompra,
+    HistorialPrecio, Resena,
 )
 
 
@@ -161,3 +162,19 @@ class DetalleCompraAdmin(admin.ModelAdmin):
     list_display  = ['id', 'compra', 'moto', 'cantidad', 'precio_costo']
     search_fields = ['moto__marca__nombre', 'moto__modelo']
     list_filter   = ['moto']
+
+
+@admin.register(HistorialPrecio)
+class HistorialPrecioAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'moto', 'precio_anterior', 'precio_nuevo', 'fecha', 'usuario']
+    search_fields = ['moto__modelo', 'moto__marca__nombre', 'usuario__first_name', 'usuario__last_name']
+    list_filter   = ['moto', 'fecha']
+    readonly_fields = ['fecha']
+
+
+@admin.register(Resena)
+class ResenaAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'moto', 'cliente', 'rating', 'fecha']
+    search_fields = ['moto__modelo', 'moto__marca__nombre', 'cliente__nombre', 'cliente__apellido', 'comentario']
+    list_filter   = ['rating', 'moto']
+    readonly_fields = ['fecha']
