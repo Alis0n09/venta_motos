@@ -33,10 +33,10 @@ class StaffAdmin(admin.ModelAdmin):
 
 @admin.register(Moto)
 class MotoAdmin(admin.ModelAdmin):
-    list_display  = ['id', 'marca', 'categoria', 'modelo', 'anio', 'color', 'precio', 'stock']
+    list_display  = ['id', 'marca', 'categoria', 'modelo', 'anio', 'color', 'precio']
     search_fields = ['marca__nombre', 'modelo', 'color']
     list_filter   = ['marca', 'categoria', 'anio', 'color']
-    list_editable = ['precio', 'stock']
+    list_editable = ['precio']
 
 
 class DetalleVentaInline(admin.TabularInline):

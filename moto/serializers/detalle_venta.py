@@ -12,17 +12,19 @@ class DetalleVentaSerializer(serializers.ModelSerializer):
             'id',
             'venta',
             'moto',
+            'moto_nombre',
             'cantidad',
             'precio_unitario',
             'subtotal',
-            'moto_nombre',
         ]
 
     def get_subtotal(self, obj):
         return obj.cantidad * obj.precio_unitario
 
     def get_moto_nombre(self, obj):
-        return f"{obj.moto.marca} {obj.moto.modelo}"
+        if obj.moto and obj.moto.marca:
+            return f"{obj.moto.marca.nombre} {obj.moto.modelo}"
+        return obj.moto.modelo if obj.moto else None
 
     def validate_cantidad(self, value):
         if value <= 0:
@@ -38,9 +40,11 @@ class DetalleVentaSerializer(serializers.ModelSerializer):
         moto = data.get('moto')
         cantidad = data.get('cantidad')
 
-        if moto and cantidad and cantidad > moto.stock:
-            raise serializers.ValidationError({
-                "cantidad": "La cantidad no puede ser mayor al stock disponible."
-            })
+        if moto and cantidad:
+            stock_disponible = moto.stock
+            if stock_disponible > 0 and cantidad > stock_disponible:
+                raise serializers.ValidationError({
+                    "cantidad": f"La cantidad no puede ser mayor al stock disponible ({stock_disponible})."
+                })
 
         return data

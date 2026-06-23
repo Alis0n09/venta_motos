@@ -30,7 +30,6 @@ class MotoPermissionTests(TestCase):
             'anio': 2024,
             'color': 'Rojo',
             'precio': 4500,
-            'stock': 5,
         })
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -42,7 +41,6 @@ class MotoPermissionTests(TestCase):
             'anio': 2024,
             'color': 'Negro',
             'precio': 3500,
-            'stock': 10,
         })
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
 
@@ -57,25 +55,10 @@ class MotoFilterTests(TestCase):
         self.client = auth_client(create_user('filters'))
 
         self.yamaha = create_marca(nombre='Yamaha')
-        self.honda = create_marca(nombre='Honda')
+        self.honda  = create_marca(nombre='Honda')
 
-        create_moto(
-            marca=self.yamaha,
-            modelo='FZ',
-            anio=2024,
-            color='Negro',
-            precio=3500,
-            stock=10,
-        )
-
-        create_moto(
-            marca=self.honda,
-            modelo='CBR',
-            anio=2023,
-            color='Rojo',
-            precio=4500,
-            stock=5,
-        )
+        create_moto(marca=self.yamaha, modelo='FZ',  anio=2024, color='Negro', precio=3500)
+        create_moto(marca=self.honda,  modelo='CBR', anio=2023, color='Rojo',  precio=4500)
 
     def test_search_by_marca(self):
         resp = self.client.get('/api/motos/?search=yamaha')

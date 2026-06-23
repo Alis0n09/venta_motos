@@ -27,12 +27,15 @@ class Moto(models.Model):
     cilindraje = models.CharField(max_length=20)
     color = models.CharField(max_length=50)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.PositiveIntegerField(default=0)
     estado = models.CharField(
         max_length=20,
         choices=ESTADO_CHOICES,
         default='disponible'
     )
+
+    @property
+    def stock(self):
+        return sum(i.cantidad for i in self.inventarios.all())
 
     def __str__(self):
         return f"{self.marca} {self.modelo} - {self.anio}"

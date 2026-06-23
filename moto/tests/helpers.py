@@ -1,5 +1,3 @@
-# moto/tests/helpers.py
-
 import itertools
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -15,7 +13,6 @@ _marca_counter = itertools.count(1)
 
 
 def _generar_cedula():
-    """Genera una cédula de prueba única tipo '0000000001', '0000000002', etc."""
     return str(next(_cedula_counter)).zfill(10)
 
 
@@ -31,7 +28,6 @@ def create_user(username='user', email=None, password='Pass1234!', **kwargs):
 
 
 def create_staff_user(username='staffuser', email=None, password='Admin1234!'):
-    """Crea un Usuario con is_staff=True (para permisos a nivel Django/DRF)."""
     email = email or f'{username}@test.com'
     return Usuario.objects.create_user(
         username=username,
@@ -86,7 +82,6 @@ def create_vendedor(
     rol=Staff.Rol.VENDEDOR,
     password='Pass1234!',
 ):
-    """Crea un Usuario + su perfil Staff asociado."""
     correo = correo or email or "carlos.lopez@gmail.com"
     cedula = cedula or _generar_cedula()
 
@@ -105,7 +100,6 @@ def create_vendedor(
 
 
 def create_marca(nombre=None, pais_origen="Japón", activa=True):
-    """Crea una Marca de prueba, con nombre único si no se especifica."""
     if nombre is None:
         nombre = f"Marca-{next(_marca_counter)}"
     return Marca.objects.create(nombre=nombre, pais_origen=pais_origen, activa=activa)
@@ -124,7 +118,6 @@ def create_moto(
     anio=2023,
     color="Rojo",
     precio=8500.00,
-    stock=5,
     cilindraje=500,
     estado="disponible",
     descripcion=None,
@@ -144,7 +137,6 @@ def create_moto(
         anio=anio,
         color=color,
         precio=precio,
-        stock=stock,
         cilindraje=cilindraje,
         estado=estado,
     )
