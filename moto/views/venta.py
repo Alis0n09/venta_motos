@@ -1,18 +1,19 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 
 from moto.models import Venta
-from moto.serializers.venta import VentaSerializer
+from moto.serializers.venta import VentaSerializer, CrearVentaSerializer
 from moto.permissions import IsStaffOrReadOnly
 from moto.pagination import StandardPagination
 from moto.filters import VentaFilter
 
 
 class VentaViewSet(viewsets.ModelViewSet):
-    queryset = Venta.objects.select_related('cliente', 'vendedor', 'vendedor__usuario').all()
+    queryset = Venta.objects.select_related('cliente', 'vendedor', 'vendedor__usuario').prefetch_related('detalles__moto__marca').all()
     serializer_class = VentaSerializer
     permission_classes = [IsStaffOrReadOnly]
     pagination_class = StandardPagination
@@ -42,6 +43,74 @@ class VentaViewSet(viewsets.ModelViewSet):
     ]
 
     ordering = ['id']
+
+    @action(
+        detail=False,
+        methods=['post'],
+        url_path='comprar',
+        permission_classes=[IsAuthenticated]
+    )
+    def comprar(self, request):
+        """
+        Endpoint para que un cliente confirme su carrito y cree su propia venta.
+        El cliente debe estar registrado y tener un perfil Cliente asociado.
+
+        Body esperado:
+        {
+            "metodo_pago": "efectivo",
+            "items": [
+                {"moto_id": 1, "cantidad": 1},
+                {"moto_id": 3, "cantidad": 2}
+            ]
+        }
+        """
+        if not hasattr(request.user, 'perfil_cliente'):
+            return Response(
+                {'error': 'Solo los clientes registrados pueden realizar compras.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        serializer = CrearVentaSerializer(
+            data=request.data,
+            context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        venta = serializer.save()
+
+        return Response(
+            VentaSerializer(venta).data,
+            status=status.HTTP_201_CREATED
+        )
+
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path='mis-compras',
+        permission_classes=[IsAuthenticated]
+    )
+    def mis_compras(self, request):
+        """
+        Endpoint para que un cliente vea su historial de compras.
+        """
+        if not hasattr(request.user, 'perfil_cliente'):
+            return Response(
+                {'error': 'No tienes un perfil de cliente.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        ventas = Venta.objects.filter(
+            cliente=request.user.perfil_cliente
+        ).select_related(
+            'cliente', 'vendedor', 'vendedor__usuario'
+        ).prefetch_related(
+            'detalles__moto__marca'
+        ).order_by('-fecha_venta')
+
+        page = self.paginate_queryset(ventas)
+        if page is not None:
+            return self.get_paginated_response(VentaSerializer(page, many=True).data)
+
+        return Response(VentaSerializer(ventas, many=True).data)
 
     @action(detail=False, methods=['get'])
     def stats(self, request):

@@ -19,7 +19,9 @@ class Venta(models.Model):
     vendedor = models.ForeignKey(
         Staff,
         on_delete=models.PROTECT,
-        related_name='ventas_realizadas'
+        related_name='ventas_realizadas',
+        null=True,
+        blank=True
     )
     fecha_venta = models.DateTimeField(auto_now_add=True)
     metodo_pago = models.CharField(
