@@ -19,6 +19,8 @@ from .inventario import Inventario
 from .sucursal_staff import SucursalStaff
 from .compra import Compra
 from .detalle_compra import DetalleCompra
+from .financiamiento import Financiamiento
+from .cuota_pago import CuotaPago
 from .historial_precio import HistorialPrecio
 from .resena import Resena
 from .logs_actividad import LogsActividad
@@ -43,6 +45,8 @@ __all__ = [
     'SucursalStaff',
     'Compra',
     'DetalleCompra',
+    'Financiamiento',
+    'CuotaPago',
     'HistorialPrecio',
     'Resena',
     'LogsActividad',

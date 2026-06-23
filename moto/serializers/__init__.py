@@ -25,6 +25,8 @@ from moto.serializers.inventario import InventarioSerializer
 from moto.serializers.sucursal_staff import SucursalStaffSerializer
 from moto.serializers.compra import CompraSerializer
 from moto.serializers.detalle_compra import DetalleCompraSerializer
+from moto.serializers.financiamiento import FinanciamientoSerializer
+from moto.serializers.cuota_pago import CuotaPagoSerializer
 from moto.serializers.historial_precio import HistorialPrecioSerializer
 from moto.serializers.resena import ResenaSerializer
 from moto.serializers.logs_actividad import LogsActividadSerializer

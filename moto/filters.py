@@ -8,6 +8,7 @@ from moto.models import (
     Categoria, Marca, Repuesto,
     Inventario, SucursalStaff,
     Compra, DetalleCompra,
+    Financiamiento, CuotaPago,
     HistorialPrecio, Resena,
     LogsActividad,
 )
@@ -227,6 +228,30 @@ class DetalleCompraFilter(django_filters.FilterSet):
     class Meta:
         model  = DetalleCompra
         fields = ['compra', 'moto', 'cantidad', 'precio_costo']
+
+
+class FinanciamientoFilter(django_filters.FilterSet):
+    venta = django_filters.NumberFilter(field_name='venta_id')
+    estado = django_filters.CharFilter(lookup_expr='icontains')
+    monto_min = django_filters.NumberFilter(field_name='monto_financiado', lookup_expr='gte')
+    monto_max = django_filters.NumberFilter(field_name='monto_financiado', lookup_expr='lte')
+    fecha_inicio = django_filters.DateFilter(field_name='fecha_inicio')
+
+    class Meta:
+        model = Financiamiento
+        fields = ['venta', 'estado', 'monto_financiado', 'fecha_inicio']
+
+
+class CuotaPagoFilter(django_filters.FilterSet):
+    financiamiento = django_filters.NumberFilter(field_name='financiamiento_id')
+    estado = django_filters.CharFilter(lookup_expr='icontains')
+    fecha_vencimiento = django_filters.DateFilter(field_name='fecha_vencimiento')
+    monto_min = django_filters.NumberFilter(field_name='monto', lookup_expr='gte')
+    monto_max = django_filters.NumberFilter(field_name='monto', lookup_expr='lte')
+
+    class Meta:
+        model = CuotaPago
+        fields = ['financiamiento', 'estado', 'fecha_vencimiento', 'monto']
 
 
 class HistorialPrecioFilter(django_filters.FilterSet):

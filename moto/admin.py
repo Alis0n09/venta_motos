@@ -8,6 +8,7 @@ from moto.models import (
     Categoria, Marca, Repuesto,
     Inventario, SucursalStaff,
     Compra, DetalleCompra,
+    Financiamiento, CuotaPago,
     HistorialPrecio, Resena,
     LogsActividad,
 )
@@ -165,6 +166,25 @@ class DetalleCompraAdmin(admin.ModelAdmin):
     list_filter   = ['moto']
 
 
+class CuotaPagoInline(admin.TabularInline):
+    model  = CuotaPago
+    extra  = 0
+    fields = ['numero_cuota', 'fecha_vencimiento', 'monto', 'estado']
+
+
+@admin.register(Financiamiento)
+class FinanciamientoAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'venta', 'monto_financiado', 'tasa_interes', 'plazo_meses', 'fecha_inicio', 'estado']
+    search_fields = ['estado']
+    list_filter   = ['estado']
+    inlines       = [CuotaPagoInline]
+
+
+@admin.register(CuotaPago)
+class CuotaPagoAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'financiamiento', 'numero_cuota', 'fecha_vencimiento', 'monto', 'estado']
+    search_fields = ['estado']
+    list_filter   = ['estado']
 @admin.register(HistorialPrecio)
 class HistorialPrecioAdmin(admin.ModelAdmin):
     list_display  = ['id', 'moto', 'precio_anterior', 'precio_nuevo', 'fecha', 'usuario']
@@ -179,11 +199,3 @@ class ResenaAdmin(admin.ModelAdmin):
     search_fields = ['moto__modelo', 'moto__marca__nombre', 'cliente__nombre', 'cliente__apellido', 'comentario']
     list_filter   = ['rating', 'moto']
     readonly_fields = ['fecha']
-
-
-@admin.register(LogsActividad)
-class LogsActividadAdmin(admin.ModelAdmin):
-    list_display    = ['id', 'usuario', 'accion', 'entidad', 'fecha']
-    search_fields   = ['accion', 'entidad', 'usuario__username']
-    list_filter     = ['accion', 'entidad', 'fecha']
-    readonly_fields = ['fecha', 'datos_antes', 'datos_despues']
