@@ -4,7 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from moto.models import (
     Usuario, Cliente, Staff, Moto, Venta, DetalleVenta,
-    Posventa, Garantia, Mantenimiento, Marca, Categoria,
+    Garantia, Mantenimiento, Marca, Categoria,
     Financiamiento, CuotaPago,
 )
 
@@ -181,66 +181,49 @@ def add_detalle_venta(venta=None, moto=None, cantidad=1, precio_unitario=None):
     )
 
 
-def create_posventa(venta=None, estado='pendiente', observaciones=''):
-    if venta is None:
-        cliente = create_cliente(cedula=_generar_cedula())
-        username = f'vendedor_{_generar_cedula()}'
-        vendedor = create_vendedor(username=username, cedula=_generar_cedula())
-        venta = create_venta(cliente=cliente, vendedor=vendedor)
-    return Posventa.objects.create(
-        venta=venta,
-        estado=estado,
-        observaciones=observaciones
-    )
-
-
 def create_garantia(
-    posventa=None,
+    venta=None,
     fecha_inicio=None,
     fecha_fin=None,
-    tipo_cobertura='Cobertura completa',
-    estado='activa'
+    tipo='Cobertura completa'
 ):
-    from datetime import date
-    if posventa is None:
-        posventa = create_posventa()
+    from datetime import date, timedelta
+    if venta is None:
+        cliente = create_cliente(cedula=_generar_cedula())
+        vendedor = create_vendedor(username=f'ven_{_generar_cedula()}', cedula=_generar_cedula())
+        venta = create_venta(cliente=cliente, vendedor=vendedor)
     if fecha_inicio is None:
         fecha_inicio = date.today()
     if fecha_fin is None:
-        fecha_fin = date(date.today().year + 1, date.today().month, date.today().day)
+        fecha_fin = date.today() + timedelta(days=365)
     return Garantia.objects.create(
-        posventa=posventa,
+        venta=venta,
         fecha_inicio=fecha_inicio,
         fecha_fin=fecha_fin,
-        tipo_cobertura=tipo_cobertura,
-        estado=estado
+        tipo=tipo
     )
 
 
 def create_mantenimiento(
-    posventa=None,
     moto=None,
-    tipo_mantenimiento='preventivo',
-    fecha_programada=None,
-    costo=150.00,
-    estado='pendiente',
-    descripcion='Mantenimiento de rutina'
+    cliente=None,
+    fecha=None,
+    tipo='preventivo',
+    costo=150.00
 ):
     from datetime import date
-    if posventa is None:
-        posventa = create_posventa()
     if moto is None:
         moto = create_moto()
-    if fecha_programada is None:
-        fecha_programada = date.today()
+    if cliente is None:
+        cliente = create_cliente(cedula=_generar_cedula())
+    if fecha is None:
+        fecha = date.today()
     return Mantenimiento.objects.create(
-        posventa=posventa,
         moto=moto,
-        tipo_mantenimiento=tipo_mantenimiento,
-        fecha_programada=fecha_programada,
-        costo=costo,
-        estado=estado,
-        descripcion=descripcion
+        cliente=cliente,
+        fecha=fecha,
+        tipo=tipo,
+        costo=costo
     )
 
 

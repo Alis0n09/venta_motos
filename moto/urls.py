@@ -15,7 +15,6 @@ from moto.views.detalle_venta   import DetalleVentaViewSet
 from moto.views.sucursal        import SucursalViewSet
 from moto.views.direccion       import DireccionViewSet
 from moto.views.proveedor       import ProveedorViewSet
-from moto.views.posventa        import PosventaViewSet
 from moto.views.garantia        import GarantiaViewSet
 from moto.views.mantenimiento   import MantenimientoViewSet
 from moto.views.categoria       import CategoriaViewSet
@@ -43,7 +42,6 @@ router.register('detalle-ventas',    DetalleVentaViewSet,    basename='detalle-v
 router.register('sucursales',        SucursalViewSet,        basename='sucursal')
 router.register('direcciones',       DireccionViewSet,       basename='direccion')
 router.register('proveedores',       ProveedorViewSet,       basename='proveedor')
-router.register('posventas',         PosventaViewSet,        basename='posventa')
 router.register('garantias',         GarantiaViewSet,        basename='garantia')
 router.register('mantenimientos',    MantenimientoViewSet,   basename='mantenimiento')
 router.register('categorias',        CategoriaViewSet,       basename='categoria')

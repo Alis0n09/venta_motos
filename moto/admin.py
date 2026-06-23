@@ -4,7 +4,7 @@ from django.contrib import admin
 from moto.models import (
     Cliente, Usuario, Staff, Moto, Venta, DetalleVenta,
     Sucursal, Direccion, Proveedor,
-    Posventa, Garantia, Mantenimiento,
+    Garantia, Mantenimiento,
     Categoria, Marca, Repuesto,
     Inventario, SucursalStaff,
     Compra, DetalleCompra,
@@ -89,25 +89,18 @@ class ProveedorAdmin(admin.ModelAdmin):
     list_filter   = ['pais']
 
 
-@admin.register(Posventa)
-class PosventaAdmin(admin.ModelAdmin):
-    list_display  = ['id', 'venta', 'fecha_apertura', 'fecha_cierre', 'estado']
-    search_fields = ['estado', 'observaciones']
-    list_filter   = ['estado']
-
-
 @admin.register(Garantia)
 class GarantiaAdmin(admin.ModelAdmin):
-    list_display  = ['id', 'posventa', 'fecha_inicio', 'fecha_fin', 'tipo_cobertura', 'estado']
-    search_fields = ['tipo_cobertura', 'estado']
-    list_filter   = ['estado', 'tipo_cobertura']
+    list_display  = ['id', 'venta', 'fecha_inicio', 'fecha_fin', 'tipo']
+    search_fields = ['tipo']
+    list_filter   = ['tipo']
 
 
 @admin.register(Mantenimiento)
 class MantenimientoAdmin(admin.ModelAdmin):
-    list_display  = ['id', 'posventa', 'moto', 'tipo_mantenimiento', 'fecha_programada', 'costo', 'estado']
-    search_fields = ['descripcion', 'tipo_mantenimiento', 'estado']
-    list_filter   = ['estado', 'tipo_mantenimiento']
+    list_display  = ['id', 'moto', 'cliente', 'fecha', 'tipo', 'costo']
+    search_fields = ['tipo']
+    list_filter   = ['tipo']
 
 
 @admin.register(Categoria)

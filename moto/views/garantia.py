@@ -5,30 +5,25 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from moto.models import Garantia
 from moto.serializers import GarantiaSerializer
-from moto.pagination import StandardPagination
 from moto.permissions import IsStaffOrReadOnly
 from moto.filters import GarantiaFilter
+from moto.pagination import StandardPagination
 
 
 class GarantiaViewSet(viewsets.ModelViewSet):
-    queryset = Garantia.objects.select_related('posventa').all()
+    queryset = Garantia.objects.select_related('venta').all()
     serializer_class = GarantiaSerializer
     permission_classes = [IsStaffOrReadOnly]
     pagination_class = StandardPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = GarantiaFilter
-    search_fields = ['tipo_cobertura', 'detalles', 'estado']
-    ordering_fields = ['fecha_inicio', 'fecha_fin', 'estado']
+    search_fields = ['tipo']
+    ordering_fields = ['fecha_inicio', 'fecha_fin']
     ordering = ['-fecha_inicio']
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], url_path='stats')
     def stats(self, request):
-        total = Garantia.objects.count()
+        qs = Garantia.objects.all()
         return Response({
-            'total': total,
-            'detail': {
-                'activas': Garantia.objects.filter(estado='activa').count(),
-                'expiradas': Garantia.objects.filter(estado='expirada').count(),
-                'canceladas': Garantia.objects.filter(estado='cancelada').count(),
-            }
+            'total_registros': qs.count(),
         })

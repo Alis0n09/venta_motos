@@ -9,7 +9,6 @@ from .detalle_venta import DetalleVenta
 from .sucursal import Sucursal
 from .direccion import Direccion
 from .proveedor import Proveedor
-from .posventa import Posventa
 from .garantia import Garantia
 from .mantenimiento import Mantenimiento
 from .categoria import Categoria
@@ -35,7 +34,6 @@ __all__ = [
     'Sucursal',
     'Direccion',
     'Proveedor',
-    'Posventa',
     'Garantia',
     'Mantenimiento',
     'Categoria',
