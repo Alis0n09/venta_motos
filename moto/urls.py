@@ -28,8 +28,10 @@ from moto.views.financiamiento  import FinanciamientoViewSet
 from moto.views.cuota_pago      import CuotaPagoViewSet
 from moto.views.historial_precio import HistorialPrecioViewSet
 from moto.views.resena          import ResenaViewSet
-from moto.views.logs_actividad  import LogsActividadViewSet
-from moto.serializers.auth      import CustomTokenView
+from moto.views.logs_actividad          import LogsActividadViewSet
+from moto.views.historial_cliente      import HistorialClienteViewSet
+from moto.views.notificaciones_cliente import NotificacionesClienteViewSet
+from moto.serializers.auth             import CustomTokenView
 
 
 router = DefaultRouter()
@@ -55,7 +57,9 @@ router.register('financiamientos',   FinanciamientoViewSet,  basename='financiam
 router.register('cuotas-pago',       CuotaPagoViewSet,       basename='cuota-pago')
 router.register('historial-precios', HistorialPrecioViewSet, basename='historial-precio')
 router.register('resenas',           ResenaViewSet,          basename='resena')
-router.register('logs-actividad',    LogsActividadViewSet,   basename='logs-actividad')
+router.register('logs-actividad',           LogsActividadViewSet,           basename='logs-actividad')
+router.register('historial-cliente',         HistorialClienteViewSet,        basename='historial-cliente')
+router.register('notificaciones-cliente',    NotificacionesClienteViewSet,   basename='notificaciones-cliente')
 
 
 urlpatterns = [

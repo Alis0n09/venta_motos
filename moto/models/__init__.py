@@ -23,6 +23,8 @@ from .cuota_pago import CuotaPago
 from .historial_precio import HistorialPrecio
 from .resena import Resena
 from .logs_actividad import LogsActividad
+from .historial_cliente import HistorialCliente
+from .notificaciones_cliente import NotificacionesCliente
 
 __all__ = [
     'Cliente',
@@ -48,4 +50,6 @@ __all__ = [
     'HistorialPrecio',
     'Resena',
     'LogsActividad',
+    'HistorialCliente',
+    'NotificacionesCliente',
 ]

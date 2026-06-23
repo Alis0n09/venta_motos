@@ -11,3 +11,5 @@ from moto.views.detalle_compra import DetalleCompraViewSet
 from moto.views.logs_actividad import LogsActividadViewSet
 from moto.views.financiamiento import FinanciamientoViewSet
 from moto.views.cuota_pago import CuotaPagoViewSet
+from moto.views.historial_cliente import HistorialClienteViewSet
+from moto.views.notificaciones_cliente import NotificacionesClienteViewSet

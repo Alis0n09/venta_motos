@@ -11,6 +11,7 @@ from moto.models import (
     Financiamiento, CuotaPago,
     HistorialPrecio, Resena,
     LogsActividad,
+    HistorialCliente, NotificacionesCliente,
 )
 
 
@@ -191,4 +192,20 @@ class ResenaAdmin(admin.ModelAdmin):
     list_display  = ['id', 'moto', 'cliente', 'rating', 'fecha']
     search_fields = ['moto__modelo', 'moto__marca__nombre', 'cliente__nombre', 'cliente__apellido', 'comentario']
     list_filter   = ['rating', 'moto']
+    readonly_fields = ['fecha']
+
+
+@admin.register(HistorialCliente)
+class HistorialClienteAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'cliente', 'tipo_evento', 'fecha']
+    search_fields = ['tipo_evento', 'cliente__nombre', 'cliente__apellido']
+    list_filter   = ['tipo_evento']
+    readonly_fields = ['fecha']
+
+
+@admin.register(NotificacionesCliente)
+class NotificacionesClienteAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'cliente', 'tipo', 'mensaje', 'leido', 'fecha']
+    search_fields = ['tipo', 'mensaje', 'cliente__nombre', 'cliente__apellido']
+    list_filter   = ['tipo', 'leido']
     readonly_fields = ['fecha']

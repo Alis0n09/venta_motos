@@ -6,6 +6,7 @@ from moto.models import (
     Usuario, Cliente, Staff, Moto, Venta, DetalleVenta,
     Garantia, Mantenimiento, Marca, Categoria,
     Financiamiento, CuotaPago,
+    HistorialCliente, NotificacionesCliente,
 )
 
 
@@ -250,6 +251,38 @@ def create_financiamiento(
         plazo_meses=plazo_meses,
         fecha_inicio=fecha_inicio,
         estado=estado
+    )
+
+
+def create_historial_cliente(
+    cliente=None,
+    tipo_evento='compra',
+    detalle=None,
+):
+    if cliente is None:
+        cliente = create_cliente(cedula=_generar_cedula())
+    if detalle is None:
+        detalle = {'monto': 1000}
+    return HistorialCliente.objects.create(
+        cliente=cliente,
+        tipo_evento=tipo_evento,
+        detalle=detalle,
+    )
+
+
+def create_notificacion_cliente(
+    cliente=None,
+    tipo='info',
+    mensaje='Notificación de prueba',
+    leido=False,
+):
+    if cliente is None:
+        cliente = create_cliente(cedula=_generar_cedula())
+    return NotificacionesCliente.objects.create(
+        cliente=cliente,
+        tipo=tipo,
+        mensaje=mensaje,
+        leido=leido,
     )
 
 

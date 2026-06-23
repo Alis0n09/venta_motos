@@ -11,6 +11,7 @@ from moto.models import (
     Financiamiento, CuotaPago,
     HistorialPrecio, Resena,
     LogsActividad,
+    HistorialCliente, NotificacionesCliente,
 )
 
 
@@ -274,3 +275,26 @@ class LogsActividadFilter(django_filters.FilterSet):
     class Meta:
         model  = LogsActividad
         fields = ['usuario', 'accion', 'entidad']
+
+
+class HistorialClienteFilter(django_filters.FilterSet):
+    cliente     = django_filters.NumberFilter(field_name='cliente_id')
+    tipo_evento = django_filters.CharFilter(lookup_expr='icontains')
+    fecha_desde = django_filters.DateTimeFilter(field_name='fecha', lookup_expr='gte')
+    fecha_hasta = django_filters.DateTimeFilter(field_name='fecha', lookup_expr='lte')
+
+    class Meta:
+        model  = HistorialCliente
+        fields = ['cliente', 'tipo_evento']
+
+
+class NotificacionesClienteFilter(django_filters.FilterSet):
+    cliente     = django_filters.NumberFilter(field_name='cliente_id')
+    tipo        = django_filters.CharFilter(lookup_expr='icontains')
+    leido       = django_filters.BooleanFilter()
+    fecha_desde = django_filters.DateTimeFilter(field_name='fecha', lookup_expr='gte')
+    fecha_hasta = django_filters.DateTimeFilter(field_name='fecha', lookup_expr='lte')
+
+    class Meta:
+        model  = NotificacionesCliente
+        fields = ['cliente', 'tipo', 'leido']
