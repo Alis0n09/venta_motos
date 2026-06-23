@@ -2,34 +2,31 @@ from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Sum
 
 from moto.models import Mantenimiento
 from moto.serializers import MantenimientoSerializer
-from moto.pagination import StandardPagination
 from moto.permissions import IsStaffOrReadOnly
 from moto.filters import MantenimientoFilter
+from moto.pagination import StandardPagination
 
 
 class MantenimientoViewSet(viewsets.ModelViewSet):
-    queryset = Mantenimiento.objects.select_related('posventa', 'moto').all()
+    queryset = Mantenimiento.objects.select_related('moto', 'cliente').all()
     serializer_class = MantenimientoSerializer
     permission_classes = [IsStaffOrReadOnly]
     pagination_class = StandardPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = MantenimientoFilter
-    search_fields = ['descripcion', 'observaciones', 'tipo_mantenimiento', 'estado']
-    ordering_fields = ['fecha_programada', 'fecha_realizacion', 'costo', 'estado']
-    ordering = ['-fecha_programada']
+    search_fields = ['tipo']
+    ordering_fields = ['fecha', 'costo']
+    ordering = ['-fecha']
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], url_path='stats')
     def stats(self, request):
-        total = Mantenimiento.objects.count()
+        qs = Mantenimiento.objects.all()
+        agg = qs.aggregate(total_gastado=Sum('costo'))
         return Response({
-            'total': total,
-            'detail': {
-                'pendientes': Mantenimiento.objects.filter(estado='pendiente').count(),
-                'en_proceso': Mantenimiento.objects.filter(estado='en_proceso').count(),
-                'completados': Mantenimiento.objects.filter(estado='completado').count(),
-                'cancelados': Mantenimiento.objects.filter(estado='cancelado').count(),
-            }
+            'total_registros': qs.count(),
+            'total_gastado': agg['total_gastado'] or 0,
         })

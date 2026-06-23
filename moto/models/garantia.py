@@ -1,28 +1,16 @@
 from django.db import models
-from .posventa import Posventa
+from .venta import Venta
 
 
 class Garantia(models.Model):
-    ESTADO_CHOICES = [
-        ('activa', 'Activa'),
-        ('expirada', 'Expirada'),
-        ('cancelada', 'Cancelada'),
-    ]
-
-    posventa = models.ForeignKey(
-        Posventa,
+    venta = models.ForeignKey(
+        Venta,
         on_delete=models.CASCADE,
         related_name='garantias'
     )
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
-    tipo_cobertura = models.CharField(max_length=100)
-    detalles = models.TextField(blank=True)
-    estado = models.CharField(
-        max_length=20,
-        choices=ESTADO_CHOICES,
-        default='activa'
-    )
+    tipo = models.CharField(max_length=50)
 
     class Meta:
         db_table = "garantias"
@@ -30,4 +18,4 @@ class Garantia(models.Model):
         verbose_name_plural = "Garantías"
 
     def __str__(self):
-        return f"Garantía #{self.id} - {self.tipo_cobertura}"
+        return f"Garantía #{self.id} - Venta #{self.venta_id}"

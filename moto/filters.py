@@ -4,7 +4,7 @@ import django_filters
 from moto.models import (
     Cliente, Staff, Moto, Venta, DetalleVenta,
     Sucursal, Direccion, Proveedor,
-    Posventa, Garantia, Mantenimiento,
+    Garantia, Mantenimiento,
     Categoria, Marca, Repuesto,
     Inventario, SucursalStaff,
     Compra, DetalleCompra,
@@ -111,27 +111,15 @@ class ProveedorFilter(django_filters.FilterSet):
         fields = ['empresa', 'pais']
 
 
-class PosventaFilter(django_filters.FilterSet):
-    estado = django_filters.CharFilter(lookup_expr='icontains')
-    fecha_apertura = django_filters.DateFilter(field_name='fecha_apertura')
-    fecha_cierre = django_filters.DateFilter(field_name='fecha_cierre')
-    venta = django_filters.NumberFilter(field_name='venta_id')
-
-    class Meta:
-        model = Posventa
-        fields = ['venta', 'estado', 'fecha_apertura', 'fecha_cierre']
-
-
 class GarantiaFilter(django_filters.FilterSet):
-    estado = django_filters.CharFilter(lookup_expr='icontains')
-    tipo_cobertura = django_filters.CharFilter(lookup_expr='icontains')
+    venta = django_filters.NumberFilter(field_name='venta_id')
+    tipo = django_filters.CharFilter(lookup_expr='icontains')
     fecha_inicio = django_filters.DateFilter(field_name='fecha_inicio')
     fecha_fin = django_filters.DateFilter(field_name='fecha_fin')
-    posventa = django_filters.NumberFilter(field_name='posventa_id')
 
     class Meta:
         model = Garantia
-        fields = ['posventa', 'estado', 'tipo_cobertura', 'fecha_inicio', 'fecha_fin']
+        fields = ['venta', 'tipo', 'fecha_inicio', 'fecha_fin']
 
 
 class CategoriaFilter(django_filters.FilterSet):
@@ -167,21 +155,16 @@ class RepuestoFilter(django_filters.FilterSet):
 
 
 class MantenimientoFilter(django_filters.FilterSet):
-    estado = django_filters.CharFilter(lookup_expr='icontains')
-    tipo_mantenimiento = django_filters.CharFilter(lookup_expr='icontains')
-    fecha_programada = django_filters.DateFilter(field_name='fecha_programada')
-    fecha_realizacion = django_filters.DateFilter(field_name='fecha_realizacion')
+    moto = django_filters.NumberFilter(field_name='moto_id')
+    cliente = django_filters.NumberFilter(field_name='cliente_id')
+    tipo = django_filters.CharFilter(lookup_expr='icontains')
+    fecha = django_filters.DateFilter(field_name='fecha')
     costo_min = django_filters.NumberFilter(field_name='costo', lookup_expr='gte')
     costo_max = django_filters.NumberFilter(field_name='costo', lookup_expr='lte')
-    posventa = django_filters.NumberFilter(field_name='posventa_id')
-    moto = django_filters.NumberFilter(field_name='moto_id')
 
     class Meta:
         model = Mantenimiento
-        fields = [
-            'posventa', 'moto', 'estado', 'tipo_mantenimiento',
-            'fecha_programada', 'fecha_realizacion', 'costo'
-        ]
+        fields = ['moto', 'cliente', 'tipo', 'fecha', 'costo']
 
 
 class InventarioFilter(django_filters.FilterSet):

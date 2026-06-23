@@ -1,7 +1,6 @@
 from moto.views.sucursal import SucursalViewSet
 from moto.views.direccion import DireccionViewSet
 from moto.views.proveedor import ProveedorViewSet
-from moto.views.posventa import PosventaViewSet
 from moto.views.garantia import GarantiaViewSet
 from moto.views.mantenimiento import MantenimientoViewSet
 from moto.views.categoria import CategoriaViewSet
