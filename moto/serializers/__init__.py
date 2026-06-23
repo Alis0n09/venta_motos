@@ -29,3 +29,5 @@ from moto.serializers.cuota_pago import CuotaPagoSerializer
 from moto.serializers.historial_precio import HistorialPrecioSerializer
 from moto.serializers.resena import ResenaSerializer
 from moto.serializers.logs_actividad import LogsActividadSerializer
+from moto.serializers.historial_cliente import HistorialClienteSerializer
+from moto.serializers.notificaciones_cliente import NotificacionesClienteSerializer
