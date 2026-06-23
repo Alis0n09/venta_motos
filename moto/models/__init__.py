@@ -21,6 +21,7 @@ from .compra import Compra
 from .detalle_compra import DetalleCompra
 from .historial_precio import HistorialPrecio
 from .resena import Resena
+from .logs_actividad import LogsActividad
 
 __all__ = [
     'Cliente',
@@ -44,4 +45,5 @@ __all__ = [
     'DetalleCompra',
     'HistorialPrecio',
     'Resena',
+    'LogsActividad',
 ]

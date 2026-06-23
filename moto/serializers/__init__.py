@@ -27,3 +27,4 @@ from moto.serializers.compra import CompraSerializer
 from moto.serializers.detalle_compra import DetalleCompraSerializer
 from moto.serializers.historial_precio import HistorialPrecioSerializer
 from moto.serializers.resena import ResenaSerializer
+from moto.serializers.logs_actividad import LogsActividadSerializer

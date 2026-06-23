@@ -9,6 +9,7 @@ from moto.models import (
     Inventario, SucursalStaff,
     Compra, DetalleCompra,
     HistorialPrecio, Resena,
+    LogsActividad,
 )
 
 
@@ -178,3 +179,11 @@ class ResenaAdmin(admin.ModelAdmin):
     search_fields = ['moto__modelo', 'moto__marca__nombre', 'cliente__nombre', 'cliente__apellido', 'comentario']
     list_filter   = ['rating', 'moto']
     readonly_fields = ['fecha']
+
+
+@admin.register(LogsActividad)
+class LogsActividadAdmin(admin.ModelAdmin):
+    list_display    = ['id', 'usuario', 'accion', 'entidad', 'fecha']
+    search_fields   = ['accion', 'entidad', 'usuario__username']
+    list_filter     = ['accion', 'entidad', 'fecha']
+    readonly_fields = ['fecha', 'datos_antes', 'datos_despues']

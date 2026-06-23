@@ -25,7 +25,8 @@ from moto.views.inventario       import InventarioViewSet
 from moto.views.sucursal_staff   import SucursalStaffViewSet
 from moto.views.compra           import CompraViewSet
 from moto.views.detalle_compra   import DetalleCompraViewSet
-from moto.views.historial_precio import HistorialPrecioViewSet
+from moto.views.historial_precio  import HistorialPrecioViewSet
+from moto.views.logs_actividad    import LogsActividadViewSet
 from moto.views.resena           import ResenaViewSet
 from moto.serializers.auth       import CustomTokenView
 
@@ -51,7 +52,8 @@ router.register('sucursal-staff',    SucursalStaffViewSet,  basename='sucursal-s
 router.register('compras',           CompraViewSet,         basename='compra')
 router.register('detalle-compras',   DetalleCompraViewSet,  basename='detalle-compra')
 router.register('historial-precios', HistorialPrecioViewSet, basename='historial-precio')
-router.register('resenas',           ResenaViewSet,         basename='resena')
+router.register('resenas',           ResenaViewSet,          basename='resena')
+router.register('logs-actividad',    LogsActividadViewSet,   basename='logs-actividad')
 
 
 urlpatterns = [

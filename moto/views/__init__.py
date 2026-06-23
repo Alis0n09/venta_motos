@@ -9,3 +9,4 @@ from moto.views.marca import MarcaViewSet
 from moto.views.repuesto import RepuestoViewSet
 from moto.views.compra import CompraViewSet
 from moto.views.detalle_compra import DetalleCompraViewSet
+from moto.views.logs_actividad import LogsActividadViewSet

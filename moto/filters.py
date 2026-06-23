@@ -9,6 +9,7 @@ from moto.models import (
     Inventario, SucursalStaff,
     Compra, DetalleCompra,
     HistorialPrecio, Resena,
+    LogsActividad,
 )
 
 
@@ -253,3 +254,15 @@ class ResenaFilter(django_filters.FilterSet):
     class Meta:
         model  = Resena
         fields = ['moto', 'cliente', 'rating']
+
+
+class LogsActividadFilter(django_filters.FilterSet):
+    usuario     = django_filters.NumberFilter(field_name='usuario_id')
+    accion      = django_filters.CharFilter(lookup_expr='icontains')
+    entidad     = django_filters.CharFilter(lookup_expr='icontains')
+    fecha_desde = django_filters.DateTimeFilter(field_name='fecha', lookup_expr='gte')
+    fecha_hasta = django_filters.DateTimeFilter(field_name='fecha', lookup_expr='lte')
+
+    class Meta:
+        model  = LogsActividad
+        fields = ['usuario', 'accion', 'entidad']
