@@ -21,6 +21,8 @@ from .compra import Compra
 from .detalle_compra import DetalleCompra
 from .financiamiento import Financiamiento
 from .cuota_pago import CuotaPago
+from .historial_precio import HistorialPrecio
+from .resena import Resena
 
 __all__ = [
     'Cliente',
@@ -44,4 +46,6 @@ __all__ = [
     'DetalleCompra',
     'Financiamiento',
     'CuotaPago',
+    'HistorialPrecio',
+    'Resena',
 ]

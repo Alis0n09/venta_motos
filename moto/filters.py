@@ -9,6 +9,7 @@ from moto.models import (
     Inventario, SucursalStaff,
     Compra, DetalleCompra,
     Financiamiento, CuotaPago,
+    HistorialPrecio, Resena,
 )
 
 
@@ -183,10 +184,10 @@ class MantenimientoFilter(django_filters.FilterSet):
 
 
 class InventarioFilter(django_filters.FilterSet):
-    moto          = django_filters.NumberFilter(field_name='moto_id')
-    sucursal      = django_filters.NumberFilter(field_name='sucursal_id')
-    cantidad_min  = django_filters.NumberFilter(field_name='cantidad', lookup_expr='gte')
-    cantidad_max  = django_filters.NumberFilter(field_name='cantidad', lookup_expr='lte')
+    moto         = django_filters.NumberFilter(field_name='moto_id')
+    sucursal     = django_filters.NumberFilter(field_name='sucursal_id')
+    cantidad_min = django_filters.NumberFilter(field_name='cantidad', lookup_expr='gte')
+    cantidad_max = django_filters.NumberFilter(field_name='cantidad', lookup_expr='lte')
 
     class Meta:
         model  = Inventario
@@ -194,9 +195,9 @@ class InventarioFilter(django_filters.FilterSet):
 
 
 class SucursalStaffFilter(django_filters.FilterSet):
-    staff             = django_filters.NumberFilter(field_name='staff_id')
-    sucursal          = django_filters.NumberFilter(field_name='sucursal_id')
-    fecha_asignacion  = django_filters.DateFilter(field_name='fecha_asignacion')
+    staff            = django_filters.NumberFilter(field_name='staff_id')
+    sucursal         = django_filters.NumberFilter(field_name='sucursal_id')
+    fecha_asignacion = django_filters.DateFilter(field_name='fecha_asignacion')
 
     class Meta:
         model  = SucursalStaff
@@ -250,3 +251,28 @@ class CuotaPagoFilter(django_filters.FilterSet):
     class Meta:
         model = CuotaPago
         fields = ['financiamiento', 'estado', 'fecha_vencimiento', 'monto']
+class HistorialPrecioFilter(django_filters.FilterSet):
+    moto          = django_filters.NumberFilter(field_name='moto_id')
+    usuario       = django_filters.NumberFilter(field_name='usuario_id')
+    fecha_min     = django_filters.DateFilter(field_name='fecha', lookup_expr='gte')
+    fecha_max     = django_filters.DateFilter(field_name='fecha', lookup_expr='lte')
+    precio_min    = django_filters.NumberFilter(field_name='precio_nuevo', lookup_expr='gte')
+    precio_max    = django_filters.NumberFilter(field_name='precio_nuevo', lookup_expr='lte')
+
+    class Meta:
+        model  = HistorialPrecio
+        fields = ['moto', 'usuario', 'fecha_min', 'fecha_max']
+
+
+class ResenaFilter(django_filters.FilterSet):
+    moto     = django_filters.NumberFilter(field_name='moto_id')
+    cliente  = django_filters.NumberFilter(field_name='cliente_id')
+    rating   = django_filters.NumberFilter(field_name='rating')
+    rating_min = django_filters.NumberFilter(field_name='rating', lookup_expr='gte')
+    rating_max = django_filters.NumberFilter(field_name='rating', lookup_expr='lte')
+    fecha_min  = django_filters.DateFilter(field_name='fecha', lookup_expr='gte')
+    fecha_max  = django_filters.DateFilter(field_name='fecha', lookup_expr='lte')
+
+    class Meta:
+        model  = Resena
+        fields = ['moto', 'cliente', 'rating']

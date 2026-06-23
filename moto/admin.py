@@ -9,6 +9,7 @@ from moto.models import (
     Inventario, SucursalStaff,
     Compra, DetalleCompra,
     Financiamiento, CuotaPago,
+    HistorialPrecio, Resena,
 )
 
 
@@ -33,10 +34,10 @@ class StaffAdmin(admin.ModelAdmin):
 
 @admin.register(Moto)
 class MotoAdmin(admin.ModelAdmin):
-    list_display  = ['id', 'marca', 'categoria', 'modelo', 'anio', 'color', 'precio', 'stock']
+    list_display  = ['id', 'marca', 'categoria', 'modelo', 'anio', 'color', 'precio']
     search_fields = ['marca__nombre', 'modelo', 'color']
     list_filter   = ['marca', 'categoria', 'anio', 'color']
-    list_editable = ['precio', 'stock']
+    list_editable = ['precio']
 
 
 class DetalleVentaInline(admin.TabularInline):
@@ -183,3 +184,17 @@ class CuotaPagoAdmin(admin.ModelAdmin):
     list_display  = ['id', 'financiamiento', 'numero_cuota', 'fecha_vencimiento', 'monto', 'estado']
     search_fields = ['estado']
     list_filter   = ['estado']
+@admin.register(HistorialPrecio)
+class HistorialPrecioAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'moto', 'precio_anterior', 'precio_nuevo', 'fecha', 'usuario']
+    search_fields = ['moto__modelo', 'moto__marca__nombre', 'usuario__first_name', 'usuario__last_name']
+    list_filter   = ['moto', 'fecha']
+    readonly_fields = ['fecha']
+
+
+@admin.register(Resena)
+class ResenaAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'moto', 'cliente', 'rating', 'fecha']
+    search_fields = ['moto__modelo', 'moto__marca__nombre', 'cliente__nombre', 'cliente__apellido', 'comentario']
+    list_filter   = ['rating', 'moto']
+    readonly_fields = ['fecha']
