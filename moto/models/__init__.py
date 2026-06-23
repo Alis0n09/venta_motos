@@ -9,7 +9,6 @@ from .detalle_venta import DetalleVenta
 from .sucursal import Sucursal
 from .direccion import Direccion
 from .proveedor import Proveedor
-from .posventa import Posventa
 from .garantia import Garantia
 from .mantenimiento import Mantenimiento
 from .categoria import Categoria
@@ -19,8 +18,13 @@ from .inventario import Inventario
 from .sucursal_staff import SucursalStaff
 from .compra import Compra
 from .detalle_compra import DetalleCompra
+from .financiamiento import Financiamiento
+from .cuota_pago import CuotaPago
 from .historial_precio import HistorialPrecio
 from .resena import Resena
+from .logs_actividad import LogsActividad
+from .historial_cliente import HistorialCliente
+from .notificaciones_cliente import NotificacionesCliente
 
 __all__ = [
     'Cliente',
@@ -32,7 +36,6 @@ __all__ = [
     'Sucursal',
     'Direccion',
     'Proveedor',
-    'Posventa',
     'Garantia',
     'Mantenimiento',
     'Categoria',
@@ -42,6 +45,11 @@ __all__ = [
     'SucursalStaff',
     'Compra',
     'DetalleCompra',
+    'Financiamiento',
+    'CuotaPago',
     'HistorialPrecio',
     'Resena',
+    'LogsActividad',
+    'HistorialCliente',
+    'NotificacionesCliente',
 ]

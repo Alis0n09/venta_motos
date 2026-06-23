@@ -4,11 +4,14 @@ import django_filters
 from moto.models import (
     Cliente, Staff, Moto, Venta, DetalleVenta,
     Sucursal, Direccion, Proveedor,
-    Posventa, Garantia, Mantenimiento,
+    Garantia, Mantenimiento,
     Categoria, Marca, Repuesto,
     Inventario, SucursalStaff,
     Compra, DetalleCompra,
+    Financiamiento, CuotaPago,
     HistorialPrecio, Resena,
+    LogsActividad,
+    HistorialCliente, NotificacionesCliente,
 )
 
 
@@ -109,27 +112,15 @@ class ProveedorFilter(django_filters.FilterSet):
         fields = ['empresa', 'pais']
 
 
-class PosventaFilter(django_filters.FilterSet):
-    estado = django_filters.CharFilter(lookup_expr='icontains')
-    fecha_apertura = django_filters.DateFilter(field_name='fecha_apertura')
-    fecha_cierre = django_filters.DateFilter(field_name='fecha_cierre')
-    venta = django_filters.NumberFilter(field_name='venta_id')
-
-    class Meta:
-        model = Posventa
-        fields = ['venta', 'estado', 'fecha_apertura', 'fecha_cierre']
-
-
 class GarantiaFilter(django_filters.FilterSet):
-    estado = django_filters.CharFilter(lookup_expr='icontains')
-    tipo_cobertura = django_filters.CharFilter(lookup_expr='icontains')
+    venta = django_filters.NumberFilter(field_name='venta_id')
+    tipo = django_filters.CharFilter(lookup_expr='icontains')
     fecha_inicio = django_filters.DateFilter(field_name='fecha_inicio')
     fecha_fin = django_filters.DateFilter(field_name='fecha_fin')
-    posventa = django_filters.NumberFilter(field_name='posventa_id')
 
     class Meta:
         model = Garantia
-        fields = ['posventa', 'estado', 'tipo_cobertura', 'fecha_inicio', 'fecha_fin']
+        fields = ['venta', 'tipo', 'fecha_inicio', 'fecha_fin']
 
 
 class CategoriaFilter(django_filters.FilterSet):
@@ -165,21 +156,16 @@ class RepuestoFilter(django_filters.FilterSet):
 
 
 class MantenimientoFilter(django_filters.FilterSet):
-    estado = django_filters.CharFilter(lookup_expr='icontains')
-    tipo_mantenimiento = django_filters.CharFilter(lookup_expr='icontains')
-    fecha_programada = django_filters.DateFilter(field_name='fecha_programada')
-    fecha_realizacion = django_filters.DateFilter(field_name='fecha_realizacion')
+    moto = django_filters.NumberFilter(field_name='moto_id')
+    cliente = django_filters.NumberFilter(field_name='cliente_id')
+    tipo = django_filters.CharFilter(lookup_expr='icontains')
+    fecha = django_filters.DateFilter(field_name='fecha')
     costo_min = django_filters.NumberFilter(field_name='costo', lookup_expr='gte')
     costo_max = django_filters.NumberFilter(field_name='costo', lookup_expr='lte')
-    posventa = django_filters.NumberFilter(field_name='posventa_id')
-    moto = django_filters.NumberFilter(field_name='moto_id')
 
     class Meta:
         model = Mantenimiento
-        fields = [
-            'posventa', 'moto', 'estado', 'tipo_mantenimiento',
-            'fecha_programada', 'fecha_realizacion', 'costo'
-        ]
+        fields = ['moto', 'cliente', 'tipo', 'fecha', 'costo']
 
 
 class InventarioFilter(django_filters.FilterSet):
@@ -228,6 +214,30 @@ class DetalleCompraFilter(django_filters.FilterSet):
         fields = ['compra', 'moto', 'cantidad', 'precio_costo']
 
 
+class FinanciamientoFilter(django_filters.FilterSet):
+    venta = django_filters.NumberFilter(field_name='venta_id')
+    estado = django_filters.CharFilter(lookup_expr='icontains')
+    monto_min = django_filters.NumberFilter(field_name='monto_financiado', lookup_expr='gte')
+    monto_max = django_filters.NumberFilter(field_name='monto_financiado', lookup_expr='lte')
+    fecha_inicio = django_filters.DateFilter(field_name='fecha_inicio')
+
+    class Meta:
+        model = Financiamiento
+        fields = ['venta', 'estado', 'monto_financiado', 'fecha_inicio']
+
+
+class CuotaPagoFilter(django_filters.FilterSet):
+    financiamiento = django_filters.NumberFilter(field_name='financiamiento_id')
+    estado = django_filters.CharFilter(lookup_expr='icontains')
+    fecha_vencimiento = django_filters.DateFilter(field_name='fecha_vencimiento')
+    monto_min = django_filters.NumberFilter(field_name='monto', lookup_expr='gte')
+    monto_max = django_filters.NumberFilter(field_name='monto', lookup_expr='lte')
+
+    class Meta:
+        model = CuotaPago
+        fields = ['financiamiento', 'estado', 'fecha_vencimiento', 'monto']
+
+
 class HistorialPrecioFilter(django_filters.FilterSet):
     moto          = django_filters.NumberFilter(field_name='moto_id')
     usuario       = django_filters.NumberFilter(field_name='usuario_id')
@@ -253,3 +263,38 @@ class ResenaFilter(django_filters.FilterSet):
     class Meta:
         model  = Resena
         fields = ['moto', 'cliente', 'rating']
+
+
+class LogsActividadFilter(django_filters.FilterSet):
+    usuario     = django_filters.NumberFilter(field_name='usuario_id')
+    accion      = django_filters.CharFilter(lookup_expr='icontains')
+    entidad     = django_filters.CharFilter(lookup_expr='icontains')
+    fecha_desde = django_filters.DateTimeFilter(field_name='fecha', lookup_expr='gte')
+    fecha_hasta = django_filters.DateTimeFilter(field_name='fecha', lookup_expr='lte')
+
+    class Meta:
+        model  = LogsActividad
+        fields = ['usuario', 'accion', 'entidad']
+
+
+class HistorialClienteFilter(django_filters.FilterSet):
+    cliente     = django_filters.NumberFilter(field_name='cliente_id')
+    tipo_evento = django_filters.CharFilter(lookup_expr='icontains')
+    fecha_desde = django_filters.DateTimeFilter(field_name='fecha', lookup_expr='gte')
+    fecha_hasta = django_filters.DateTimeFilter(field_name='fecha', lookup_expr='lte')
+
+    class Meta:
+        model  = HistorialCliente
+        fields = ['cliente', 'tipo_evento']
+
+
+class NotificacionesClienteFilter(django_filters.FilterSet):
+    cliente     = django_filters.NumberFilter(field_name='cliente_id')
+    tipo        = django_filters.CharFilter(lookup_expr='icontains')
+    leido       = django_filters.BooleanFilter()
+    fecha_desde = django_filters.DateTimeFilter(field_name='fecha', lookup_expr='gte')
+    fecha_hasta = django_filters.DateTimeFilter(field_name='fecha', lookup_expr='lte')
+
+    class Meta:
+        model  = NotificacionesCliente
+        fields = ['cliente', 'tipo', 'leido']

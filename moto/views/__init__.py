@@ -1,7 +1,6 @@
 from moto.views.sucursal import SucursalViewSet
 from moto.views.direccion import DireccionViewSet
 from moto.views.proveedor import ProveedorViewSet
-from moto.views.posventa import PosventaViewSet
 from moto.views.garantia import GarantiaViewSet
 from moto.views.mantenimiento import MantenimientoViewSet
 from moto.views.categoria import CategoriaViewSet
@@ -9,3 +8,8 @@ from moto.views.marca import MarcaViewSet
 from moto.views.repuesto import RepuestoViewSet
 from moto.views.compra import CompraViewSet
 from moto.views.detalle_compra import DetalleCompraViewSet
+from moto.views.logs_actividad import LogsActividadViewSet
+from moto.views.financiamiento import FinanciamientoViewSet
+from moto.views.cuota_pago import CuotaPagoViewSet
+from moto.views.historial_cliente import HistorialClienteViewSet
+from moto.views.notificaciones_cliente import NotificacionesClienteViewSet

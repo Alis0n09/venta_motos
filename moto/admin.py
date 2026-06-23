@@ -4,11 +4,14 @@ from django.contrib import admin
 from moto.models import (
     Cliente, Usuario, Staff, Moto, Venta, DetalleVenta,
     Sucursal, Direccion, Proveedor,
-    Posventa, Garantia, Mantenimiento,
+    Garantia, Mantenimiento,
     Categoria, Marca, Repuesto,
     Inventario, SucursalStaff,
     Compra, DetalleCompra,
+    Financiamiento, CuotaPago,
     HistorialPrecio, Resena,
+    LogsActividad,
+    HistorialCliente, NotificacionesCliente,
 )
 
 
@@ -87,25 +90,18 @@ class ProveedorAdmin(admin.ModelAdmin):
     list_filter   = ['pais']
 
 
-@admin.register(Posventa)
-class PosventaAdmin(admin.ModelAdmin):
-    list_display  = ['id', 'venta', 'fecha_apertura', 'fecha_cierre', 'estado']
-    search_fields = ['estado', 'observaciones']
-    list_filter   = ['estado']
-
-
 @admin.register(Garantia)
 class GarantiaAdmin(admin.ModelAdmin):
-    list_display  = ['id', 'posventa', 'fecha_inicio', 'fecha_fin', 'tipo_cobertura', 'estado']
-    search_fields = ['tipo_cobertura', 'estado']
-    list_filter   = ['estado', 'tipo_cobertura']
+    list_display  = ['id', 'venta', 'fecha_inicio', 'fecha_fin', 'tipo']
+    search_fields = ['tipo']
+    list_filter   = ['tipo']
 
 
 @admin.register(Mantenimiento)
 class MantenimientoAdmin(admin.ModelAdmin):
-    list_display  = ['id', 'posventa', 'moto', 'tipo_mantenimiento', 'fecha_programada', 'costo', 'estado']
-    search_fields = ['descripcion', 'tipo_mantenimiento', 'estado']
-    list_filter   = ['estado', 'tipo_mantenimiento']
+    list_display  = ['id', 'moto', 'cliente', 'fecha', 'tipo', 'costo']
+    search_fields = ['tipo']
+    list_filter   = ['tipo']
 
 
 @admin.register(Categoria)
@@ -164,6 +160,25 @@ class DetalleCompraAdmin(admin.ModelAdmin):
     list_filter   = ['moto']
 
 
+class CuotaPagoInline(admin.TabularInline):
+    model  = CuotaPago
+    extra  = 0
+    fields = ['numero_cuota', 'fecha_vencimiento', 'monto', 'estado']
+
+
+@admin.register(Financiamiento)
+class FinanciamientoAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'venta', 'monto_financiado', 'tasa_interes', 'plazo_meses', 'fecha_inicio', 'estado']
+    search_fields = ['estado']
+    list_filter   = ['estado']
+    inlines       = [CuotaPagoInline]
+
+
+@admin.register(CuotaPago)
+class CuotaPagoAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'financiamiento', 'numero_cuota', 'fecha_vencimiento', 'monto', 'estado']
+    search_fields = ['estado']
+    list_filter   = ['estado']
 @admin.register(HistorialPrecio)
 class HistorialPrecioAdmin(admin.ModelAdmin):
     list_display  = ['id', 'moto', 'precio_anterior', 'precio_nuevo', 'fecha', 'usuario']
@@ -177,4 +192,20 @@ class ResenaAdmin(admin.ModelAdmin):
     list_display  = ['id', 'moto', 'cliente', 'rating', 'fecha']
     search_fields = ['moto__modelo', 'moto__marca__nombre', 'cliente__nombre', 'cliente__apellido', 'comentario']
     list_filter   = ['rating', 'moto']
+    readonly_fields = ['fecha']
+
+
+@admin.register(HistorialCliente)
+class HistorialClienteAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'cliente', 'tipo_evento', 'fecha']
+    search_fields = ['tipo_evento', 'cliente__nombre', 'cliente__apellido']
+    list_filter   = ['tipo_evento']
+    readonly_fields = ['fecha']
+
+
+@admin.register(NotificacionesCliente)
+class NotificacionesClienteAdmin(admin.ModelAdmin):
+    list_display  = ['id', 'cliente', 'tipo', 'mensaje', 'leido', 'fecha']
+    search_fields = ['tipo', 'mensaje', 'cliente__nombre', 'cliente__apellido']
+    list_filter   = ['tipo', 'leido']
     readonly_fields = ['fecha']
