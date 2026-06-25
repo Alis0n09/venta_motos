@@ -37,7 +37,6 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
-    # apps de Django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,12 +44,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # terceros
     'rest_framework',
     'django_filters',
     'rest_framework_simplejwt.token_blacklist',
+    'drf_spectacular',
 
-    # tu app
     'moto',
 ]
 
@@ -152,6 +150,15 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Venta Motos API',
+    'DESCRIPTION': 'Sistema de gestión de venta de motos. Permite a clientes registrarse, explorar el catálogo y realizar compras. El staff gestiona inventario, ventas, financiamientos y posventa.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
 }
 
 AUTH_USER_MODEL = 'moto.Usuario'

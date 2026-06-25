@@ -1,11 +1,10 @@
-# moto/views/auth.py
-
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
+from drf_spectacular.utils import extend_schema
 
 from moto.serializers.user import RegisterSerializer, RegisterStaffSerializer
 
@@ -13,6 +12,11 @@ from moto.serializers.user import RegisterSerializer, RegisterStaffSerializer
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
+    @extend_schema(
+        request=RegisterSerializer,
+        responses={201: RegisterSerializer},
+        description='Registro de cliente. Crea automáticamente un perfil de Cliente asociado.'
+    )
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -32,6 +36,11 @@ class RegisterView(APIView):
 class RegisterStaffView(APIView):
     permission_classes = [IsAdminUser]
 
+    @extend_schema(
+        request=RegisterStaffSerializer,
+        responses={201: RegisterStaffSerializer},
+        description='Registro de staff (admin/vendedor/bodeguero). Solo accesible por administradores.'
+    )
     def post(self, request):
         serializer = RegisterStaffSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -50,6 +59,9 @@ class RegisterStaffView(APIView):
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        description='Cierra la sesión del usuario invalidando el refresh token.'
+    )
     def post(self, request):
         refresh_token = request.data.get('refresh')
 

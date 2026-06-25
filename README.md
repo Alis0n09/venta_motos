@@ -304,6 +304,15 @@ Content-Type: application/json
 
 ---
 
+## Credenciales de prueba
+
+Para facilitar las pruebas de la API en drf-spectacular, se han creado los siguientes usuarios:
+| Usuario | Contraseña |
+|---------|------------|
+| admin | Admin1234! |
+| prueba | prueba123 |
+
+> Estas credenciales son solo para entorno de desarrollo/pruebas.
 ## Endpoints
 
 ### Autenticación
@@ -346,6 +355,7 @@ Content-Type: application/json
 | PATCH | `/api/vendedores/{id}/` | Editar vendedor | 
 | DELETE | `/api/vendedores/{id}/` | Eliminar vendedor | 
 | GET | `/api/vendedores/stats/` | Estadísticas | 
+
 ### Motos
 | Método | Ruta | Descripción |
 |--------|------|-------------|
@@ -357,200 +367,235 @@ Content-Type: application/json
 | GET | `/api/motos/stats/` | Estadísticas |
 
 ### Marcas
-| Método | Ruta | Descripción | 
+
+| Método | Ruta | Descripción |
 |--------|------|-------------|
-| GET | `/api/marcas/` | Listar marcas | Sí |
-| POST | `/api/marcas/` | Crear marca | Staff |
-| GET | `/api/marcas/{id}/` | Ver marca | Sí |
-| PATCH | `/api/marcas/{id}/` | Editar marca | Staff |
-| DELETE | `/api/marcas/{id}/` | Eliminar marca | Staff |
-| GET | `/api/marcas/stats/` | Estadísticas | Sí |
+| GET | `/api/marcas/` | Listar marcas |
+| POST | `/api/marcas/` | Crear marca |
+| GET | `/api/marcas/{id}/` | Ver marca |
+| PATCH | `/api/marcas/{id}/` | Editar marca |
+| DELETE | `/api/marcas/{id}/` | Eliminar marca |
+| GET | `/api/marcas/stats/` | Estadísticas |
 
 ### Categorías
+
 | Método | Ruta | Descripción |
-|--------|------|-------------|------|
-| GET | `/api/categorias/` | Listar categorías | Sí |
-| POST | `/api/categorias/` | Crear categoría | Staff |
-| GET | `/api/categorias/{id}/` | Ver categoría | Sí |
-| PATCH | `/api/categorias/{id}/` | Editar categoría | Staff |
-| DELETE | `/api/categorias/{id}/` | Eliminar categoría | Staff |
-| GET | `/api/categorias/stats/` | Estadísticas | Sí |
+|--------|------|-------------|
+| GET | `/api/categorias/` | Listar categorías |
+| POST | `/api/categorias/` | Crear categoría |
+| GET | `/api/categorias/{id}/` | Ver categoría |
+| PATCH | `/api/categorias/{id}/` | Editar categoría |
+| DELETE | `/api/categorias/{id}/` | Eliminar categoría |
+| GET | `/api/categorias/stats/` | Estadísticas |
 
 ### Repuestos
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/repuestos/` | Listar repuestos | Sí |
-| POST | `/api/repuestos/` | Crear repuesto | Staff |
-| GET | `/api/repuestos/{id}/` | Ver repuesto | Sí |
-| PATCH | `/api/repuestos/{id}/` | Editar repuesto | Staff |
-| DELETE | `/api/repuestos/{id}/` | Eliminar repuesto | Staff |
-| GET | `/api/repuestos/stats/` | Estadísticas | Sí |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/repuestos/` | Listar repuestos |
+| POST | `/api/repuestos/` | Crear repuesto |
+| GET | `/api/repuestos/{id}/` | Ver repuesto |
+| PATCH | `/api/repuestos/{id}/` | Editar repuesto |
+| DELETE | `/api/repuestos/{id}/` | Eliminar repuesto |
+| GET | `/api/repuestos/stats/` | Estadísticas |
 
 ### Sucursales
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/sucursales/` | Listar sucursales | Sí |
-| POST | `/api/sucursales/` | Crear sucursal | Staff |
-| GET | `/api/sucursales/{id}/` | Ver sucursal | Sí |
-| PATCH | `/api/sucursales/{id}/` | Editar sucursal | Staff |
-| DELETE | `/api/sucursales/{id}/` | Eliminar sucursal | Staff |
-| GET | `/api/sucursales/stats/` | Estadísticas | Sí |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/sucursales/` | Listar sucursales |
+| POST | `/api/sucursales/` | Crear sucursal |
+| GET | `/api/sucursales/{id}/` | Ver sucursal |
+| PATCH | `/api/sucursales/{id}/` | Editar sucursal |
+| DELETE | `/api/sucursales/{id}/` | Eliminar sucursal |
+| GET | `/api/sucursales/stats/` | Estadísticas |
 
 ### Direcciones
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/direcciones/` | Listar direcciones | Sí |
-| POST | `/api/direcciones/` | Crear dirección | Staff |
-| GET | `/api/direcciones/{id}/` | Ver dirección | Sí |
-| PATCH | `/api/direcciones/{id}/` | Editar dirección | Staff |
-| DELETE | `/api/direcciones/{id}/` | Eliminar dirección | Staff |
-| GET | `/api/direcciones/stats/` | Estadísticas | Sí |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/direcciones/` | Listar direcciones |
+| POST | `/api/direcciones/` | Crear dirección |
+| GET | `/api/direcciones/{id}/` | Ver dirección |
+| PATCH | `/api/direcciones/{id}/` | Editar dirección |
+| DELETE | `/api/direcciones/{id}/` | Eliminar dirección |
+| GET | `/api/direcciones/stats/` | Estadísticas |
 
 ### Inventario
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/inventario/` | Listar inventario | Sí |
-| POST | `/api/inventario/` | Crear registro | Staff |
-| GET | `/api/inventario/{id}/` | Ver registro | Sí |
-| PATCH | `/api/inventario/{id}/` | Editar registro | Staff |
-| DELETE | `/api/inventario/{id}/` | Eliminar registro | Staff |
-| GET | `/api/inventario/stats/` | Estadísticas | Sí |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/inventario/` | Listar inventario |
+| POST | `/api/inventario/` | Crear registro |
+| GET | `/api/inventario/{id}/` | Ver registro |
+| PATCH | `/api/inventario/{id}/` | Editar registro |
+| DELETE | `/api/inventario/{id}/` | Eliminar registro |
+| GET | `/api/inventario/stats/` | Estadísticas |
 
 ### Sucursal Staff
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/sucursal-staff/` | Listar asignaciones | Sí |
-| POST | `/api/sucursal-staff/` | Asignar staff | Staff |
-| GET | `/api/sucursal-staff/{id}/` | Ver asignación | Sí |
-| DELETE | `/api/sucursal-staff/{id}/` | Eliminar asignación | Staff |
-| GET | `/api/sucursal-staff/stats/` | Estadísticas | Sí |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/sucursal-staff/` | Listar asignaciones |
+| POST | `/api/sucursal-staff/` | Asignar staff |
+| GET | `/api/sucursal-staff/{id}/` | Ver asignación |
+| DELETE | `/api/sucursal-staff/{id}/` | Eliminar asignación |
+| GET | `/api/sucursal-staff/stats/` | Estadísticas |
 
 ### Proveedores
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/proveedores/` | Listar proveedores | Sí |
-| POST | `/api/proveedores/` | Crear proveedor | Staff |
-| GET | `/api/proveedores/{id}/` | Ver proveedor | Sí |
-| PATCH | `/api/proveedores/{id}/` | Editar proveedor | Staff |
-| DELETE | `/api/proveedores/{id}/` | Eliminar proveedor | Staff |
-| GET | `/api/proveedores/stats/` | Estadísticas | Sí |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/proveedores/` | Listar proveedores |
+| POST | `/api/proveedores/` | Crear proveedor |
+| GET | `/api/proveedores/{id}/` | Ver proveedor |
+| PATCH | `/api/proveedores/{id}/` | Editar proveedor |
+| DELETE | `/api/proveedores/{id}/` | Eliminar proveedor |
+| GET | `/api/proveedores/stats/` | Estadísticas |
 
 ### Ventas
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/ventas/` | Listar ventas | Sí |
-| POST | `/api/ventas/` | Crear venta (staff) | Staff |
-| GET | `/api/ventas/{id}/` | Ver venta | Sí |
-| PATCH | `/api/ventas/{id}/` | Editar venta | Staff |
-| DELETE | `/api/ventas/{id}/` | Eliminar venta | Staff |
-| POST | `/api/ventas/comprar/` | Comprar (cliente) | Sí |
-| GET | `/api/ventas/mis-compras/` | Mis compras | Sí |
-| GET | `/api/ventas/stats/` | Estadísticas | Sí |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/ventas/` | Listar ventas |
+| POST | `/api/ventas/` | Crear venta |
+| GET | `/api/ventas/{id}/` | Ver venta |
+| PATCH | `/api/ventas/{id}/` | Editar venta |
+| DELETE | `/api/ventas/{id}/` | Eliminar venta |
+| POST | `/api/ventas/comprar/` | Comprar |
+| GET | `/api/ventas/mis-compras/` | Mis compras |
+| GET | `/api/ventas/stats/` | Estadísticas |
 
 ### Detalle Ventas
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/detalle-ventas/` | Listar detalles | Sí |
-| POST | `/api/detalle-ventas/` | Crear detalle | Staff |
-| GET | `/api/detalle-ventas/{id}/` | Ver detalle | Sí |
-| DELETE | `/api/detalle-ventas/{id}/` | Eliminar detalle | Staff |
-| GET | `/api/detalle-ventas/stats/` | Estadísticas | Sí |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/detalle-ventas/` | Listar detalles |
+| POST | `/api/detalle-ventas/` | Crear detalle |
+| GET | `/api/detalle-ventas/{id}/` | Ver detalle |
+| DELETE | `/api/detalle-ventas/{id}/` | Eliminar detalle |
+| GET | `/api/detalle-ventas/stats/` | Estadísticas |
 
 ### Compras
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/compras/` | Listar compras | Staff |
-| POST | `/api/compras/` | Crear compra | Staff |
-| GET | `/api/compras/{id}/` | Ver compra | Staff |
-| PATCH | `/api/compras/{id}/` | Editar compra | Staff |
-| DELETE | `/api/compras/{id}/` | Eliminar compra | Staff |
-| GET | `/api/compras/stats/` | Estadísticas | Staff |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/compras/` | Listar compras |
+| POST | `/api/compras/` | Crear compra |
+| GET | `/api/compras/{id}/` | Ver compra |
+| PATCH | `/api/compras/{id}/` | Editar compra |
+| DELETE | `/api/compras/{id}/` | Eliminar compra |
+| GET | `/api/compras/stats/` | Estadísticas |
 
 ### Detalle Compras
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/detalle-compras/` | Listar detalles | Staff |
-| POST | `/api/detalle-compras/` | Crear detalle | Staff |
-| GET | `/api/detalle-compras/{id}/` | Ver detalle | Staff |
-| DELETE | `/api/detalle-compras/{id}/` | Eliminar detalle | Staff |
-| GET | `/api/detalle-compras/stats/` | Estadísticas | Staff |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/detalle-compras/` | Listar detalles |
+| POST | `/api/detalle-compras/` | Crear detalle |
+| GET | `/api/detalle-compras/{id}/` | Ver detalle |
+| DELETE | `/api/detalle-compras/{id}/` | Eliminar detalle |
+| GET | `/api/detalle-compras/stats/` | Estadísticas |
 
 ### Garantías
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/garantias/` | Listar garantías | Sí |
-| POST | `/api/garantias/` | Crear garantía | Staff |
-| GET | `/api/garantias/{id}/` | Ver garantía | Sí |
-| PATCH | `/api/garantias/{id}/` | Editar garantía | Staff |
-| DELETE | `/api/garantias/{id}/` | Eliminar garantía | Staff |
-| GET | `/api/garantias/stats/` | Estadísticas | Sí |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/garantias/` | Listar garantías |
+| POST | `/api/garantias/` | Crear garantía |
+| GET | `/api/garantias/{id}/` | Ver garantía |
+| PATCH | `/api/garantias/{id}/` | Editar garantía |
+| DELETE | `/api/garantias/{id}/` | Eliminar garantía |
+| GET | `/api/garantias/stats/` | Estadísticas |
 
 ### Mantenimientos
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/mantenimientos/` | Listar mantenimientos | Sí |
-| POST | `/api/mantenimientos/` | Crear mantenimiento | Staff |
-| GET | `/api/mantenimientos/{id}/` | Ver mantenimiento | Sí |
-| PATCH | `/api/mantenimientos/{id}/` | Editar mantenimiento | Staff |
-| DELETE | `/api/mantenimientos/{id}/` | Eliminar mantenimiento | Staff |
-| GET | `/api/mantenimientos/stats/` | Estadísticas | Sí |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/mantenimientos/` | Listar mantenimientos |
+| POST | `/api/mantenimientos/` | Crear mantenimiento |
+| GET | `/api/mantenimientos/{id}/` | Ver mantenimiento |
+| PATCH | `/api/mantenimientos/{id}/` | Editar mantenimiento |
+| DELETE | `/api/mantenimientos/{id}/` | Eliminar mantenimiento |
+| GET | `/api/mantenimientos/stats/` | Estadísticas |
 
 ### Financiamientos
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/financiamientos/` | Listar financiamientos | Staff |
-| POST | `/api/financiamientos/` | Crear financiamiento | Staff |
-| GET | `/api/financiamientos/{id}/` | Ver financiamiento | Staff |
-| PATCH | `/api/financiamientos/{id}/` | Editar financiamiento | Staff |
-| DELETE | `/api/financiamientos/{id}/` | Eliminar financiamiento | Staff |
-| GET | `/api/financiamientos/stats/` | Estadísticas | Staff |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/financiamientos/` | Listar financiamientos |
+| POST | `/api/financiamientos/` | Crear financiamiento |
+| GET | `/api/financiamientos/{id}/` | Ver financiamiento |
+| PATCH | `/api/financiamientos/{id}/` | Editar financiamiento |
+| DELETE | `/api/financiamientos/{id}/` | Eliminar financiamiento |
+| GET | `/api/financiamientos/stats/` | Estadísticas |
 
 ### Cuotas de Pago
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/cuotas-pago/` | Listar cuotas | Staff |
-| POST | `/api/cuotas-pago/` | Crear cuota | Staff |
-| GET | `/api/cuotas-pago/{id}/` | Ver cuota | Staff |
-| PATCH | `/api/cuotas-pago/{id}/` | Editar cuota | Staff |
-| DELETE | `/api/cuotas-pago/{id}/` | Eliminar cuota | Staff |
-| GET | `/api/cuotas-pago/stats/` | Estadísticas | Staff |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/cuotas-pago/` | Listar cuotas |
+| POST | `/api/cuotas-pago/` | Crear cuota |
+| GET | `/api/cuotas-pago/{id}/` | Ver cuota |
+| PATCH | `/api/cuotas-pago/{id}/` | Editar cuota |
+| DELETE | `/api/cuotas-pago/{id}/` | Eliminar cuota |
+| GET | `/api/cuotas-pago/stats/` | Estadísticas |
 
 ### Historial de Precios
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/historial-precios/` | Listar historial | Sí |
-| GET | `/api/historial-precios/{id}/` | Ver registro | Sí |
-| DELETE | `/api/historial-precios/{id}/` | Eliminar registro | Staff |
-| GET | `/api/historial-precios/stats/` | Estadísticas | Sí |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/historial-precios/` | Listar historial |
+| GET | `/api/historial-precios/{id}/` | Ver registro |
+| DELETE | `/api/historial-precios/{id}/` | Eliminar registro |
+| GET | `/api/historial-precios/stats/` | Estadísticas |
 
 > El historial de precios se genera automáticamente cuando se actualiza el precio de una moto.
 
 ### Reseñas
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/resenas/` | Listar reseñas | Sí |
-| POST | `/api/resenas/` | Crear reseña | Sí (cliente) |
-| GET | `/api/resenas/{id}/` | Ver reseña | Sí |
-| PATCH | `/api/resenas/{id}/` | Editar reseña | Staff |
-| DELETE | `/api/resenas/{id}/` | Eliminar reseña | Staff |
-| GET | `/api/resenas/stats/` | Estadísticas | Sí |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/resenas/` | Listar reseñas |
+| POST | `/api/resenas/` | Crear reseña |
+| GET | `/api/resenas/{id}/` | Ver reseña |
+| PATCH | `/api/resenas/{id}/` | Editar reseña |
+| DELETE | `/api/resenas/{id}/` | Eliminar reseña |
+| GET | `/api/resenas/stats/` | Estadísticas |
 
 ### Logs de Actividad
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/logs-actividad/` | Listar logs | Staff |
-| GET | `/api/logs-actividad/{id}/` | Ver log | Staff |
-| GET | `/api/logs-actividad/stats/` | Estadísticas | Staff |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/logs-actividad/` | Listar logs |
+| GET | `/api/logs-actividad/{id}/` | Ver log |
+| GET | `/api/logs-actividad/stats/` | Estadísticas |
 
 > Los logs se generan automáticamente en cada acción importante del sistema.
 
 ### Historial del Cliente
-| Método | Ruta | Descripción | Auth |
-|--------|------|-------------|------|
-| GET | `/api/historial-cliente/` | Listar historial | Sí |
-| GET | `/api/historial-cliente/{id}/` | Ver registro | Sí |
-| GET | `/api/historial-cliente/mi-historial/` | Mi historial | Sí (cliente) |
-| GET | `/api/historial-cliente/stats/` | Estadísticas | Sí |
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/historial-cliente/` | Listar historial |
+| GET | `/api/historial-cliente/{id}/` | Ver registro |
+| GET | `/api/historial-cliente/mi-historial/` | Mi historial |
+| GET | `/api/historial-cliente/stats/` | Estadísticas |
+
+> El historial se genera automáticamente en compras, mantenimientos, garantías, financiamientos y reseñas.
+
+### Notificaciones del Cliente
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/notificaciones-cliente/` | Listar notificaciones |
+| POST | `/api/notificaciones-cliente/` | Crear notificación |
+| GET | `/api/notificaciones-cliente/{id}/` | Ver notificación |
+| PATCH | `/api/notificaciones-cliente/{id}/` | Editar notificación |
+| DELETE | `/api/notificaciones-cliente/{id}/` | Eliminar notificación |
+| PATCH | `/api/notificaciones-cliente/{id}/marcar-leida/` | Marcar como leída |
+| GET | `/api/notificaciones-cliente/mis-notificaciones/` | Mis notificaciones |
+| GET | `/api/notificaciones-cliente/stats/` | Estadísticas |
 
 > El historial se genera automáticamente en compras, mantenimientos, garantías, financiamientos y reseñas.
 
