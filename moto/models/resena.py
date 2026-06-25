@@ -12,7 +12,9 @@ class Resena(models.Model):
     cliente = models.ForeignKey(
         Cliente,
         on_delete=models.CASCADE,
-        related_name='resenas'
+        related_name='resenas',
+        null = True,
+        blank = True,
     )
     rating = models.PositiveSmallIntegerField()
     comentario = models.TextField(blank=True)

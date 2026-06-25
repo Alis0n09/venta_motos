@@ -9,16 +9,20 @@ from moto.serializers import FinanciamientoSerializer
 from moto.permissions import IsStaffOrReadOnly
 from moto.filters import FinanciamientoFilter
 from moto.pagination import StandardPagination
+from moto.mixins import LogActividadMixin
 
 
-class FinanciamientoViewSet(viewsets.ModelViewSet):
-    queryset = Financiamiento.objects.select_related('venta').all()
+class FinanciamientoViewSet(LogActividadMixin, viewsets.ModelViewSet):
+    log_entidad = 'Financiamiento'
+    queryset = Financiamiento.objects.select_related(
+        'venta', 'venta__cliente',
+    ).prefetch_related('venta__detalles__moto__marca').all()
     serializer_class = FinanciamientoSerializer
     permission_classes = [IsStaffOrReadOnly]
     pagination_class = StandardPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = FinanciamientoFilter
-    search_fields = ['estado']
+    search_fields = ['estado', 'venta__cliente__nombre', 'venta__cliente__apellido', 'venta__cliente__cedula']
     ordering_fields = ['fecha_inicio', 'monto_financiado', 'estado']
     ordering = ['-fecha_inicio']
 
@@ -31,4 +35,5 @@ class FinanciamientoViewSet(viewsets.ModelViewSet):
             'total_financiado': agg['total_financiado'] or 0,
             'activos': qs.filter(estado='activo').count(),
             'pagados': qs.filter(estado='pagado').count(),
+            'cancelados': qs.filter(estado='cancelado').count(),
         })

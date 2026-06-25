@@ -82,7 +82,7 @@ class CrearVentaSerializer(serializers.Serializer):
         return items
 
     def create(self, validated_data):
-        from moto.models import Moto
+        from moto.models import Moto, HistorialCliente
         request = self.context['request']
         cliente = request.user.perfil_cliente
 
@@ -101,6 +101,7 @@ class CrearVentaSerializer(serializers.Serializer):
             total=total,
         )
 
+        motos_compradas = []
         for item in items:
             moto = Moto.objects.get(id=item['moto_id'])
             DetalleVenta.objects.create(
@@ -109,5 +110,19 @@ class CrearVentaSerializer(serializers.Serializer):
                 cantidad=int(item['cantidad']),
                 precio_unitario=moto.precio,
             )
+            if moto.marca:
+                motos_compradas.append(f"{moto.marca.nombre} {moto.modelo} ({moto.anio})")
+
+        # Registrar historial del cliente
+        HistorialCliente.objects.create(
+            cliente=cliente,
+            tipo_evento='compra',
+            detalle={
+                'venta_id': venta.id,
+                'total': str(venta.total),
+                'metodo_pago': venta.metodo_pago,
+                'motos': motos_compradas,
+            }
+        )
 
         return venta

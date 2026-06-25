@@ -9,27 +9,24 @@ from moto.serializers.inventario import InventarioSerializer
 from moto.permissions import IsStaffOrReadOnly
 from moto.pagination import StandardPagination
 from moto.filters import InventarioFilter
+from moto.mixins import LogActividadMixin
 
 
-class InventarioViewSet(viewsets.ModelViewSet):
+class InventarioViewSet(LogActividadMixin, viewsets.ModelViewSet):
+    log_entidad = 'Inventario'
     queryset = Inventario.objects.select_related('moto', 'moto__marca', 'sucursal').all()
     serializer_class = InventarioSerializer
     permission_classes = [IsStaffOrReadOnly]
     pagination_class = StandardPagination
-
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = InventarioFilter
-
     search_fields = ['moto__modelo', 'moto__marca__nombre', 'sucursal__nombre', 'ubicacion_bodega']
-
     ordering_fields = ['id', 'cantidad', 'sucursal', 'moto']
-
     ordering = ['id']
 
     @action(detail=False, methods=['get'])
     def stats(self, request):
         inventarios = Inventario.objects.select_related('moto', 'moto__marca', 'sucursal').all()
-
         return Response({
             'total': inventarios.count(),
             'detail': [
