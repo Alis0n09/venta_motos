@@ -40,6 +40,11 @@ class MotoViewSet(viewsets.ModelViewSet):
 
     ordering = ['id']
 
+    def perform_update(self, serializer):
+        """Al actualizar una moto, pasa el usuario actual a la señal antes de guardar."""
+        serializer.instance._usuario_modificacion = self.request.user
+        serializer.save()
+
     @action(detail=False, methods=['get'])
     def stats(self, request):
         motos = Moto.objects.select_related('marca', 'categoria').all()

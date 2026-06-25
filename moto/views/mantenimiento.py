@@ -12,13 +12,24 @@ from moto.pagination import StandardPagination
 
 
 class MantenimientoViewSet(viewsets.ModelViewSet):
-    queryset = Mantenimiento.objects.select_related('moto', 'cliente').all()
+    queryset = Mantenimiento.objects.select_related(
+        'moto',
+        'moto__marca',
+        'cliente',
+    ).all()
     serializer_class = MantenimientoSerializer
     permission_classes = [IsStaffOrReadOnly]
     pagination_class = StandardPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = MantenimientoFilter
-    search_fields = ['tipo']
+    search_fields = [
+        'tipo',
+        'moto__modelo',
+        'moto__marca__nombre',
+        'cliente__nombre',
+        'cliente__apellido',
+        'cliente__cedula',
+    ]
     ordering_fields = ['fecha', 'costo']
     ordering = ['-fecha']
 

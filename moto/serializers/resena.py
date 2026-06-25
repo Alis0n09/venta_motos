@@ -1,10 +1,15 @@
 from rest_framework import serializers
-from moto.models import Resena
+from moto.models import Resena, Cliente
 
 
 class ResenaSerializer(serializers.ModelSerializer):
-    moto_nombre = serializers.SerializerMethodField()
+    moto_nombre    = serializers.SerializerMethodField()
     cliente_nombre = serializers.SerializerMethodField()
+    cliente        = serializers.PrimaryKeyRelatedField(
+        queryset=Cliente.objects.all(),
+        required=False,
+        allow_null=True,
+    )
 
     class Meta:
         model = Resena

@@ -5,7 +5,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
 from moto.views.health          import health_check, testing_cicd
-from moto.views.auth            import RegisterView, LogoutView
+from moto.views.auth            import RegisterStaffView, RegisterView, LogoutView
 from moto.views.user            import UserViewSet
 from moto.views.cliente         import ClienteViewSet
 from moto.views.vendedor        import VendedorViewSet
@@ -67,6 +67,7 @@ urlpatterns = [
     path('testing-cicd/',       testing_cicd),
 
     path('auth/register/',      RegisterView.as_view()),
+    path('auth/register-staff/', RegisterStaffView.as_view()),
     path('auth/login/',         CustomTokenView.as_view()),
     path('auth/token/refresh/', TokenRefreshView.as_view()),
     path('auth/token/verify/',  TokenVerifyView.as_view()),
