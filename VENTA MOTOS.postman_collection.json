@@ -1,0 +1,6334 @@
+{
+  "info": {
+    "_postman_id": "92ac0967-b1b5-41fc-aa0a-7ac60f9be3d6",
+    "name": "VENTA MOTOS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49903762",
+    "_collection_link": "https://go.postman.co/collection/49903762-92ac0967-b1b5-41fc-aa0a-7ac60f9be3d6?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "AUTH",
+      "item": [
+        {
+          "name": "Register (cliente)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"alison\",\n  \"email\": \"aliliseth2006@hotmail.com\",\n  \"password\": \"Pass1234!\",\n  \"password2\": \"Pass1234!\",\n  \"nombre\": \"Alison\",\n  \"apellido\": \"Venegas\",\n  \"cedula\": \"1234567890\",\n  \"telefono\": \"0999999999\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register (staff)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"vendedor2\",\n    \"email\": \"vendedor2@test.com\",\n    \"password\": \"Pass1234!\",\n    \"nombre\": \"Juan\",\n    \"apellido\": \"Yepez\",\n    \"cedula\": \"1234567892\",\n    \"telefono\": \"0988888887\",\n    \"rol\": \"vendedor\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register-staff/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register-staff",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "pm.collectionVariables.set('access', data.access);",
+                  "pm.collectionVariables.set('refresh', data.refresh);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"alison\",\n  \"password\": \"Pass1234!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Staff",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "pm.collectionVariables.set('access_staff', data.access);",
+                  "pm.collectionVariables.set('refresh_staff', data.refresh);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Admin1234!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Token Refresh",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{refresh}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/token/refresh/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "token",
+                "refresh",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Token Verify",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{access}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/token/verify/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "token",
+                "verify",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{refresh}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/logout/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "logout",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register - passwords no coinciden (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"test\",\n  \"email\": \"test@test.com\",\n  \"password\": \"Pass1234!\",\n  \"password2\": \"otracosa123\",\n  \"nombre\": \"Test\",\n  \"apellido\": \"User\",\n  \"cedula\": \"0000000001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "USUARIOS",
+      "item": [
+        {
+          "name": "Listar Users (staff)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ver mi perfil",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/profile/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "profile",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar mi perfil",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Admin\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/profile/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "profile",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_password\": \"Pass1234!\",\n  \"new_password\": \"NewPass1234!\",\n  \"new_password2\": \"NewPass1234!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/change-password/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "change-password",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Toggle Activo (staff)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}/toggle-active/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}",
+                "toggle-active",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User Stats (staff )",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Users sin auth (401)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar mi perfil",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"juan123\",\n  \"email\": \"juan@test.com\",\n  \"first_name\": \"Juan\",\n  \"last_name\": \"Perez\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/profile/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "profile",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "CLIENTES",
+      "item": [
+        {
+          "name": "Listar Clientes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clientes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Cliente (staff)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Maria\",\n  \"apellido\": \"Torres\",\n  \"cedula\": \"1787654321\",\n  \"telefono\": \"0988888888\",\n  \"correo\": \"maria@test.com\",\n  \"direccion\": \"Av. Principal 123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/clientes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Cliente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clientes/{{cliente_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "{{cliente_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Cliente (staff)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"0977777777\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/clientes/{{cliente_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "{{cliente_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Cliente (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clientes/{{cliente_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "{{cliente_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Clientes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clientes/?search=alison",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "alison"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Clientes por cedula",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clientes/?cedula=1234567890",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "cedula",
+                  "value": "1234567890"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cliente Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clientes/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Cliente sin auth (403)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Test\",\n  \"apellido\": \"User\",\n  \"cedula\": \"1111111111\",\n  \"telefono\": \"0900000000\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/clientes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Cliente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Perez\",\n  \"cedula\": \"1234567890\",\n  \"telefono\": \"0999999999\",\n  \"correo\": \"juan@test.com\",\n  \"direccion\": \"Av. Principal 123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/clientes/{{cliente_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "{{cliente_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "(STAFF POR ROLES)",
+      "item": [
+        {
+          "name": "Listar Staff",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vendedores/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vendedores",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get staff",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vendedores/{{vendedor_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vendedores",
+                "{{vendedor_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar staff rol",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rol\": \"bodeguero\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/vendedores/{{vendedor_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vendedores",
+                "{{vendedor_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete staff",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vendedores/{{vendedor_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vendedores",
+                "{{vendedor_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter staff por rol",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vendedores/?rol=bodeguero",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vendedores",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "rol",
+                  "value": "bodeguero"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Staff Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vendedores/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vendedores",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar rol",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": {{usuario_id}},\n  \"rol\": \"vendedor\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/vendedores/{{vendedor_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vendedores",
+                "{{vendedor_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "MARCAS",
+      "item": [
+        {
+          "name": "Listar Marcas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/marcas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "marcas",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Marca",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('marca_id', data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Yamaha\",\n  \"pais_origen\": \"Japón\",\n  \"activa\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/marcas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "marcas",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Marca",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/marcas/{{marca_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "marcas",
+                "{{marca_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Marca",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pais_origen\": \"Japón (actualizado)\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/marcas/{{marca_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "marcas",
+                "{{marca_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Marca (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/marcas/{{marca_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "marcas",
+                "{{marca_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar activa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/marcas/?activa=true",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "marcas",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "activa",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar por Marcas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/marcas/?search=honda",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "marcas",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "honda"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Marcas Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/marcas/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "marcas",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Marca",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Honda\",\n  \"pais_origen\": \"Japón\",\n  \"activa\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/marcas/{{marca_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "marcas",
+                "{{marca_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "CATEGORIAS",
+      "item": [
+        {
+          "name": "Listar Categorias",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categorias/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Categoria (staff)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('categoria_id', data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Scooters\",\n  \"descripcion\": \"ideales para la ciudad\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/categorias/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Categoria",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categorias/{{categoria_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias",
+                "{{categoria_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Categoria (staff)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descripcion\": \"Motos de alto rendimiento y velocidad\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/categorias/{{categoria_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias",
+                "{{categoria_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Categoria (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categorias/{{categoria_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias",
+                "{{categoria_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Categorias",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categorias/?search=scooter",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "scooter"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Categorias Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categorias/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Categoria",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Deportiva\",\n  \"descripcion\": \"Motos de alto rendimiento\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/categorias/{{categoria_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias",
+                "{{categoria_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "MOTOS",
+      "item": [
+        {
+          "name": "Listar Motos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/motos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motos",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Moto (staff)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"marca\": {{marca_id}},\n  \"categoria\": {{categoria_id}},\n  \"modelo\": \"DY150\",\n  \"anio\": 2022,\n  \"cilindraje\": \"500\",\n  \"color\": \"Negro\",\n  \"precio\": 2500.00,\n  \"estado\": \"disponible\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/motos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motos",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Moto",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/motos/{{moto_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motos",
+                "{{moto_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Moto  (staff)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"precio\": 1500.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/motos/{{moto_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motos",
+                "{{moto_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Moto (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/motos/{{moto_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motos",
+                "{{moto_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscra Motos por marca",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/motos/?search=yahama",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motos",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "yahama"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Motos por precio",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/motos/?precio_min=5000&precio_max=10000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motos",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "precio_min",
+                  "value": "5000"
+                },
+                {
+                  "key": "precio_max",
+                  "value": "10000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Motos por marca_id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/motos/?marca={{marca_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motos",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "marca",
+                  "value": "{{marca_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Motos Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/motos/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motos",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Moto",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"marca\": {{marca_id}},\n  \"categoria\": {{categoria_id}},\n  \"modelo\": \"CBR 500R\",\n  \"anio\": 2024,\n  \"cilindraje\": \"500\",\n  \"color\": \"Rojo\",\n  \"precio\": 8500.00,\n  \"estado\": \"disponible\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/motos/{{moto_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motos",
+                "{{moto_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "SUCURSALES",
+      "item": [
+        {
+          "name": "Listar Sucursales",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sucursales/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sucursales",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Sucursal (staff)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('sucursal_id', data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Sucursal Centro\",\n  \"direccion\": \"Tejar\",\n  \"ciudad\": \"Quito\",\n  \"telefono\": \"022345678\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sucursales/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sucursales",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Sucursal",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sucursales/{{sucursal_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sucursales",
+                "{{sucursal_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Sucursal (staff)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"022345679\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sucursales/{{sucursal_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sucursales",
+                "{{sucursal_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Sucursal (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sucursales/{{sucursal_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sucursales",
+                "{{sucursal_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Sucursales por ciudad",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sucursales/?ciudad=Quito",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sucursales",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "ciudad",
+                  "value": "Quito"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sucursales Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sucursales/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sucursales",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Sucursal",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Sucursal Norte\",\n  \"direccion\": \"Av. 10 de Agosto N123\",\n  \"ciudad\": \"Quito\",\n  \"telefono\": \"022345678\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sucursales/{{sucursal_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sucursales",
+                "{{sucursal_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "DIRECCIONES",
+      "item": [
+        {
+          "name": "Listar Direcciones",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/direcciones/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "direcciones",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Direccion (staff)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('direccion_id', data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": {{cliente_id}},\n  \"calle\": \"Calle 123\",\n  \"ciudad\": \"Quito\",\n  \"provincia\": \"Pichincha\",\n  \"principal\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/direcciones/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "direcciones",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Direccion",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/direcciones/{{direccion_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "direcciones",
+                "{{direccion_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Direccion (staff)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"calle\": \"Av. Amazonas N456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/direcciones/{{direccion_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "direcciones",
+                "{{direccion_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Direccion (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/direcciones/{{direccion_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "direcciones",
+                "{{direccion_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Direcciones por cliente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/direcciones/?cliente={{cliente_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "direcciones",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "cliente",
+                  "value": "{{cliente_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Direcciones principales",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/direcciones/?principal=true",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "direcciones",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "principal",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Direcciones Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/direcciones/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "direcciones",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Direccion",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": {{cliente_id}},\n  \"calle\": \"Calle Falsa 123\",\n  \"ciudad\": \"Quito\",\n  \"provincia\": \"Pichincha\",\n  \"principal\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/direcciones/{{direccion_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "direcciones",
+                "{{direccion_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "REPUESTOS",
+      "item": [
+        {
+          "name": "Listar Repuestos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/repuestos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Repuesto (staff)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('repuesto_id', data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Filtro de gas\",\n  \"marca_compatible\": {{marca_id}},\n  \"stock\": 25,\n  \"precio\": 15.50\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/repuestos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Repuesto",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/repuestos/{{repuesto_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos",
+                "{{repuesto_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar  Repuesto (staff)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stock\": 25,\n  \"precio\": 16.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/repuestos/{{repuesto_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos",
+                "{{repuesto_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Repuesto (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/repuestos/{{repuesto_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos",
+                "{{repuesto_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Repuestos por marca",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/repuestos/?marca_compatible={{marca_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "marca_compatible",
+                  "value": "{{marca_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Repuestos por precio",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/repuestos/?precio_min=10&precio_max=11",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "precio_min",
+                  "value": "10"
+                },
+                {
+                  "key": "precio_max",
+                  "value": "11"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Repuestos Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/repuestos/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Repuesto",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Filtro de aceite\",\n  \"marca_compatible\": {{marca_id}},\n  \"stock\": 20,\n  \"precio\": 15.50\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/repuestos/{{repuesto_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos",
+                "{{repuesto_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "INVENTARIO",
+      "item": [
+        {
+          "name": "Listar Inventario",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/inventario/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventario",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Inventario (staff)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('inventario_id', data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"moto\": {{moto_id}},\n  \"sucursal\": {{sucursal_id}},\n  \"cantidad\": 5,\n  \"ubicacion_bodega\": \"Pasillo B\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/inventario/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventario",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Inventario",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/inventario/{{inventario_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventario",
+                "{{inventario_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Inventario cantidad (staff)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cantidad\": 10\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/inventario/{{inventario_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventario",
+                "{{inventario_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Inventario (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/inventario/{{inventario_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventario",
+                "{{inventario_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por sucursal",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/inventario/?sucursal={{sucursal_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventario",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "sucursal",
+                  "value": "{{sucursal_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Inventario Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/inventario/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventario",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Inventario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"moto\": {{moto_id}},\n  \"sucursal\": {{sucursal_id}},\n  \"cantidad\": 10,\n  \"ubicacion_bodega\": \"Pasillo A\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/inventario/{{inventario_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "inventario",
+                "{{inventario_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "VENTAS",
+      "item": [
+        {
+          "name": "Listar Ventas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/ventas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ventas",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Venta (staff)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('venta_id', data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": {{cliente_id}},\n  \"vendedor\": {{vendedor_id}},\n  \"metodo_pago\": \"efectivo\",\n  \"total\": 8500.00\n} "
+            },
+            "url": {
+              "raw": "{{base_url}}/ventas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ventas",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Comprar (cliente)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('venta_id', data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"metodo_pago\": \"tarjeta\",\n  \"items\": [\n    {\"moto_id\": {{moto_id}}, \"cantidad\": 1}\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ventas/comprar/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ventas",
+                "comprar",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mis Compras (cliente)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/ventas/mis-compras/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ventas",
+                "mis-compras",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Venta",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/ventas/{{venta_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ventas",
+                "{{venta_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Venta (staff)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"metodo_pago\": \"transferencia\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ventas/{{venta_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ventas",
+                "{{venta_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Venta (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/ventas/{{venta_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ventas",
+                "{{venta_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Ventas por cliente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/ventas/?cliente={{cliente_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ventas",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "cliente",
+                  "value": "{{cliente_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Ventas por metodo_pago",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/ventas/?metodo_pago=transferencia",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ventas",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "metodo_pago",
+                  "value": "transferencia"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ventas Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/ventas/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ventas",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Venta",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": {{cliente_id}},\n  \"vendedor\": {{vendedor_id}},\n  \"metodo_pago\": \"efectivo\",\n  \"total\": 8500.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ventas/{{venta_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ventas",
+                "{{venta_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "DETALLE VENTAS",
+      "item": [
+        {
+          "name": "Listar Detalle Ventas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/detalle-ventas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalle-ventas",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Detalle Venta (staff)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('detalle_venta_id', data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": {{venta_id}},\n  \"moto\": {{moto_id}},\n  \"cantidad\": 1,\n  \"precio_unitario\": 8500.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/detalle-ventas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalle-ventas",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Detalle Venta",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/detalle-ventas/{{detalle_venta_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalle-ventas",
+                "{{detalle_venta_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Detalle Venta (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/detalle-ventas/{{detalle_venta_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalle-ventas",
+                "{{detalle_venta_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por venta",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/detalle-ventas/?venta={{venta_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalle-ventas",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "venta",
+                  "value": "{{venta_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Detalle Ventas Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/detalle-ventas/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalle-ventas",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar DetalleVenta",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": {{venta_id}},\n  \"moto\": {{moto_id}},\n  \"cantidad\": 1,\n  \"precio_unitario\": 8500.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/detalle-ventas/{{detalle_venta_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalle-ventas",
+                "{{detalle_venta_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "SUCURSAL STAFF",
+      "item": [
+        {
+          "name": "Listar SucursalStaff",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sucursal-staff/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sucursal-staff",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear SucursalStaff (staff)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('sucursal_staff_id', data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"staff\": {{vendedor_id}},\n  \"sucursal\": {{sucursal_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sucursal-staff/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sucursal-staff",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get SucursalStaff",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sucursal-staff/{{sucursal_staff_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sucursal-staff",
+                "{{sucursal_staff_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete SucursalStaff (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sucursal-staff/{{sucursal_staff_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sucursal-staff",
+                "{{sucursal_staff_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por sucursal",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sucursal-staff/?sucursal={{sucursal_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sucursal-staff",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "sucursal",
+                  "value": "{{sucursal_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "SucursalStaff Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sucursal-staff/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sucursal-staff",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar SucursalStaff",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"staff\": {{vendedor_id}},\n  \"sucursal\": {{sucursal_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sucursal-staff/{{sucursal_staff_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sucursal-staff",
+                "{{sucursal_staff_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "PROVEEDORES",
+      "item": [
+        {
+          "name": "Listar Proveedores",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/proveedores/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Proveedor (staff)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('proveedor_id', data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"empresa\": \"Yahama Motors Ecuador\",\n  \"contacto\": \"Luis Escobar\",\n  \"correo\": \"contacto@yahama.ec\",\n  \"pais\": \"Ecuador\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/proveedores/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Proveedor",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/proveedores/{{proveedor_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                "{{proveedor_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Proveedor (staff)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contacto\": \"Maria Sanchez\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/proveedores/{{proveedor_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                "{{proveedor_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Proveedor (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/proveedores/{{proveedor_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                "{{proveedor_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Proveedores por pais",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/proveedores/?pais=Ecuador",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "pais",
+                  "value": "Ecuador"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Proveedores",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/proveedores/?search=yahama",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "yahama"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Proveedores Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/proveedores/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Proveedor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"empresa\": \"Honda Motors Ecuador\",\n  \"contacto\": \"Juan Perez\",\n  \"correo\": \"contacto@honda.ec\",\n  \"pais\": \"Ecuador\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/proveedores/{{proveedor_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                "{{proveedor_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "COMPRAS",
+      "item": [
+        {
+          "name": "Listar Compras",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/compras/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "compras",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Compra (staff)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('compra_id', data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"proveedor\": {{proveedor_id}},\n  \"sucursal_destino\": {{sucursal_id}},\n  \"total\": 25000.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/compras/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "compras",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Compra",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/compras/{{compra_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "compras",
+                "{{compra_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Compra (staff)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"total\": 15000.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/compras/{{compra_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "compras",
+                "{{compra_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Compra (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/compras/{{compra_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "compras",
+                "{{compra_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Compras por proveedor",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/compras/?proveedor={{proveedor_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "compras",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "proveedor",
+                  "value": "{{proveedor_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Compras Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/compras/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "compras",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Compra",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"proveedor\": {{proveedor_id}},\n  \"sucursal_destino\": {{sucursal_id}},\n  \"total\": 25000.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/compras/{{compra_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "compras",
+                "{{compra_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "DETALLE COMPRAS",
+      "item": [
+        {
+          "name": "List Detalle Compras",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/detalle-compras/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalle-compras",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Detalle Compra (staff)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('detalle_compra_id', data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"compra\": {{compra_id}},\n  \"moto\": {{moto_id}},\n  \"cantidad\": 7,\n  \"precio_costo\": 7500.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/detalle-compras/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalle-compras",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Detalle Compra",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/detalle-compras/{{detalle_compra_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalle-compras",
+                "{{detalle_compra_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Detalle Compra (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/detalle-compras/{{detalle_compra_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalle-compras",
+                "{{detalle_compra_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por compra",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/detalle-compras/?compra={{compra_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalle-compras",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "compra",
+                  "value": "{{compra_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Detalle Compras Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/detalle-compras/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalle-compras",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar DetalleCompra",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"compra\": {{compra_id}},\n  \"moto\": {{moto_id}},\n  \"cantidad\": 3,\n  \"precio_costo\": 7500.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/detalle-compras/{{detalle_compra_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalle-compras",
+                "{{detalle_compra_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "GARANTIAS",
+      "item": [
+        {
+          "name": "Listar Garantias",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/garantias/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "garantias",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Garantia (staff)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('garantia_id', data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": {{venta_id}},\n  \"fecha_inicio\": \"2026-06-24\",\n  \"fecha_fin\": \"2027-01-01\",\n  \"tipo\": \"Medias\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/garantias/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "garantias",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Garantia",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/garantias/{{garantia_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "garantias",
+                "{{garantia_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Garantia (staff)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"Parcial\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/garantias/{{garantia_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "garantias",
+                "{{garantia_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Garantia (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/garantias/{{garantia_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "garantias",
+                "{{garantia_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Garantias por venta",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/garantias/?venta={{venta_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "garantias",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "venta",
+                  "value": "{{venta_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Garantias Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/garantias/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "garantias",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Garantia",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": {{venta_id}},\n  \"fecha_inicio\": \"2025-01-01\",\n  \"fecha_fin\": \"2026-01-01\",\n  \"tipo\": \"Total\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/garantias/{{garantia_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "garantias",
+                "{{garantia_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "FINANCIAMIENTO",
+      "item": [
+        {
+          "name": "Listar Financiamientos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/financiamientos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "financiamientos",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Financiamiento (staff)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('financiamiento_id', data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": {{venta_id}},\n  \"monto_financiado\": 100.00,\n  \"tasa_interes\": 12.50,\n  \"plazo_meses\": 6,\n  \"fecha_inicio\": \"2026-06-24\",\n  \"estado\": \"activo\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/financiamientos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "financiamientos",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Financiamiento",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/financiamientos/{{financiamiento_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "financiamientos",
+                "{{financiamiento_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Financiamiento (staff)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"pagado\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/financiamientos/{{financiamiento_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "financiamientos",
+                "{{financiamiento_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Financiamiento (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/financiamientos/{{financiamiento_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "financiamientos",
+                "{{financiamiento_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por venta",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/financiamientos/?venta={{venta_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "financiamientos",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "venta",
+                  "value": "{{venta_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Financiamientos Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/financiamientos/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "financiamientos",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Financiamiento",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": {{venta_id}},\n  \"monto_financiado\": 7000.00,\n  \"tasa_interes\": 12.50,\n  \"plazo_meses\": 12,\n  \"fecha_inicio\": \"2025-01-01\",\n  \"estado\": \"activo\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/financiamientos/{{financiamiento_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "financiamientos",
+                "{{financiamiento_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "CUOTAS DE PAGO",
+      "item": [
+        {
+          "name": "Listar Cuotas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cuotas-pago/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cuotas-pago",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Cuota (staff)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('cuota_id', data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"financiamiento\": {{financiamiento_id}},\n  \"numero_cuota\": 1,\n  \"fecha_vencimiento\": \"2026-07-24\",\n  \"monto\": 650.00,\n  \"estado\": \"pendiente\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cuotas-pago/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cuotas-pago",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Cuota",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cuotas-pago/{{cuota_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cuotas-pago",
+                "{{cuota_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Cuota (staff)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"pagada\",\n  \"fecha_pago\": \"2026-07-20\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cuotas-pago/{{cuota_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cuotas-pago",
+                "{{cuota_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Cuota (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cuotas-pago/{{cuota_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cuotas-pago",
+                "{{cuota_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por financiamiento",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cuotas-pago/?financiamiento={{financiamiento_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cuotas-pago",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "financiamiento",
+                  "value": "{{financiamiento_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar cuotas pendientes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cuotas-pago/?estado=pendiente",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cuotas-pago",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "estado",
+                  "value": "pendiente"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cuotas Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cuotas-pago/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cuotas-pago",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar CuotaPago",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"financiamiento\": {{financiamiento_id}},\n  \"numero_cuota\": 1,\n  \"fecha_vencimiento\": \"2025-02-01\",\n  \"monto\": 650.00,\n  \"estado\": \"pendiente\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cuotas-pago/{{cuota_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cuotas-pago",
+                "{{cuota_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "MANTENIMIENTOS",
+      "item": [
+        {
+          "name": "Listar Mantenimientos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mantenimientos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mantenimientos",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Mantenimiento (staff)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('mantenimiento_id', data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"moto\": {{moto_id}},\n  \"cliente\": {{cliente_id}},\n  \"fecha\": \"2026-06-15\",\n  \"tipo\": \"Reparacion 2\",\n  \"costo\": 200.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/mantenimientos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mantenimientos",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Mantenimiento",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mantenimientos/{{mantenimiento_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mantenimientos",
+                "{{mantenimiento_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Mantenimiento (staff)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"costo\": 150.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/mantenimientos/{{mantenimiento_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mantenimientos",
+                "{{mantenimiento_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Mantenimiento (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mantenimientos/{{mantenimiento_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mantenimientos",
+                "{{mantenimiento_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por moto",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mantenimientos/?moto={{moto_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mantenimientos",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "moto",
+                  "value": "{{moto_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mantenimientos Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mantenimientos/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mantenimientos",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Mantenimiento",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"moto\": {{moto_id}},\n  \"cliente\": {{cliente_id}},\n  \"fecha\": \"2025-06-15\",\n  \"tipo\": \"Preventivo\",\n  \"costo\": 120.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/mantenimientos/{{mantenimiento_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mantenimientos",
+                "{{mantenimiento_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RESEÑAS",
+      "item": [
+        {
+          "name": "Listar Resenas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/resenas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "resenas",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Resena",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('resena_id', data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"moto\": {{moto_id}},\n  \"rating\": 5,\n  \"comentario\": \"Excelente moto, muy buena calidad.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/resenas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "resenas",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Resena",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/resenas/{{resena_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "resenas",
+                "{{resena_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Resena (staff)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 4,\n  \"comentario\": \"Muy buena moto, la recomiendo.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/resenas/{{resena_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "resenas",
+                "{{resena_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Resena (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/resenas/{{resena_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "resenas",
+                "{{resena_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por moto",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/resenas/?moto={{moto_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "resenas",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "moto",
+                  "value": "{{moto_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por rating",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/resenas/?rating=4",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "resenas",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "rating",
+                  "value": "4"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Resenas Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/resenas/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "resenas",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Resena",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"moto\": {{moto_id}},\n  \"cliente\": {{cliente_id}},\n  \"rating\": 5,\n  \"comentario\": \"Excelente moto, muy buena calidad.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/resenas/{{resena_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "resenas",
+                "{{resena_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "HISTORIAL PRECIOS",
+      "item": [
+        {
+          "name": "List HistorialPrecios",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/historial-precios/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-precios",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get HistorialPrecio",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/historial-precios/{{historial_precio_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-precios",
+                "{{historial_precio_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete HistorialPrecio (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/historial-precios/{{historial_precio_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-precios",
+                "{{historial_precio_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por  moto",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/historial-precios/?moto={{moto_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-precios",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "moto",
+                  "value": "{{moto_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por precio_min",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/historial-precios/?precio_min=9000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-precios",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "precio_min",
+                  "value": "9000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "HistorialPrecios Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/historial-precios/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-precios",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "HISTORIAL CLIENTE",
+      "item": [
+        {
+          "name": "Listar MiHistorialCliente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/historial-cliente/mi-historial/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-cliente",
+                "mi-historial",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar HistorialClientes (staff)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/historial-cliente/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-cliente",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get HistorialCliente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/historial-cliente/2/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-cliente",
+                "2",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete HistorialCliente (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/historial-cliente/2/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-cliente",
+                "2",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por cliente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/historial-cliente?cliente={{cliente_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-cliente"
+              ],
+              "query": [
+                {
+                  "key": "cliente",
+                  "value": "{{cliente_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por tipo_evento",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/historial-cliente?tipo_evento=compra",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-cliente"
+              ],
+              "query": [
+                {
+                  "key": "tipo_evento",
+                  "value": "compra"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "HistorialCliente Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/historial-cliente/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-cliente",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "LOGS ACTIVIDAD",
+      "item": [
+        {
+          "name": "Listar LogsActividad",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logs-actividad/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "logs-actividad",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get LogActividad",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logs-actividad/3/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "logs-actividad",
+                "3",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por accion",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logs-actividad?accion=login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "logs-actividad"
+              ],
+              "query": [
+                {
+                  "key": "accion",
+                  "value": "login"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "LogsActividad Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logs-actividad/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "logs-actividad",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "NOTIFICACIONES CLIENTE",
+      "item": [
+        {
+          "name": "Listar MisNotificaciones",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notificaciones-cliente/mis-notificaciones/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notificaciones-cliente",
+                "mis-notificaciones",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Notificaciones (staff)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notificaciones-cliente/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notificaciones-cliente",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Notificacion (staff)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "if(data.id) pm.collectionVariables.set('notificacion_id', data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": {{cliente_id}},\n  \"tipo\": \"promocion\",\n  \"mensaje\": \"Tienes un 10% de descuento en tu próxima compra.\",\n  \"leido\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/notificaciones-cliente/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notificaciones-cliente",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Notificacion",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notificaciones-cliente/{{notificacion_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notificaciones-cliente",
+                "{{notificacion_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Marcar como leida",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"leido\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/notificaciones-cliente/{{notificacion_id}}/marcar-leida/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notificaciones-cliente",
+                "{{notificacion_id}}",
+                "marcar-leida",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Notificacion (staff)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notificaciones-cliente/{{notificacion_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notificaciones-cliente",
+                "{{notificacion_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar por cliente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notificaciones-cliente/?cliente={{cliente_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notificaciones-cliente",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "cliente",
+                  "value": "{{cliente_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar leidas/no leidas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notificaciones-cliente/?leido=true",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notificaciones-cliente",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "leido",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Notificaciones Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notificaciones-cliente/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notificaciones-cliente",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar NotificacionCliente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_staff}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": {{cliente_id}},\n  \"tipo\": \"promocion\",\n  \"mensaje\": \"Tienes un 10% de descuento en tu próxima compra.\",\n  \"leido\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/notificaciones-cliente/{{notificacion_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notificaciones-cliente",
+                "{{notificacion_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api"
+    },
+    {
+      "key": "access",
+      "value": ""
+    },
+    {
+      "key": "refresh",
+      "value": ""
+    },
+    {
+      "key": "access_staff",
+      "value": ""
+    },
+    {
+      "key": "refresh_staff",
+      "value": ""
+    },
+    {
+      "key": "user_id",
+      "value": "1"
+    },
+    {
+      "key": "cliente_id",
+      "value": "1"
+    },
+    {
+      "key": "vendedor_id",
+      "value": "1"
+    },
+    {
+      "key": "usuario_id",
+      "value": "1"
+    },
+    {
+      "key": "moto_id",
+      "value": "1"
+    },
+    {
+      "key": "marca_id",
+      "value": "1"
+    },
+    {
+      "key": "categoria_id",
+      "value": "1"
+    },
+    {
+      "key": "sucursal_id",
+      "value": ""
+    },
+    {
+      "key": "direccion_id",
+      "value": ""
+    },
+    {
+      "key": "repuesto_id",
+      "value": ""
+    },
+    {
+      "key": "inventario_id",
+      "value": ""
+    },
+    {
+      "key": "venta_id",
+      "value": ""
+    },
+    {
+      "key": "detalle_venta_id",
+      "value": ""
+    },
+    {
+      "key": "sucursal_staff_id",
+      "value": ""
+    },
+    {
+      "key": "proveedor_id",
+      "value": ""
+    },
+    {
+      "key": "compra_id",
+      "value": ""
+    },
+    {
+      "key": "detalle_compra_id",
+      "value": ""
+    },
+    {
+      "key": "garantia_id",
+      "value": ""
+    },
+    {
+      "key": "financiamiento_id",
+      "value": ""
+    },
+    {
+      "key": "cuota_id",
+      "value": ""
+    },
+    {
+      "key": "mantenimiento_id",
+      "value": ""
+    },
+    {
+      "key": "resena_id",
+      "value": ""
+    },
+    {
+      "key": "historial_precio_id",
+      "value": ""
+    },
+    {
+      "key": "notificacion_id",
+      "value": ""
+    }
+  ]
+}
