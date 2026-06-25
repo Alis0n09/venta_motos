@@ -10,40 +10,24 @@ from moto.serializers.vendedor import VendedorSerializer
 from moto.permissions import IsStaffOrReadOnly
 from moto.pagination import StandardPagination
 from moto.filters import VendedorFilter
+from moto.mixins import LogActividadMixin
 
 
-class VendedorViewSet(viewsets.ModelViewSet):
+class VendedorViewSet(LogActividadMixin, viewsets.ModelViewSet):
+    log_entidad = 'Staff'
     queryset = Staff.objects.select_related('usuario').all()
     serializer_class = VendedorSerializer
     permission_classes = [IsStaffOrReadOnly]
     pagination_class = StandardPagination
-
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = VendedorFilter
-
-    search_fields = [
-        'usuario__first_name',
-        'usuario__last_name',
-        'usuario__cedula',
-        'usuario__email',
-        'usuario__telefono',
-    ]
-
-    ordering_fields = [
-        'id',
-        'usuario__first_name',
-        'usuario__last_name',
-        'usuario__cedula',
-    ]
-
+    search_fields = ['usuario__first_name', 'usuario__last_name', 'usuario__cedula', 'usuario__email', 'usuario__telefono']
+    ordering_fields = ['id', 'usuario__first_name', 'usuario__last_name', 'usuario__cedula']
     ordering = ['id']
 
     @action(detail=False, methods=['get'])
     def stats(self, request):
-        vendedores = Staff.objects.select_related('usuario').annotate(
-            total_ventas=Count('ventas_realizadas')
-        )
-
+        vendedores = Staff.objects.select_related('usuario').annotate(total_ventas=Count('ventas_realizadas'))
         return Response({
             'total': vendedores.count(),
             'detail': [

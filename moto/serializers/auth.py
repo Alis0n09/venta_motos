@@ -20,6 +20,24 @@ class CustomTokenSerializer(TokenObtainPairSerializer):
         data['username'] = self.user.username
         data['email']    = self.user.email
         data['is_staff'] = self.user.is_staff
+
+        # Registrar log de login
+        try:
+            from moto.models import LogsActividad
+            LogsActividad.objects.create(
+                usuario=self.user,
+                accion='LOGIN',
+                entidad='Usuario',
+                datos_antes=None,
+                datos_despues={
+                    'username': self.user.username,
+                    'email': self.user.email,
+                    'is_staff': self.user.is_staff,
+                }
+            )
+        except Exception:
+            pass
+
         return data
 
 

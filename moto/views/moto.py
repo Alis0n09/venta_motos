@@ -9,9 +9,11 @@ from moto.serializers.moto import MotoSerializer
 from moto.permissions import IsStaffOrReadOnly
 from moto.pagination import StandardPagination
 from moto.filters import MotoFilter
+from moto.mixins import LogActividadMixin
 
 
-class MotoViewSet(viewsets.ModelViewSet):
+class MotoViewSet(LogActividadMixin, viewsets.ModelViewSet):
+    log_entidad = 'Moto'
     queryset = Moto.objects.select_related('marca', 'categoria').all()
     serializer_class = MotoSerializer
     permission_classes = [IsStaffOrReadOnly]
@@ -41,9 +43,15 @@ class MotoViewSet(viewsets.ModelViewSet):
     ordering = ['id']
 
     def perform_update(self, serializer):
-        """Al actualizar una moto, pasa el usuario actual a la señal antes de guardar."""
+        """Crea historial de precios y log de actividad."""
         serializer.instance._usuario_modificacion = self.request.user
-        serializer.save()
+        datos_antes = self._serializar(serializer.instance)
+        instance = serializer.save()
+        self._crear_log(
+            accion='UPDATE',
+            datos_antes=datos_antes,
+            datos_despues=self._serializar(instance),
+        )
 
     @action(detail=False, methods=['get'])
     def stats(self, request):

@@ -9,15 +9,14 @@ from moto.serializers import FinanciamientoSerializer
 from moto.permissions import IsStaffOrReadOnly
 from moto.filters import FinanciamientoFilter
 from moto.pagination import StandardPagination
+from moto.mixins import LogActividadMixin
 
 
-class FinanciamientoViewSet(viewsets.ModelViewSet):
+class FinanciamientoViewSet(LogActividadMixin, viewsets.ModelViewSet):
+    log_entidad = 'Financiamiento'
     queryset = Financiamiento.objects.select_related(
-        'venta',
-        'venta__cliente',
-    ).prefetch_related(
-        'venta__detalles__moto__marca'
-    ).all()
+        'venta', 'venta__cliente',
+    ).prefetch_related('venta__detalles__moto__marca').all()
     serializer_class = FinanciamientoSerializer
     permission_classes = [IsStaffOrReadOnly]
     pagination_class = StandardPagination
