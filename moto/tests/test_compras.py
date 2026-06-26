@@ -2,7 +2,7 @@ from django.test import TestCase
 from rest_framework import status
 
 from moto.models import Compra, Proveedor, Sucursal
-from moto.tests.helpers import create_user, create_staff_user, auth_client
+from moto.tests.helpers import create_user, create_staff_user, create_staff_with_rol, auth_client
 
 
 def _make_proveedor(empresa='Yamaha Ecuador'):
@@ -18,7 +18,7 @@ def _make_sucursal(nombre='Sucursal Norte'):
 class CompraPermissionTests(TestCase):
     def setUp(self):
         self.user      = create_user('com_user')
-        self.staff     = create_staff_user('com_staff')
+        self.staff     = create_staff_with_rol('com_staff', 'admin')
         self.proveedor = _make_proveedor()
         self.sucursal  = _make_sucursal()
         self.obj = Compra.objects.create(

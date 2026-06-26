@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from moto.models import Inventario
 from moto.serializers.inventario import InventarioSerializer
-from moto.permissions import IsStaffOrReadOnly
+from moto.permissions import IsBodegueroOrAdmin
 from moto.pagination import StandardPagination
 from moto.filters import InventarioFilter
 from moto.mixins import LogActividadMixin
@@ -16,7 +16,7 @@ class InventarioViewSet(LogActividadMixin, viewsets.ModelViewSet):
     log_entidad = 'Inventario'
     queryset = Inventario.objects.select_related('moto', 'moto__marca', 'sucursal').all()
     serializer_class = InventarioSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    permission_classes = [IsBodegueroOrAdmin]
     pagination_class = StandardPagination
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = InventarioFilter

@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from moto.models                import Proveedor
 from moto.serializers.proveedor import ProveedorSerializer
-from moto.permissions           import IsStaffOrReadOnly
+from moto.permissions           import IsBodegueroOrAdmin
 from moto.filters               import ProveedorFilter
 from moto.pagination            import StandardPagination
 
@@ -14,7 +14,7 @@ from moto.pagination            import StandardPagination
 class ProveedorViewSet(viewsets.ModelViewSet):
     queryset           = Proveedor.objects.all()
     serializer_class   = ProveedorSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    permission_classes = [IsBodegueroOrAdmin]
     pagination_class   = StandardPagination
     filter_backends    = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class    = ProveedorFilter

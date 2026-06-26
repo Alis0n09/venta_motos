@@ -8,7 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from moto.models import DetalleVenta
 from moto.serializers.detalle_venta import DetalleVentaSerializer
-from moto.permissions import IsStaffOrReadOnly
+from moto.permissions import IsVendedorOrAdmin
 from moto.pagination import StandardPagination
 from moto.filters import DetalleVentaFilter
 
@@ -16,7 +16,7 @@ from moto.filters import DetalleVentaFilter
 class DetalleVentaViewSet(viewsets.ModelViewSet):
     queryset = DetalleVenta.objects.all()
     serializer_class = DetalleVentaSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    permission_classes = [IsVendedorOrAdmin]
     pagination_class = StandardPagination
 
     filter_backends = [

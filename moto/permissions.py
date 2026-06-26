@@ -31,7 +31,7 @@ class IsClienteOrStaff(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         if request.method == 'POST':
-            return True
+            return request.user.is_staff or hasattr(request.user, 'perfil_cliente')
         return bool(request.user.is_staff)
 
     def has_object_permission(self, request, view, obj):

@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from moto.models import DetalleCompra
 from moto.serializers.detalle_compra import DetalleCompraSerializer
-from moto.permissions import IsStaffOrReadOnly
+from moto.permissions import IsBodegueroOrAdmin
 from moto.filters import DetalleCompraFilter
 from moto.pagination import StandardPagination
 
@@ -14,7 +14,7 @@ from moto.pagination import StandardPagination
 class DetalleCompraViewSet(viewsets.ModelViewSet):
     queryset = DetalleCompra.objects.select_related('compra', 'moto').all()
     serializer_class = DetalleCompraSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    permission_classes = [IsBodegueroOrAdmin]
     pagination_class = StandardPagination
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = DetalleCompraFilter

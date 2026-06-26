@@ -7,7 +7,7 @@ from django.db.models import Sum
 
 from moto.models import Compra
 from moto.serializers.compra import CompraSerializer
-from moto.permissions import IsStaffOrReadOnly
+from moto.permissions import IsBodegueroOrAdmin
 from moto.filters import CompraFilter
 from moto.pagination import StandardPagination
 
@@ -15,7 +15,7 @@ from moto.pagination import StandardPagination
 class CompraViewSet(viewsets.ModelViewSet):
     queryset = Compra.objects.select_related('proveedor', 'sucursal_destino').all()
     serializer_class = CompraSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    permission_classes = [IsBodegueroOrAdmin]
     pagination_class = StandardPagination
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = CompraFilter

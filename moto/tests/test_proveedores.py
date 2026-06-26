@@ -3,7 +3,7 @@
 from django.test import TestCase
 from rest_framework import status
 
-from .helpers import create_user, create_staff_user, auth_client
+from .helpers import create_user, create_staff_user, create_staff_with_rol, auth_client
 from moto.models import Proveedor
 
 
@@ -25,7 +25,7 @@ class ProveedorPermissionTests(TestCase):
 
     def setUp(self):
         self.user      = create_user('prov_user')
-        self.staff     = create_staff_user('prov_staff')
+        self.staff     = create_staff_with_rol('prov_staff', 'admin')
         self.proveedor = create_proveedor()
 
     def test_authenticated_user_can_list(self):
