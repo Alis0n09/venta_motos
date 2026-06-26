@@ -7,7 +7,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from moto.models import Venta
 from moto.serializers.venta import VentaSerializer, CrearVentaSerializer
-from moto.permissions import IsStaffOrReadOnly
+from moto.permissions import IsVendedorOrAdmin
 from moto.pagination import StandardPagination
 from moto.filters import VentaFilter
 from moto.mixins import LogActividadMixin
@@ -17,7 +17,7 @@ class VentaViewSet(LogActividadMixin, viewsets.ModelViewSet):
     log_entidad = 'Venta'
     queryset = Venta.objects.select_related('cliente', 'vendedor', 'vendedor__usuario').prefetch_related('detalles__moto__marca').all()
     serializer_class = VentaSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    permission_classes = [IsVendedorOrAdmin]
     pagination_class = StandardPagination
 
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]

@@ -6,6 +6,7 @@ from rest_framework import status
 from .helpers import (
     create_user,
     create_staff_user,
+    create_staff_with_rol,
     auth_client,
     create_cliente,
     create_vendedor,
@@ -17,7 +18,7 @@ class VentaPermissionTests(TestCase):
 
     def setUp(self):
         self.user      = create_user('eve')
-        self.staff     = create_staff_user()
+        self.staff     = create_staff_with_rol('ventas_admin', 'admin')
         self.cliente   = create_cliente()
         self.vendedor  = create_vendedor()
         self.venta     = create_venta(

@@ -3,7 +3,7 @@
 from django.test import TestCase
 from rest_framework import status
 
-from .helpers import create_user, create_staff_user, auth_client, create_moto
+from .helpers import create_user, create_staff_user, create_staff_with_rol, auth_client, create_moto
 from moto.models import Inventario, Sucursal
 
 
@@ -11,7 +11,7 @@ class InventarioPermissionTests(TestCase):
 
     def setUp(self):
         self.user = create_user('eve')
-        self.staff = create_staff_user()
+        self.staff = create_staff_with_rol('inventario_admin', 'admin')
         self.moto = create_moto()
         self.sucursal = Sucursal.objects.create(nombre='Matriz', direccion='Av. Principal', ciudad='Quito')
         self.inventario = Inventario.objects.create(

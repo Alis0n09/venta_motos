@@ -40,6 +40,19 @@ def create_staff_user(username='staffuser', email=None, password='Admin1234!'):
     )
 
 
+def create_staff_with_rol(username, rol='admin', email=None, password='Admin1234!'):
+    email = email or f'{username}@test.com'
+    user = Usuario.objects.create_user(
+        username=username,
+        email=email,
+        password=password,
+        cedula=_generar_cedula(),
+        is_staff=True
+    )
+    Staff.objects.create(usuario=user, rol=rol)
+    return user
+
+
 def get_tokens(user):
     refresh = RefreshToken.for_user(user)
     return str(refresh.access_token), str(refresh)

@@ -2,7 +2,7 @@ from django.test import TestCase
 from rest_framework import status
 
 from moto.models import Compra, DetalleCompra, Proveedor, Sucursal
-from moto.tests.helpers import create_user, create_staff_user, auth_client, create_moto
+from moto.tests.helpers import create_user, create_staff_user, create_staff_with_rol, auth_client, create_moto
 
 
 def _make_compra():
@@ -18,7 +18,7 @@ def _make_compra():
 class DetalleCompraPermissionTests(TestCase):
     def setUp(self):
         self.user   = create_user('dc_user')
-        self.staff  = create_staff_user('dc_staff')
+        self.staff  = create_staff_with_rol('dc_staff', 'admin')
         self.compra = _make_compra()
         self.moto   = create_moto()
         self.obj = DetalleCompra.objects.create(
