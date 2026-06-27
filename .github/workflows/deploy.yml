@@ -18,8 +18,8 @@ jobs:
       postgres:
         image: postgres:16
         env:
-          POSTGRES_DB:       chicaiza_motos_db
-          POSTGRES_USER:     chicaiza_motos_user
+          POSTGRES_DB:       venta_motos_db
+          POSTGRES_USER:     venta_motos_user
           POSTGRES_PASSWORD: postgres
         options: >-
           --health-cmd pg_isready
@@ -49,12 +49,12 @@ jobs:
           SECRET_KEY:    test-secret-key-for-ci-only
           DEBUG:         True
           ALLOWED_HOSTS: localhost,127.0.0.1
-          DB_NAME:       chicaiza_motos_db
-          DB_USER:       chicaiza_motos_user
+          DB_NAME:       venta_motos_db
+          DB_USER:       venta_motos_user
           DB_PASSWORD:   postgres
           DB_HOST:       localhost
           DB_PORT:       5432
-          TEST_DB_NAME:  chicaiza_motos_test_db
+          TEST_DB_NAME:  venta_motos_test_db
           CORS_ALLOW_ALL_ORIGINS: True
         run: uv run python manage.py test --verbosity=2
 
@@ -100,7 +100,7 @@ jobs:
             uv run python manage.py collectstatic --noinput --clear
 
             echo "── 5. Reiniciando servicios ──"
-            sudo systemctl restart gunicorn-chicaiza_venta_motos
+            sudo systemctl restart gunicorn-venta_motos
             sudo systemctl restart nginx
 
             echo "── 6. Verificando salud de la API ──"
