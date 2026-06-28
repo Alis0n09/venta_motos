@@ -113,15 +113,13 @@ exit()
 python manage.py runserver
 ```
 
-La API estará disponible en `http://localhost:8000/api/`
+La API estará disponible en `https://moto-store-api.uaeftt-ute.site/`
 
-El panel de administración en `http://localhost:8000/admin/`
+El panel de administración en `https://moto-store-api.uaeftt-ute.site/admin/`
 
 ---
 
 ## Despliegue en VPS
-
-> Esta sección será completada al finalizar el despliegue en producción.
 
 ### Configuración del VPS
 
