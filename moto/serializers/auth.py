@@ -12,6 +12,9 @@ class CustomTokenSerializer(TokenObtainPairSerializer):
         token['username'] = user.username
         token['email']    = user.email
         token['is_staff'] = user.is_staff
+        token['rol'] = None
+        if user.is_staff and hasattr(user, 'perfil_staff'):
+            token['rol'] = user.perfil_staff.rol
         return token
 
     def validate(self, attrs):
@@ -20,6 +23,9 @@ class CustomTokenSerializer(TokenObtainPairSerializer):
         data['username'] = self.user.username
         data['email']    = self.user.email
         data['is_staff'] = self.user.is_staff
+        data['rol'] = None
+        if self.user.is_staff and hasattr(self.user, 'perfil_staff'):
+            data['rol'] = self.user.perfil_staff.rol
 
         # Registrar log de login
         try:
