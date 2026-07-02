@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from moto.models import Marca
 from moto.serializers.marca import MarcaSerializer
-from moto.permissions import IsStaffOrReadOnly
+from moto.permissions import IsStaffOrPublicReadOnly
 from moto.pagination import StandardPagination
 from moto.filters import MarcaFilter
 
@@ -14,7 +14,7 @@ from moto.filters import MarcaFilter
 class MarcaViewSet(viewsets.ModelViewSet):
     queryset = Marca.objects.all()
     serializer_class = MarcaSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    permission_classes = [IsStaffOrPublicReadOnly]
     pagination_class = StandardPagination
 
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]

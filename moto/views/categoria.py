@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from moto.models import Categoria
 from moto.serializers.categoria import CategoriaSerializer
-from moto.permissions import IsStaffOrReadOnly
+from moto.permissions import IsStaffOrPublicReadOnly
 from moto.pagination import StandardPagination
 from moto.filters import CategoriaFilter
 
@@ -14,7 +14,7 @@ from moto.filters import CategoriaFilter
 class CategoriaViewSet(viewsets.ModelViewSet):
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    permission_classes = [IsStaffOrPublicReadOnly]
     pagination_class = StandardPagination
 
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
