@@ -12,6 +12,7 @@ from moto.permissions import IsStaffOrReadOnly
 from moto.filters import ClienteFilter
 from moto.pagination import StandardPagination
 from moto.mixins import LogActividadMixin
+from rest_framework.permissions import IsAuthenticated
 
 
 class ClienteViewSet(LogActividadMixin, viewsets.ModelViewSet):
@@ -34,6 +35,21 @@ class ClienteViewSet(LogActividadMixin, viewsets.ModelViewSet):
         if page is not None:
             return self.get_paginated_response(VentaSerializer(page, many=True).data)
         return Response(VentaSerializer(qs, many=True).data)
+    
+    @action(detail=False, methods=['get', 'patch'], url_path='me', permission_classes=[IsAuthenticated])
+    def me(self, request):
+        if not hasattr(request.user, 'perfil_cliente'):
+            return Response({'error': 'No tienes un perfil de cliente.'}, status=403)
+
+        cliente = request.user.perfil_cliente
+
+        if request.method == 'GET':
+            return Response(ClienteSerializer(cliente).data)
+
+        serializer = ClienteSerializer(cliente, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
     @action(detail=False, methods=['get'], url_path='stats')
     def stats(self, request):

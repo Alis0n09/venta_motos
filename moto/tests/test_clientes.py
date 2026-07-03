@@ -94,3 +94,42 @@ class ClienteFilterTests(TestCase):
 
         for field in ['total', 'detail']:
             self.assertIn(field, resp.data)
+
+class ClienteMeTests(TestCase):
+
+    def setUp(self):
+        self.usuario = create_user('clienteme')
+        self.cliente = create_cliente(
+            usuario=self.usuario,
+            nombre='Ali',
+            apellido='Torres',
+            cedula='0102030499',
+            telefono='0991111111',
+            correo='ali@test.com',
+        )
+        self.staff_sin_cliente = create_staff_user()
+
+    def test_cliente_puede_ver_su_propio_perfil(self):
+        resp = auth_client(self.usuario).get('/api/clientes/me/')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data['nombre'], 'Ali')
+        self.assertEqual(resp.data['telefono'], '0991111111')
+
+    def test_cliente_puede_editar_su_propio_telefono(self):
+        resp = auth_client(self.usuario).patch('/api/clientes/me/', {
+            'telefono': '0987654321',
+        })
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data['telefono'], '0987654321')
+
+        self.cliente.refresh_from_db()
+        self.assertEqual(self.cliente.telefono, '0987654321')
+
+    def test_unauthenticated_no_puede_ver_perfil(self):
+        from rest_framework.test import APIClient
+        resp = APIClient().get('/api/clientes/me/')
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_usuario_sin_perfil_cliente_recibe_403(self):
+        resp = auth_client(self.staff_sin_cliente).get('/api/clientes/me/')
+        self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
