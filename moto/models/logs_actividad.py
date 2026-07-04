@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 
 
@@ -11,8 +12,8 @@ class LogsActividad(models.Model):
     )
     accion        = models.CharField(max_length=100)
     entidad       = models.CharField(max_length=100)
-    datos_antes   = models.JSONField(null=True, blank=True)
-    datos_despues = models.JSONField(null=True, blank=True)
+    datos_antes   = models.JSONField(null=True, blank=True, encoder=DjangoJSONEncoder)
+    datos_despues = models.JSONField(null=True, blank=True, encoder=DjangoJSONEncoder)
     fecha         = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
