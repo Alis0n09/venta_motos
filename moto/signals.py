@@ -7,11 +7,42 @@ from django.template.loader import render_to_string
 from django.conf import settings
 
 from moto.models import Venta
+from moto.models.cliente import Cliente
 from moto.models.financiamiento import Financiamiento
 from moto.models.garantia import Garantia
 from moto.models.mantenimiento import Mantenimiento
 from moto.models.moto import Moto
 from moto.models.resena import Resena
+
+
+@receiver(post_save, sender=Cliente)
+def enviar_bienvenida_cliente(sender, instance, created, **kwargs):
+    """Se dispara automáticamente cada vez que se crea un Cliente nuevo (registro de app)."""
+    if not created:
+        return
+
+    correo_destino = instance.correo or (instance.usuario.email if instance.usuario else None)
+
+    if not correo_destino:
+        return
+
+    context = {
+        'cliente': instance,
+        'frontend_url': settings.FRONTEND_URL,
+    }
+
+    asunto = 'Bienvenido a Venta Motos 🏍️'
+    html_content = render_to_string('emails/bienvenida.html', context)
+    text_content = f'Hola {instance.nombre}, tu cuenta de cliente fue creada exitosamente.'
+
+    email = EmailMultiAlternatives(
+        subject=asunto,
+        body=text_content,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[correo_destino],
+    )
+    email.attach_alternative(html_content, 'text/html')
+    email.send(fail_silently=True)
 
 
 @receiver(post_save, sender=Venta)
