@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from .venta import Venta
 
@@ -42,6 +43,23 @@ class Financiamiento(models.Model):
 
     def __str__(self):
         return f"Financiamiento #{self.id} - Venta #{self.venta_id}"
+
+    def calcular_cuota_mensual(self):
+        """Cuota mensual fija (sistema francés / interés compuesto)."""
+        if not self.monto_financiado or not self.tasa_interes or not self.plazo_meses:
+            return None
+
+        tasa_mensual = self.tasa_interes / Decimal('100') / Decimal('12')
+        n = self.plazo_meses
+        monto = self.monto_financiado
+
+        if tasa_mensual == 0:
+            cuota = monto / n
+        else:
+            factor = (1 + tasa_mensual) ** n
+            cuota = monto * (tasa_mensual * factor) / (factor - 1)
+
+        return cuota.quantize(Decimal('0.01'))
 
     def save(self, *args, **kwargs):
         if not self.fecha_fin and self.fecha_inicio and self.plazo_meses:

@@ -47,16 +47,9 @@ class FinanciamientoSerializer(serializers.ModelSerializer):
         return []
 
     def get_cuota_mensual(self, obj):
-        """Calcula la cuota mensual con interés compuesto."""
-        if not obj.monto_financiado or not obj.tasa_interes or not obj.plazo_meses:
-            return None
-        tasa_mensual = float(obj.tasa_interes) / 100 / 12
-        n = obj.plazo_meses
-        monto = float(obj.monto_financiado)
-        if tasa_mensual == 0:
-            return round(monto / n, 2)
-        cuota = monto * (tasa_mensual * (1 + tasa_mensual) ** n) / ((1 + tasa_mensual) ** n - 1)
-        return round(cuota, 2)
+        """Cuota mensual calculada por el modelo (sistema francés)."""
+        cuota = obj.calcular_cuota_mensual()
+        return float(cuota) if cuota is not None else None
 
     def validate_monto_financiado(self, value):
         if value <= 0:

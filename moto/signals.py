@@ -1,5 +1,6 @@
 # moto/signals.py
 
+from decimal import Decimal
 from django.db import transaction
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
@@ -9,7 +10,8 @@ from django.conf import settings
 
 from moto.models import Venta
 from moto.models.cliente import Cliente
-from moto.models.financiamiento import Financiamiento
+from moto.models.cuota_pago import CuotaPago
+from moto.models.financiamiento import Financiamiento, _add_months
 from moto.models.garantia import Garantia
 from moto.models.mantenimiento import Mantenimiento
 from moto.models.moto import Moto
@@ -207,3 +209,42 @@ def registrar_historial_financiamiento(sender, instance, created, **kwargs):
             'estado': instance.estado,
         }
     )
+
+
+@receiver(post_save, sender=Financiamiento)
+def generar_cuotas_financiamiento(sender, instance, created, **kwargs):
+    """
+    Genera automáticamente el plan de cuotas (una por cada mes del plazo)
+    apenas se crea un Financiamiento. Solo corre en la creación (created=True);
+    si el financiamiento se edita después, las cuotas ya generadas no se tocan.
+    """
+    if not created:
+        return
+
+    cuota_mensual = instance.calcular_cuota_mensual()
+    if not cuota_mensual:
+        return
+
+    total_cuotas = instance.plazo_meses
+    monto_total = cuota_mensual * total_cuotas
+
+    cuotas = []
+    suma_generada = Decimal('0.00')
+    for numero in range(1, total_cuotas + 1):
+        if numero < total_cuotas:
+            monto_cuota = cuota_mensual
+            suma_generada += monto_cuota
+        else:
+            # La última cuota absorbe el residuo del redondeo para que la
+            # suma total cuadre exacto con cuota_mensual * plazo_meses.
+            monto_cuota = monto_total - suma_generada
+
+        cuotas.append(CuotaPago(
+            financiamiento=instance,
+            numero_cuota=numero,
+            fecha_vencimiento=_add_months(instance.fecha_inicio, numero),
+            monto=monto_cuota,
+            estado='pendiente',
+        ))
+
+    CuotaPago.objects.bulk_create(cuotas)
