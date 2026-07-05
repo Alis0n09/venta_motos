@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 from moto.models import Venta, DetalleVenta, Cliente
 from moto.serializers.detalle_venta import DetalleVentaSerializer
@@ -94,35 +95,36 @@ class CrearVentaSerializer(serializers.Serializer):
             for item in items
         )
 
-        venta = Venta.objects.create(
-            cliente=cliente,
-            vendedor=None,
-            metodo_pago=metodo_pago,
-            total=total,
-        )
-
-        motos_compradas = []
-        for item in items:
-            moto = Moto.objects.get(id=item['moto_id'])
-            DetalleVenta.objects.create(
-                venta=venta,
-                moto=moto,
-                cantidad=int(item['cantidad']),
-                precio_unitario=moto.precio,
+        with transaction.atomic():
+            venta = Venta.objects.create(
+                cliente=cliente,
+                vendedor=None,
+                metodo_pago=metodo_pago,
+                total=total,
             )
-            if moto.marca:
-                motos_compradas.append(f"{moto.marca.nombre} {moto.modelo} ({moto.anio})")
 
-        # Registrar historial del cliente
-        HistorialCliente.objects.create(
-            cliente=cliente,
-            tipo_evento='compra',
-            detalle={
-                'venta_id': venta.id,
-                'total': str(venta.total),
-                'metodo_pago': venta.metodo_pago,
-                'motos': motos_compradas,
-            }
-        )
+            motos_compradas = []
+            for item in items:
+                moto = Moto.objects.get(id=item['moto_id'])
+                DetalleVenta.objects.create(
+                    venta=venta,
+                    moto=moto,
+                    cantidad=int(item['cantidad']),
+                    precio_unitario=moto.precio,
+                )
+                if moto.marca:
+                    motos_compradas.append(f"{moto.marca.nombre} {moto.modelo} ({moto.anio})")
+
+            # Registrar historial del cliente
+            HistorialCliente.objects.create(
+                cliente=cliente,
+                tipo_evento='compra',
+                detalle={
+                    'venta_id': venta.id,
+                    'total': str(venta.total),
+                    'metodo_pago': venta.metodo_pago,
+                    'motos': motos_compradas,
+                }
+            )
 
         return venta
