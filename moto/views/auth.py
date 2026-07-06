@@ -5,7 +5,13 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from drf_spectacular.utils import extend_schema
-
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.template.loader import render_to_string
+from moto.serializers.user import PasswordResetRequestSerializer, PasswordResetConfirmSerializer
 from moto.serializers.user import RegisterSerializer, RegisterStaffSerializer
 
 
@@ -83,3 +89,47 @@ class LogoutView(APIView):
             {'message': 'Session closed successfully.'},
             status=status.HTTP_200_OK
         )
+    
+class PasswordResetRequestView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.user
+
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        codigo = f"{uid}.{token}"
+
+        context = {
+            'nombre': user.first_name or user.username,
+            'codigo': codigo,
+        }
+
+        html_content = render_to_string('emails/password_reset.html', context)
+        text_content = (
+            f"Hola {user.first_name or user.username},\n\n"
+            f"Usa este código en la app para restablecer tu contraseña:\n\n{codigo}\n\n"
+            f"Si no solicitaste esto, ignora este correo."
+        )
+
+        email = EmailMultiAlternatives(
+            subject='Recupera tu contraseña — Victal Speed',
+            body=text_content,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[user.email],
+        )
+        email.attach_alternative(html_content, 'text/html')
+        email.send(fail_silently=True)
+
+        return Response({'message': 'Se envió un código a tu correo registrado.'})
+
+class PasswordResetConfirmView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = PasswordResetConfirmSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'message': 'Contraseña actualizada correctamente.'})

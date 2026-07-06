@@ -2,6 +2,9 @@
 
 from rest_framework import serializers
 from moto.models import Usuario, Cliente, Staff
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
 
 
 class RegisterSerializer(serializers.Serializer):
@@ -170,3 +173,44 @@ class ChangePasswordSerializer(serializers.Serializer):
         user.set_password(self.validated_data['new_password'])
         user.save()
         return user
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    username = serializers.CharField()
+
+    def validate_username(self, value):
+        try:
+            self.user = Usuario.objects.get(username=value)
+        except Usuario.DoesNotExist:
+            raise serializers.ValidationError("No existe un usuario con ese nombre de usuario.")
+        if not self.user.email:
+            raise serializers.ValidationError("Este usuario no tiene un correo registrado.")
+        return value
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    codigo = serializers.CharField()
+    new_password = serializers.CharField(write_only=True)
+    new_password2 = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        if data['new_password'] != data['new_password2']:
+            raise serializers.ValidationError("Las contraseñas no coinciden.")
+        if len(data['new_password']) < 8:
+            raise serializers.ValidationError("La contraseña debe tener al menos 8 caracteres.")
+
+        try:
+            uidb64, token = data['codigo'].split('.', 1)
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = Usuario.objects.get(pk=uid)
+        except (ValueError, TypeError, OverflowError, Usuario.DoesNotExist):
+            raise serializers.ValidationError("Código inválido.")
+
+        if not default_token_generator.check_token(user, token):
+            raise serializers.ValidationError("El código no es válido o ya expiró.")
+
+        self.user = user
+        return data
+
+    def save(self):
+        self.user.set_password(self.validated_data['new_password'])
+        self.user.save()
