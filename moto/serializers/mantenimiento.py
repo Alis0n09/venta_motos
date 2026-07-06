@@ -21,6 +21,9 @@ class MantenimientoSerializer(serializers.ModelSerializer):
             'costo',
         ]
         read_only_fields = ['id']
+        extra_kwargs = {
+        'cliente': {'required': False},
+    }
 
     def get_moto_detalle(self, obj):
         if obj.moto and obj.moto.marca:

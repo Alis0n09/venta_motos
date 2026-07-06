@@ -90,3 +90,18 @@ class IsBodegueroOrAdmin(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         return _get_rol(request.user) in ['bodeguero', 'admin']
+
+class IsStaffOrOwnerCliente(BasePermission):
+    """
+    GET: cualquier autenticado (filtrado por dueño en get_queryset).
+    POST: staff o cliente con perfil.
+    PUT/PATCH/DELETE: solo staff.
+    """
+    def has_permission(self, request, view):
+        if not request.user or not request.user.is_authenticated:
+            return False
+        if request.method in ('PUT', 'PATCH', 'DELETE'):
+            return request.user.is_staff
+        if request.method == 'POST':
+            return request.user.is_staff or hasattr(request.user, 'perfil_cliente')
+        return True

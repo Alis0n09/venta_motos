@@ -59,10 +59,50 @@ class MantenimientoPermissionTests(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
 
 
+class MantenimientoClienteAgendaTests(TestCase):
+
+    def setUp(self):
+        self.moto = create_moto()
+        self.cliente_usuario = create_user('clientemant')
+        self.cliente = create_cliente(usuario=self.cliente_usuario, cedula=_generar_cedula())
+        self.otro_cliente_usuario = create_user('otromant')
+        self.otro_cliente = create_cliente(usuario=self.otro_cliente_usuario, cedula=_generar_cedula())
+
+    def test_cliente_puede_agendar_sin_mandar_cliente(self):
+        resp = auth_client(self.cliente_usuario).post('/api/mantenimientos/', {
+            'moto': self.moto.id,
+            'fecha': '2026-07-20',
+            'tipo': 'Cambio de aceite',
+            'costo': 0,
+        })
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(resp.data['cliente'], self.cliente.id)
+
+    def test_cliente_no_puede_asignar_otro_cliente(self):
+        resp = auth_client(self.cliente_usuario).post('/api/mantenimientos/', {
+            'moto': self.moto.id,
+            'cliente': self.otro_cliente.id,
+            'fecha': '2026-07-20',
+            'tipo': 'Cambio de aceite',
+            'costo': 0,
+        })
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        # A pesar de mandar otro cliente, debe quedar asignado al dueño real de la sesión
+        self.assertEqual(resp.data['cliente'], self.cliente.id)
+
+    def test_cliente_solo_ve_sus_propios_mantenimientos(self):
+        create_mantenimiento(moto=self.moto, cliente=self.cliente)
+        create_mantenimiento(moto=self.moto, cliente=self.otro_cliente)
+
+        resp = auth_client(self.cliente_usuario).get('/api/mantenimientos/')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data['count'], 1)
+
+
 class MantenimientoFilterTests(TestCase):
 
     def setUp(self):
-        self.client = auth_client(create_user('filters'))
+        self.client = auth_client(create_staff_user())
         moto_1 = create_moto(modelo='CBR 500R', color='Rojo')
         moto_2 = create_moto(modelo='MT-07', color='Azul')
         c1 = create_cliente(cedula=_generar_cedula())
