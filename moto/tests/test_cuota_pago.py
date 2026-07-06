@@ -16,7 +16,10 @@ class CuotaPagoPermissionTests(TestCase):
         self.user = create_user('eve')
         self.staff = create_staff_user()
         self.financiamiento = create_financiamiento()
-        self.cuota = create_cuota_pago(financiamiento=self.financiamiento)
+        # numero_cuota=99: el financiamiento por default tiene plazo_meses=12,
+        # así que el signal ya generó las cuotas 1..12 automáticamente. Usamos
+        # un número fuera de ese rango para no chocar con unique_cuota_por_financiamiento.
+        self.cuota = create_cuota_pago(financiamiento=self.financiamiento, numero_cuota=99)
 
     def test_authenticated_user_can_list(self):
         resp = auth_client(self.user).get('/api/cuotas-pago/')
@@ -32,7 +35,7 @@ class CuotaPagoPermissionTests(TestCase):
         otro_financiamiento = create_financiamiento()
         resp = auth_client(self.user).post('/api/cuotas-pago/', {
             'financiamiento': otro_financiamiento.id,
-            'numero_cuota': 1,
+            'numero_cuota': 99,
             'fecha_vencimiento': '2026-02-15',
             'monto': 500.00,
         })
@@ -41,7 +44,7 @@ class CuotaPagoPermissionTests(TestCase):
     def test_staff_can_create(self):
         resp = auth_client(self.staff).post('/api/cuotas-pago/', {
             'financiamiento': self.financiamiento.id,
-            'numero_cuota': 2,
+            'numero_cuota': 98,
             'fecha_vencimiento': '2026-03-15',
             'monto': 500.00,
         })
@@ -58,8 +61,10 @@ class CuotaPagoFilterTests(TestCase):
         self.client = auth_client(create_user('filters'))
         f1 = create_financiamiento()
         f2 = create_financiamiento()
-        create_cuota_pago(financiamiento=f1, numero_cuota=1, monto=500, estado='pendiente')
-        create_cuota_pago(financiamiento=f2, numero_cuota=1, monto=800, estado='pagada')
+        # numero_cuota=99: mismo motivo que arriba, evitar choque con las
+        # cuotas 1..12 que el signal ya generó al crear cada financiamiento.
+        create_cuota_pago(financiamiento=f1, numero_cuota=99, monto=500, estado='pendiente')
+        create_cuota_pago(financiamiento=f2, numero_cuota=99, monto=800, estado='pagada')
 
     def test_filter_by_estado(self):
         resp = self.client.get('/api/cuotas-pago/?estado=pagada')

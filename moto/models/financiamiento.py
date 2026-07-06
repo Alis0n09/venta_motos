@@ -49,9 +49,17 @@ class Financiamiento(models.Model):
         if not self.monto_financiado or not self.tasa_interes or not self.plazo_meses:
             return None
 
-        tasa_mensual = self.tasa_interes / Decimal('100') / Decimal('12')
+        # monto_financiado y tasa_interes pueden llegar como float cuando el
+        # objeto se crea directo con el ORM (Model.objects.create(...)) en vez
+        # de a través del serializer (que sí los normaliza a Decimal). Se
+        # convierten aquí para que la aritmética con Decimal no truene.
+        monto = self.monto_financiado if isinstance(self.monto_financiado, Decimal) \
+            else Decimal(str(self.monto_financiado))
+        tasa = self.tasa_interes if isinstance(self.tasa_interes, Decimal) \
+            else Decimal(str(self.tasa_interes))
         n = self.plazo_meses
-        monto = self.monto_financiado
+
+        tasa_mensual = tasa / Decimal('100') / Decimal('12')
 
         if tasa_mensual == 0:
             cuota = monto / n
