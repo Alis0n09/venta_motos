@@ -6,7 +6,7 @@ from django.db.models import Sum
 
 from moto.models import Mantenimiento
 from moto.serializers import MantenimientoSerializer
-from moto.permissions import IsStaffOrReadOnly
+from moto.permissions import IsStaffOrOwnerCliente
 from moto.filters import MantenimientoFilter
 from moto.pagination import StandardPagination
 
@@ -18,7 +18,7 @@ class MantenimientoViewSet(viewsets.ModelViewSet):
         'cliente',
     ).all()
     serializer_class = MantenimientoSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    permission_classes = [IsStaffOrOwnerCliente]
     pagination_class = StandardPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = MantenimientoFilter
@@ -32,6 +32,22 @@ class MantenimientoViewSet(viewsets.ModelViewSet):
     ]
     ordering_fields = ['fecha', 'costo']
     ordering = ['-fecha']
+
+    def get_queryset(self):
+        qs = Mantenimiento.objects.select_related('moto', 'moto__marca', 'cliente').all()
+        user = self.request.user
+        if user.is_staff:
+            return qs
+        if hasattr(user, 'perfil_cliente'):
+            return qs.filter(cliente=user.perfil_cliente)
+        return qs.none()
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        if user.is_staff:
+            serializer.save()
+        else:
+            serializer.save(cliente=user.perfil_cliente)
 
     @action(detail=False, methods=['get'], url_path='stats')
     def stats(self, request):
