@@ -3,12 +3,15 @@
 from django.test import TestCase
 from rest_framework import status
 
+from moto.models import Inventario, LogsActividad, Sucursal, Venta
+
 from .helpers import (
     create_user,
     create_staff_user,
     create_staff_with_rol,
     auth_client,
     create_cliente,
+    create_moto,
     create_vendedor,
     create_venta,
 )
@@ -200,3 +203,76 @@ class VentaFilterTests(TestCase):
 
         for field in ['total', 'detail']:
             self.assertIn(field, resp.data)
+
+
+class VentaComprarStockTests(TestCase):
+    """
+    /api/ventas/comprar/ debe descontar Inventario real (no solo validar
+    contra la property Moto.stock), priorizando la sucursal con más cantidad
+    y repartiendo entre varias si es necesario.
+    """
+
+    def setUp(self):
+        self.user = create_user('clienteweb')
+        self.cliente = create_cliente(usuario=self.user)
+        self.moto = create_moto()
+
+        self.sucursal_a = Sucursal.objects.create(nombre='Norte', direccion='Calle 1', ciudad='Quito')
+        self.sucursal_b = Sucursal.objects.create(nombre='Sur', direccion='Calle 2', ciudad='Guayaquil')
+
+        self.inv_a = Inventario.objects.create(moto=self.moto, sucursal=self.sucursal_a, cantidad=3)
+        self.inv_b = Inventario.objects.create(moto=self.moto, sucursal=self.sucursal_b, cantidad=5)
+
+    def _comprar(self, cantidad):
+        return auth_client(self.user).post('/api/ventas/comprar/', {
+            'metodo_pago': 'efectivo',
+            'items': [{'moto_id': self.moto.id, 'cantidad': cantidad}],
+        }, format='json')
+
+    def test_descuenta_de_la_sucursal_con_mas_stock_primero(self):
+        resp = self._comprar(4)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED, resp.data)
+
+        self.inv_a.refresh_from_db()
+        self.inv_b.refresh_from_db()
+
+        # sucursal_b tenía más (5), se descuenta primero y por completo (4 <= 5)
+        self.assertEqual(self.inv_b.cantidad, 1)
+        self.assertEqual(self.inv_a.cantidad, 3)
+        self.assertEqual(self.moto.stock, 4)
+
+    def test_reparte_entre_varias_sucursales_si_no_alcanza_una_sola(self):
+        resp = self._comprar(7)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED, resp.data)
+
+        self.inv_a.refresh_from_db()
+        self.inv_b.refresh_from_db()
+
+        # sucursal_b (5) se agota primero, luego se toman 2 de sucursal_a (3)
+        self.assertEqual(self.inv_b.cantidad, 0)
+        self.assertEqual(self.inv_a.cantidad, 1)
+        self.assertGreaterEqual(self.inv_a.cantidad, 0)
+        self.assertGreaterEqual(self.inv_b.cantidad, 0)
+        self.assertEqual(self.moto.stock, 1)
+
+    def test_no_deja_stock_negativo_y_falla_si_no_alcanza(self):
+        resp = self._comprar(9)  # total disponible es 8 (3 + 5)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+        self.inv_a.refresh_from_db()
+        self.inv_b.refresh_from_db()
+
+        # como la venta falla, no debe haberse modificado ni creado nada
+        self.assertEqual(self.inv_a.cantidad, 3)
+        self.assertEqual(self.inv_b.cantidad, 5)
+        self.assertFalse(Venta.objects.exists())
+
+    def test_registra_log_de_inventario_por_cada_ajuste(self):
+        resp = self._comprar(7)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED, resp.data)
+
+        logs = LogsActividad.objects.filter(entidad='Inventario', accion='UPDATE')
+        self.assertEqual(logs.count(), 2)
+
+        descuentos = sorted(l.datos_despues['descontado'] for l in logs)
+        self.assertEqual(descuentos, [2, 5])

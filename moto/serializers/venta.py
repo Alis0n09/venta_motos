@@ -82,6 +82,59 @@ class CrearVentaSerializer(serializers.Serializer):
 
         return items
 
+    def _descontar_stock(self, moto, cantidad, venta, usuario):
+        """
+        Descuenta `cantidad` unidades de `moto` del inventario, empezando por la
+        sucursal con más existencias y continuando con las siguientes hasta
+        completar el total (o lanzando ValidationError si no alcanza).
+        Deja constancia de cada ajuste en LogsActividad.
+        """
+        from moto.models import Inventario, LogsActividad
+
+        pendiente = cantidad
+        inventarios = Inventario.objects.select_for_update().filter(
+            moto=moto
+        ).order_by('-cantidad')
+
+        for inv in inventarios:
+            if pendiente <= 0:
+                break
+            if inv.cantidad <= 0:
+                continue
+
+            cantidad_antes = inv.cantidad
+            descontado = min(inv.cantidad, pendiente)
+            inv.cantidad -= descontado
+            inv.save(update_fields=['cantidad'])
+            pendiente -= descontado
+
+            LogsActividad.objects.create(
+                usuario=usuario,
+                accion='UPDATE',
+                entidad='Inventario',
+                datos_antes={
+                    'id': inv.id,
+                    'moto': moto.id,
+                    'sucursal': inv.sucursal_id,
+                    'cantidad': cantidad_antes,
+                },
+                datos_despues={
+                    'id': inv.id,
+                    'moto': moto.id,
+                    'sucursal': inv.sucursal_id,
+                    'cantidad': inv.cantidad,
+                    'descontado': descontado,
+                    'venta_id': venta.id,
+                },
+            )
+
+        if pendiente > 0:
+            raise serializers.ValidationError(
+                f"Stock insuficiente para {moto.marca.nombre} {moto.modelo}: "
+                f"faltaron {pendiente} unidad(es) por descontar de inventario "
+                f"(posiblemente otra compra se adelantó)."
+            )
+
     def create(self, validated_data):
         from moto.models import Moto, HistorialCliente
         request = self.context['request']
@@ -106,12 +159,14 @@ class CrearVentaSerializer(serializers.Serializer):
             motos_compradas = []
             for item in items:
                 moto = Moto.objects.get(id=item['moto_id'])
+                cantidad = int(item['cantidad'])
                 DetalleVenta.objects.create(
                     venta=venta,
                     moto=moto,
-                    cantidad=int(item['cantidad']),
+                    cantidad=cantidad,
                     precio_unitario=moto.precio,
                 )
+                self._descontar_stock(moto, cantidad, venta, request.user)
                 if moto.marca:
                     motos_compradas.append(f"{moto.marca.nombre} {moto.modelo} ({moto.anio})")
 
