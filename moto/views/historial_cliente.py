@@ -17,7 +17,7 @@ class HistorialClienteViewSet(viewsets.ModelViewSet):
     pagination_class = StandardPagination
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = HistorialClienteFilter
-    search_fields = ['tipo_evento', 'cliente__nombre', 'cliente__apellido']
+    search_fields = ['tipo_evento', 'cliente__nombre', 'cliente__apellido', 'cliente__cedula']
     ordering_fields = ['fecha', 'tipo_evento']
     ordering = ['-fecha']
 
