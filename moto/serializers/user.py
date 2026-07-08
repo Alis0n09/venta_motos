@@ -28,7 +28,7 @@ class RegisterSerializer(serializers.Serializer):
         return value
 
     def validate_cedula(self, value):
-        if Cliente.objects.filter(cedula=value).exists():
+        if Usuario.objects.filter(cedula=value).exists():
             raise serializers.ValidationError('This cedula is already registered.')
         return value
 
