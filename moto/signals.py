@@ -93,6 +93,40 @@ def enviar_factura_correo(sender, instance, created, **kwargs):
     transaction.on_commit(_enviar)
 
 
+@receiver(post_save, sender=Venta)
+def notificar_compra_cliente(sender, instance, created, **kwargs):
+    """Crea una NotificacionesCliente ('Su compra fue realizada...') cada vez
+    que se crea una Venta nueva. Se difiere con transaction.on_commit porque
+    los DetalleVenta se crean después, en la misma transacción, y queremos
+    describir las motos compradas en el mensaje.
+    """
+    if not created:
+        return
+
+    def _crear_notificacion():
+        from moto.models import NotificacionesCliente
+
+        detalles = instance.detalles.select_related('moto', 'moto__marca').all()
+        if detalles:
+            descripciones = []
+            for detalle in detalles:
+                moto = detalle.moto
+                nombre_moto = f"{moto.marca.nombre} {moto.modelo}" if moto and moto.marca else (moto.modelo if moto else '')
+                descripciones.append(f"{detalle.cantidad}x {nombre_moto}".strip())
+            detalle_texto = ', '.join(descripciones)
+            mensaje = f"Su compra #{instance.id} fue realizada con éxito: {detalle_texto}. Total: ${instance.total}."
+        else:
+            mensaje = f"Su compra #{instance.id} fue realizada con éxito. Total: ${instance.total}."
+
+        NotificacionesCliente.objects.create(
+            cliente=instance.cliente,
+            tipo='compra',
+            mensaje=mensaje[:255],
+        )
+
+    transaction.on_commit(_crear_notificacion)
+
+
 @receiver(pre_save, sender=Moto)
 def registrar_historial_precio(sender, instance, **kwargs):
     """Se dispara antes de guardar una Moto. Si el precio cambió, guarda el historial."""
@@ -140,6 +174,36 @@ def registrar_historial_mantenimiento(sender, instance, created, **kwargs):
     )
 
 
+@receiver(post_save, sender=Mantenimiento)
+def notificar_mantenimiento_cliente(sender, instance, created, **kwargs):
+    """Crea una NotificacionesCliente ('Su moto necesita mantenimiento...')
+    cada vez que se registra un Mantenimiento nuevo para un cliente."""
+    if not created:
+        return
+
+    if not instance.cliente:
+        return
+
+    from moto.models import NotificacionesCliente
+
+    moto_detalle = None
+    if instance.moto and instance.moto.marca:
+        moto_detalle = f"{instance.moto.marca.nombre} {instance.moto.modelo}"
+    elif instance.moto:
+        moto_detalle = instance.moto.modelo
+
+    if moto_detalle:
+        mensaje = f"Su moto {moto_detalle} necesita mantenimiento: {instance.tipo}, programado para el {instance.fecha}."
+    else:
+        mensaje = f"Su moto necesita mantenimiento: {instance.tipo}, programado para el {instance.fecha}."
+
+    NotificacionesCliente.objects.create(
+        cliente=instance.cliente,
+        tipo='mantenimiento',
+        mensaje=mensaje[:255],
+    )
+
+
 @receiver(post_save, sender=Garantia)
 def registrar_historial_garantia(sender, instance, created, **kwargs):
     if not created:
@@ -159,6 +223,27 @@ def registrar_historial_garantia(sender, instance, created, **kwargs):
             'fecha_fin': str(instance.fecha_fin),
             'tipo': instance.tipo,
         }
+    )
+
+
+@receiver(post_save, sender=Garantia)
+def notificar_garantia_cliente(sender, instance, created, **kwargs):
+    """Crea una NotificacionesCliente cuando se activa una Garantía nueva."""
+    if not created:
+        return
+
+    if not instance.venta or not instance.venta.cliente:
+        return
+
+    from moto.models import NotificacionesCliente
+    mensaje = (
+        f"Se activó su garantía ({instance.tipo}) para la compra #{instance.venta.id}, "
+        f"válida del {instance.fecha_inicio} al {instance.fecha_fin}."
+    )
+    NotificacionesCliente.objects.create(
+        cliente=instance.venta.cliente,
+        tipo='garantia',
+        mensaje=mensaje[:255],
     )
 
 
@@ -212,6 +297,28 @@ def registrar_historial_financiamiento(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=Financiamiento)
+def notificar_financiamiento_cliente(sender, instance, created, **kwargs):
+    """Crea una NotificacionesCliente cuando se aprueba un Financiamiento nuevo."""
+    if not created:
+        return
+
+    if not instance.venta or not instance.venta.cliente:
+        return
+
+    from moto.models import NotificacionesCliente
+    mensaje = (
+        f"Su financiamiento para la compra #{instance.venta.id} fue aprobado: "
+        f"${instance.monto_financiado} a {instance.plazo_meses} meses "
+        f"({instance.tasa_interes}% de interés anual)."
+    )
+    NotificacionesCliente.objects.create(
+        cliente=instance.venta.cliente,
+        tipo='financiamiento',
+        mensaje=mensaje[:255],
+    )
+
+
+@receiver(post_save, sender=Financiamiento)
 def generar_cuotas_financiamiento(sender, instance, created, **kwargs):
     """
     Genera automáticamente el plan de cuotas (una por cada mes del plazo)
@@ -248,3 +355,58 @@ def generar_cuotas_financiamiento(sender, instance, created, **kwargs):
         ))
 
     CuotaPago.objects.bulk_create(cuotas)
+
+
+@receiver(pre_save, sender=CuotaPago)
+def _cachear_estado_anterior_cuota(sender, instance, **kwargs):
+    """Guarda el estado anterior de la cuota en la propia instancia, para que
+    el post_save pueda saber si el estado realmente cambió (igual que se hace
+    con el precio de Moto)."""
+    if not instance.pk:
+        instance._estado_anterior = None
+        return
+
+    try:
+        anterior = CuotaPago.objects.get(pk=instance.pk)
+        instance._estado_anterior = anterior.estado
+    except CuotaPago.DoesNotExist:
+        instance._estado_anterior = None
+
+
+@receiver(post_save, sender=CuotaPago)
+def notificar_cuota_pago_cliente(sender, instance, created, **kwargs):
+    """Notifica al cliente cuando una cuota cambia de estado a 'pagada' o
+    'vencida'. Las cuotas generadas en lote al crear el Financiamiento
+    (bulk_create) no disparan señales, así que esto solo corre en
+    actualizaciones posteriores (registrar un pago, un cron que marca
+    vencidas, etc.), nunca en la creación inicial del plan de pagos.
+    """
+    if created:
+        return
+
+    estado_anterior = getattr(instance, '_estado_anterior', None)
+    if estado_anterior == instance.estado:
+        return
+
+    financiamiento = instance.financiamiento
+    if not financiamiento or not financiamiento.venta or not financiamiento.venta.cliente:
+        return
+
+    cliente = financiamiento.venta.cliente
+
+    if instance.estado == 'pagada':
+        mensaje = f"Registramos el pago de su cuota #{instance.numero_cuota} (${instance.monto})."
+    elif instance.estado == 'vencida':
+        mensaje = (
+            f"Su cuota #{instance.numero_cuota} (${instance.monto}) está vencida. "
+            f"Fecha límite: {instance.fecha_vencimiento}."
+        )
+    else:
+        return
+
+    from moto.models import NotificacionesCliente
+    NotificacionesCliente.objects.create(
+        cliente=cliente,
+        tipo='pago',
+        mensaje=mensaje[:255],
+    )
