@@ -25,6 +25,7 @@ from .resena import Resena
 from .logs_actividad import LogsActividad
 from .historial_cliente import HistorialCliente
 from .notificaciones_cliente import NotificacionesCliente
+from .favorito import Favorito
 
 __all__ = [
     'Cliente',
@@ -52,4 +53,5 @@ __all__ = [
     'LogsActividad',
     'HistorialCliente',
     'NotificacionesCliente',
+    'Favorito',
 ]

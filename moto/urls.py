@@ -31,6 +31,7 @@ from moto.views.resena          import ResenaViewSet
 from moto.views.logs_actividad          import LogsActividadViewSet
 from moto.views.historial_cliente      import HistorialClienteViewSet
 from moto.views.notificaciones_cliente import NotificacionesClienteViewSet
+from moto.views.favorito               import FavoritoViewSet
 from moto.serializers.auth             import CustomTokenView
 
 
@@ -60,6 +61,7 @@ router.register('resenas',           ResenaViewSet,          basename='resena')
 router.register('logs-actividad',           LogsActividadViewSet,           basename='logs-actividad')
 router.register('historial-cliente',         HistorialClienteViewSet,        basename='historial-cliente')
 router.register('notificaciones-cliente',    NotificacionesClienteViewSet,   basename='notificaciones-cliente')
+router.register('favoritos',                 FavoritoViewSet,                basename='favorito')
 
 
 

@@ -49,6 +49,17 @@ class CrearVentaSerializer(serializers.Serializer):
         child=serializers.DictField(),
         min_length=1
     )
+    # ── Financiamiento parcial opcional ──────────────────────────────────────
+    # Si el cliente quiere financiar solo una parte de la compra (el resto lo
+    # paga con `metodo_pago`), envía estos 3 campos juntos. Si no los envía,
+    # el comportamiento es idéntico al de siempre (venta 100% al contado).
+    monto_a_financiar = serializers.DecimalField(
+        max_digits=10, decimal_places=2, required=False, allow_null=True, default=None
+    )
+    tasa_interes = serializers.DecimalField(
+        max_digits=5, decimal_places=2, required=False, allow_null=True, default=None
+    )
+    plazo_meses = serializers.IntegerField(required=False, allow_null=True, default=None)
 
     def validate_items(self, items):
         from moto.models import Moto
@@ -81,6 +92,44 @@ class CrearVentaSerializer(serializers.Serializer):
             raise serializers.ValidationError(errores)
 
         return items
+
+    def validate(self, data):
+        """Valida el financiamiento parcial opcional, sin afectar la
+        validación normal de items/metodo_pago si no se está financiando."""
+        monto = data.get('monto_a_financiar')
+        tasa = data.get('tasa_interes')
+        plazo = data.get('plazo_meses')
+
+        campos = [monto, tasa, plazo]
+        algunos = any(c is not None for c in campos)
+        todos = all(c is not None for c in campos)
+
+        if algunos and not todos:
+            raise serializers.ValidationError(
+                "Para financiar parte de la compra debes enviar "
+                "monto_a_financiar, tasa_interes y plazo_meses juntos."
+            )
+
+        if todos:
+            from moto.models import Moto
+
+            if monto <= 0:
+                raise serializers.ValidationError({"monto_a_financiar": "Debe ser mayor a cero."})
+            if tasa < 0:
+                raise serializers.ValidationError({"tasa_interes": "No puede ser negativa."})
+            if plazo <= 0:
+                raise serializers.ValidationError({"plazo_meses": "Debe ser mayor a cero."})
+
+            total_items = sum(
+                Moto.objects.get(id=item['moto_id']).precio * int(item['cantidad'])
+                for item in data['items']
+            )
+            if monto > total_items:
+                raise serializers.ValidationError(
+                    {"monto_a_financiar": "No puede ser mayor al total de la compra."}
+                )
+
+        return data
 
     def _descontar_stock(self, moto, cantidad, venta, usuario):
         """
@@ -136,12 +185,16 @@ class CrearVentaSerializer(serializers.Serializer):
             )
 
     def create(self, validated_data):
-        from moto.models import Moto, HistorialCliente
+        from datetime import date
+        from moto.models import Moto, HistorialCliente, Financiamiento
         request = self.context['request']
         cliente = request.user.perfil_cliente
 
         items = validated_data['items']
         metodo_pago = validated_data['metodo_pago']
+        monto_a_financiar = validated_data.get('monto_a_financiar')
+        tasa_interes = validated_data.get('tasa_interes')
+        plazo_meses = validated_data.get('plazo_meses')
 
         total = sum(
             Moto.objects.get(id=item['moto_id']).precio * int(item['cantidad'])
@@ -170,16 +223,34 @@ class CrearVentaSerializer(serializers.Serializer):
                 if moto.marca:
                     motos_compradas.append(f"{moto.marca.nombre} {moto.modelo} ({moto.anio})")
 
+            financiamiento_creado = None
+            if monto_a_financiar:
+                # El signal generar_cuotas_financiamiento (ya existente en el
+                # backend) genera las cuotas mensuales automáticamente al
+                # crearse este objeto, igual que cuando lo crea un admin.
+                financiamiento_creado = Financiamiento.objects.create(
+                    venta=venta,
+                    monto_financiado=monto_a_financiar,
+                    tasa_interes=tasa_interes,
+                    plazo_meses=plazo_meses,
+                    fecha_inicio=date.today(),
+                )
+
             # Registrar historial del cliente
+            detalle_historial = {
+                'venta_id': venta.id,
+                'total': str(venta.total),
+                'metodo_pago': venta.metodo_pago,
+                'motos': motos_compradas,
+            }
+            if financiamiento_creado:
+                detalle_historial['monto_financiado'] = str(financiamiento_creado.monto_financiado)
+                detalle_historial['monto_contado'] = str(venta.total - financiamiento_creado.monto_financiado)
+
             HistorialCliente.objects.create(
                 cliente=cliente,
                 tipo_evento='compra',
-                detalle={
-                    'venta_id': venta.id,
-                    'total': str(venta.total),
-                    'metodo_pago': venta.metodo_pago,
-                    'motos': motos_compradas,
-                }
+                detalle=detalle_historial,
             )
 
         return venta
