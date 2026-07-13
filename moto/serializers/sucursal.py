@@ -5,7 +5,7 @@ from moto.models import Sucursal
 class SucursalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sucursal
-        fields = ['id', 'nombre', 'direccion', 'ciudad', 'telefono']
+        fields = ['id', 'nombre', 'direccion', 'ciudad', 'telefono', 'latitud', 'longitud']
 
     def validate_nombre(self, value):
         if not value.strip():

@@ -6,6 +6,8 @@ class Sucursal(models.Model):
     direccion = models.CharField(max_length=200)
     ciudad = models.CharField(max_length=100)
     telefono = models.CharField(max_length=20, blank=True, null=True)
+    latitud = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    longitud = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
 
     def __str__(self):
         return self.nombre
