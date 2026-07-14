@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from moto.models                import Sucursal
 from moto.serializers.sucursal  import SucursalSerializer
-from moto.permissions           import IsStaffOrReadOnly
+from moto.permissions           import IsStaffOrPublicReadOnly
 from moto.filters               import SucursalFilter
 from moto.pagination            import StandardPagination
 
@@ -14,7 +14,7 @@ from moto.pagination            import StandardPagination
 class SucursalViewSet(viewsets.ModelViewSet):
     queryset           = Sucursal.objects.all()
     serializer_class   = SucursalSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    permission_classes = [IsStaffOrPublicReadOnly]
     pagination_class   = StandardPagination
     filter_backends    = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class    = SucursalFilter

@@ -2,6 +2,7 @@
 
 from django.test import TestCase
 from rest_framework import status
+from rest_framework.test import APIClient
 
 from .helpers import create_user, create_staff_user, auth_client
 from moto.models import Sucursal
@@ -32,10 +33,10 @@ class SucursalPermissionTests(TestCase):
         resp = auth_client(self.user).get('/api/sucursales/')
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
-    def test_unauthenticated_returns_401(self):
-        from rest_framework.test import APIClient
+    def test_unauthenticated_can_read_sucursales(self):
+        # Sucursales es pública — cualquiera puede leer sin autenticarse
         resp = APIClient().get('/api/sucursales/')
-        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_regular_user_cannot_create(self):
         resp = auth_client(self.user).post('/api/sucursales/', {
