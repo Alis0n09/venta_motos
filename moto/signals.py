@@ -298,19 +298,49 @@ def registrar_historial_financiamiento(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Financiamiento)
 def notificar_financiamiento_cliente(sender, instance, created, **kwargs):
-    """Crea una NotificacionesCliente cuando se aprueba un Financiamiento nuevo."""
-    if not created:
-        return
-
+    """Notifica al cliente sobre su financiamiento:
+    - Al crearse en estado 'pendiente' (solicitud del cliente al pagar): avisa que quedó en revisión.
+    - Al crearse ya 'activo' (lo registra un admin directamente): avisa que fue aprobado.
+    - Al pasar de 'pendiente' a 'activo' (un admin aprueba la solicitud): avisa que fue aprobado.
+    - Al pasar de 'pendiente' a 'cancelado' (un admin rechaza la solicitud): avisa que fue rechazado.
+    """
     if not instance.venta or not instance.venta.cliente:
         return
 
     from moto.models import NotificacionesCliente
-    mensaje = (
-        f"Su financiamiento para la compra #{instance.venta.id} fue aprobado: "
-        f"${instance.monto_financiado} a {instance.plazo_meses} meses "
-        f"({instance.tasa_interes}% de interés anual)."
-    )
+    estado_anterior = getattr(instance, '_estado_anterior', None)
+
+    if created:
+        if instance.estado == 'pendiente':
+            mensaje = (
+                f"Recibimos tu solicitud de financiamiento para la compra #{instance.venta.id}: "
+                f"${instance.monto_financiado} a {instance.plazo_meses} meses "
+                f"({instance.tasa_interes}% de interés anual). Está en revisión, "
+                f"te avisaremos cuando sea aprobada."
+            )
+        else:
+            mensaje = (
+                f"Su financiamiento para la compra #{instance.venta.id} fue aprobado: "
+                f"${instance.monto_financiado} a {instance.plazo_meses} meses "
+                f"({instance.tasa_interes}% de interés anual)."
+            )
+    else:
+        if estado_anterior == instance.estado:
+            return
+        if estado_anterior == 'pendiente' and instance.estado == 'activo':
+            mensaje = (
+                f"¡Tu financiamiento para la compra #{instance.venta.id} fue aprobado! "
+                f"${instance.monto_financiado} a {instance.plazo_meses} meses "
+                f"({instance.tasa_interes}% de interés anual)."
+            )
+        elif estado_anterior == 'pendiente' and instance.estado == 'cancelado':
+            mensaje = (
+                f"Tu solicitud de financiamiento para la compra #{instance.venta.id} "
+                f"fue rechazada. Contáctanos si tienes dudas."
+            )
+        else:
+            return
+
     NotificacionesCliente.objects.create(
         cliente=instance.venta.cliente,
         tipo='financiamiento',
@@ -318,14 +348,41 @@ def notificar_financiamiento_cliente(sender, instance, created, **kwargs):
     )
 
 
+@receiver(pre_save, sender=Financiamiento)
+def _cachear_estado_anterior_financiamiento(sender, instance, **kwargs):
+    """Guarda el estado anterior del financiamiento en la propia instancia,
+    igual que se hace con CuotaPago, para saber si estado realmente cambió."""
+    if not instance.pk:
+        instance._estado_anterior = None
+        return
+
+    try:
+        anterior = Financiamiento.objects.get(pk=instance.pk)
+        instance._estado_anterior = anterior.estado
+    except Financiamiento.DoesNotExist:
+        instance._estado_anterior = None
+
+
 @receiver(post_save, sender=Financiamiento)
 def generar_cuotas_financiamiento(sender, instance, created, **kwargs):
     """
-    Genera automáticamente el plan de cuotas (una por cada mes del plazo)
-    apenas se crea un Financiamiento. Solo corre en la creación (created=True);
-    si el financiamiento se edita después, las cuotas ya generadas no se tocan.
+    Genera el plan de cuotas (una por cada mes del plazo) apenas el
+    financiamiento queda en estado 'activo':
+    - Si se crea directamente como 'activo' (lo registra un admin).
+    - Si pasa de 'pendiente' a 'activo' (un admin aprueba la solicitud del cliente).
+    Si el financiamiento se crea o queda en 'pendiente', NO se generan cuotas
+    todavía — se generan recién cuando se aprueba. Nunca se regeneran cuotas
+    si el financiamiento ya las tiene.
     """
-    if not created:
+    if instance.estado != 'activo':
+        return
+
+    estado_anterior = getattr(instance, '_estado_anterior', None)
+    recien_activado = created or estado_anterior == 'pendiente'
+    if not recien_activado:
+        return
+
+    if instance.cuotas.exists():
         return
 
     cuota_mensual = instance.calcular_cuota_mensual()

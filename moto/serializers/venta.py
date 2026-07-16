@@ -225,15 +225,18 @@ class CrearVentaSerializer(serializers.Serializer):
 
             financiamiento_creado = None
             if monto_a_financiar:
+                # Queda 'pendiente': un admin debe aprobarlo (o rechazarlo) desde
+                # el panel antes de que se active y se generen las cuotas.
                 # El signal generar_cuotas_financiamiento (ya existente en el
-                # backend) genera las cuotas mensuales automáticamente al
-                # crearse este objeto, igual que cuando lo crea un admin.
+                # backend) genera las cuotas mensuales automáticamente recién
+                # cuando el admin lo aprueba (pendiente -> activo).
                 financiamiento_creado = Financiamiento.objects.create(
                     venta=venta,
                     monto_financiado=monto_a_financiar,
                     tasa_interes=tasa_interes,
                     plazo_meses=plazo_meses,
                     fecha_inicio=date.today(),
+                    estado='pendiente',
                 )
 
             # Registrar historial del cliente

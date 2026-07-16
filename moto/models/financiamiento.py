@@ -15,6 +15,7 @@ def _add_months(source, months):
 
 class Financiamiento(models.Model):
     ESTADO_CHOICES = [
+        ('pendiente', 'Pendiente'),
         ('activo', 'Activo'),
         ('pagado', 'Pagado'),
         ('cancelado', 'Cancelado'),
