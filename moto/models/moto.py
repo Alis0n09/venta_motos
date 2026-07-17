@@ -27,7 +27,7 @@ class Moto(models.Model):
     cilindraje = models.CharField(max_length=20)
     color = models.CharField(max_length=50)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
-    imagen_url = models.URLField(max_length=600, blank=True, null=True)
+    imagen = models.ImageField(upload_to='motos/', blank=True, null=True)
     estado = models.CharField(
         max_length=20,
         choices=ESTADO_CHOICES,

@@ -24,7 +24,7 @@ class MotoSerializer(serializers.ModelSerializer):
             'stock',
             'cilindraje',
             'estado',
-            'imagen_url',
+            'imagen',
         ]
 
     def validate_precio(self, value):
