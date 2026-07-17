@@ -50,14 +50,13 @@ class CrearVentaSerializer(serializers.Serializer):
         min_length=1
     )
     # ── Financiamiento parcial opcional ──────────────────────────────────────
-    # Si el cliente quiere financiar solo una parte de la compra (el resto lo
-    # paga con `metodo_pago`), envía estos 3 campos juntos. Si no los envía,
-    # el comportamiento es idéntico al de siempre (venta 100% al contado).
+    # Si el cliente quiere financiar parte de la compra, envía estos 2 campos
+    # juntos (el resto de la compra la paga con `metodo_pago`). El cliente NO
+    # elige la tasa de interés: la fija un admin al aprobar la solicitud
+    # (ver FinanciamientoViewSet.aprobar). Si no envía estos campos, el
+    # comportamiento es idéntico al de siempre (venta 100% al contado).
     monto_a_financiar = serializers.DecimalField(
         max_digits=10, decimal_places=2, required=False, allow_null=True, default=None
-    )
-    tasa_interes = serializers.DecimalField(
-        max_digits=5, decimal_places=2, required=False, allow_null=True, default=None
     )
     plazo_meses = serializers.IntegerField(required=False, allow_null=True, default=None)
 
@@ -97,17 +96,16 @@ class CrearVentaSerializer(serializers.Serializer):
         """Valida el financiamiento parcial opcional, sin afectar la
         validación normal de items/metodo_pago si no se está financiando."""
         monto = data.get('monto_a_financiar')
-        tasa = data.get('tasa_interes')
         plazo = data.get('plazo_meses')
 
-        campos = [monto, tasa, plazo]
+        campos = [monto, plazo]
         algunos = any(c is not None for c in campos)
         todos = all(c is not None for c in campos)
 
         if algunos and not todos:
             raise serializers.ValidationError(
                 "Para financiar parte de la compra debes enviar "
-                "monto_a_financiar, tasa_interes y plazo_meses juntos."
+                "monto_a_financiar y plazo_meses juntos."
             )
 
         if todos:
@@ -115,8 +113,6 @@ class CrearVentaSerializer(serializers.Serializer):
 
             if monto <= 0:
                 raise serializers.ValidationError({"monto_a_financiar": "Debe ser mayor a cero."})
-            if tasa < 0:
-                raise serializers.ValidationError({"tasa_interes": "No puede ser negativa."})
             if plazo <= 0:
                 raise serializers.ValidationError({"plazo_meses": "Debe ser mayor a cero."})
 
@@ -193,7 +189,6 @@ class CrearVentaSerializer(serializers.Serializer):
         items = validated_data['items']
         metodo_pago = validated_data['metodo_pago']
         monto_a_financiar = validated_data.get('monto_a_financiar')
-        tasa_interes = validated_data.get('tasa_interes')
         plazo_meses = validated_data.get('plazo_meses')
 
         total = sum(
@@ -225,15 +220,15 @@ class CrearVentaSerializer(serializers.Serializer):
 
             financiamiento_creado = None
             if monto_a_financiar:
-                # Queda 'pendiente': un admin debe aprobarlo (o rechazarlo) desde
-                # el panel antes de que se active y se generen las cuotas.
-                # El signal generar_cuotas_financiamiento (ya existente en el
-                # backend) genera las cuotas mensuales automáticamente recién
-                # cuando el admin lo aprueba (pendiente -> activo).
+                # Queda 'pendiente' y SIN tasa de interés todavía: un admin
+                # debe fijar la tasa y aprobar (o rechazar) la solicitud desde
+                # el panel. El signal generar_cuotas_financiamiento (ya
+                # existente en el backend) arma el plan de cuotas recién
+                # cuando el admin aprueba (pendiente -> activo).
                 financiamiento_creado = Financiamiento.objects.create(
                     venta=venta,
                     monto_financiado=monto_a_financiar,
-                    tasa_interes=tasa_interes,
+                    tasa_interes=None,
                     plazo_meses=plazo_meses,
                     fecha_inicio=date.today(),
                     estado='pendiente',

@@ -27,7 +27,10 @@ class Financiamiento(models.Model):
         related_name='financiamiento'
     )
     monto_financiado = models.DecimalField(max_digits=10, decimal_places=2)
-    tasa_interes = models.DecimalField(max_digits=5, decimal_places=2)
+    # Nula mientras el financiamiento está 'pendiente' de aprobación: el
+    # cliente NO elige la tasa, la fija el admin recién al aprobar la
+    # solicitud (ver FinanciamientoViewSet.aprobar).
+    tasa_interes = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     plazo_meses = models.PositiveIntegerField()
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField(null=True, blank=True)

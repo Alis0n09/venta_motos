@@ -314,9 +314,8 @@ def notificar_financiamiento_cliente(sender, instance, created, **kwargs):
         if instance.estado == 'pendiente':
             mensaje = (
                 f"Recibimos tu solicitud de financiamiento para la compra #{instance.venta.id}: "
-                f"${instance.monto_financiado} a {instance.plazo_meses} meses "
-                f"({instance.tasa_interes}% de interés anual). Está en revisión, "
-                f"te avisaremos cuando sea aprobada."
+                f"${instance.monto_financiado} a {instance.plazo_meses} meses. "
+                f"Está en revisión, te avisaremos cuando sea aprobada."
             )
         else:
             mensaje = (
