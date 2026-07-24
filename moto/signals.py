@@ -34,7 +34,7 @@ def enviar_bienvenida_cliente(sender, instance, created, **kwargs):
         'frontend_url': settings.FRONTEND_URL,
     }
 
-    asunto = 'Bienvenido a Venta Motos 🏍️'
+    asunto = 'Bienvenido a Victal Speed 🏍️'
     html_content = render_to_string('emails/bienvenida.html', context)
     text_content = f'Hola {instance.nombre}, tu cuenta de cliente fue creada exitosamente.'
 
@@ -76,9 +76,9 @@ def enviar_factura_correo(sender, instance, created, **kwargs):
         # "/media/motos/foto.jpg".
         for detalle in detalles:
             if detalle.moto and detalle.moto.imagen:
-                detalle.moto.imagen_url_absoluta = f"{settings.BACKEND_URL}{detalle.moto.imagen.url}"
+                detalle.moto.imagen_absoluta = f"{settings.BACKEND_URL}{detalle.moto.imagen.url}"
             else:
-                detalle.moto.imagen_url_absoluta = None
+                detalle.moto.imagen_absoluta = None
 
         context = {
             'venta': instance,

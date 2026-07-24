@@ -57,8 +57,8 @@
                     {% for detalle in detalles %}
                     <tr>
                         <td>
-                            {% if detalle.moto.imagen_url_absoluta %}
-                            <img src="{{ detalle.moto.imagen_url_absoluta }}" alt="{{ detalle.moto.modelo }}"
+                            {% if detalle.moto.imagen_absoluta %}
+                            <img src="{{ detalle.moto.imagen_absoluta }}" alt="{{ detalle.moto.modelo }}"
                                  width="50" height="50"
                                  style="object-fit:cover; border-radius:6px; vertical-align:middle; margin-right:10px;">
                             {% endif %}
@@ -78,7 +78,6 @@
 
             <p style="color:#555; font-size:14px;">Si tienes alguna pregunta sobre tu compra, no dudes en contactarnos.</p>
 
-            <a href="{{ frontend_url }}" class="btn">Ver mis compras</a>
         </div>
 
         <div class="footer">
