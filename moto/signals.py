@@ -68,6 +68,18 @@ def enviar_factura_correo(sender, instance, created, **kwargs):
 
         detalles = instance.detalles.select_related('moto', 'moto__marca').all()
 
+        # Arma la URL absoluta de cada imagen: en un signal no hay "request"
+        # disponible (no venimos de una vista HTTP), así que no se puede usar
+        # request.build_absolute_uri(). El cliente de correo abre la imagen
+        # desde su propia bandeja de entrada, en otra red, así que necesita
+        # una URL pública completa (con dominio), no una ruta relativa tipo
+        # "/media/motos/foto.jpg".
+        for detalle in detalles:
+            if detalle.moto and detalle.moto.imagen:
+                detalle.moto.imagen_url_absoluta = f"{settings.BACKEND_URL}{detalle.moto.imagen.url}"
+            else:
+                detalle.moto.imagen_url_absoluta = None
+
         context = {
             'venta': instance,
             'cliente': cliente,
@@ -77,7 +89,7 @@ def enviar_factura_correo(sender, instance, created, **kwargs):
             'frontend_url': settings.FRONTEND_URL,
         }
 
-        asunto = f'Factura de tu compra #{instance.id} — Venta Motos'
+        asunto = f'Factura de tu compra #{instance.id} — Victal Speed'
         html_content = render_to_string('emails/factura.html', context)
         text_content = f'Gracias por tu compra #{instance.id}. Total: ${instance.total}'
 
@@ -345,6 +357,82 @@ def notificar_financiamiento_cliente(sender, instance, created, **kwargs):
         tipo='financiamiento',
         mensaje=mensaje[:255],
     )
+
+
+@receiver(post_save, sender=Financiamiento)
+def enviar_email_financiamiento(sender, instance, created, **kwargs):
+    """Envía un correo al cliente cuando su financiamiento es aprobado o
+    rechazado. Sigue el mismo patrón que enviar_factura_correo: se difiere
+    con transaction.on_commit para que, en el caso de la aprobación, el plan
+    de cuotas que arma generar_cuotas_financiamiento ya exista al momento
+    de armar el correo (ese signal corre sincrónico, antes del commit, así
+    que para cuando _enviar() se ejecuta las cuotas ya están creadas).
+    """
+    if not instance.venta or not instance.venta.cliente:
+        return
+
+    estado_anterior = getattr(instance, '_estado_anterior', None)
+
+    if created:
+        aprobado_recien = instance.estado == 'activo'
+        rechazado_recien = False
+    else:
+        if estado_anterior == instance.estado:
+            return
+        aprobado_recien = estado_anterior == 'pendiente' and instance.estado == 'activo'
+        rechazado_recien = estado_anterior == 'pendiente' and instance.estado == 'cancelado'
+
+    if not aprobado_recien and not rechazado_recien:
+        return
+
+    def _enviar():
+        cliente = instance.venta.cliente
+        correo_destino = cliente.correo or (cliente.usuario.email if cliente.usuario else None)
+        if not correo_destino:
+            return
+
+        if aprobado_recien:
+            cuotas = instance.cuotas.order_by('numero_cuota').all()
+            context = {
+                'cliente': cliente,
+                'financiamiento': instance,
+                'venta': instance.venta,
+                'cuotas': cuotas,
+                'cuota_mensual': instance.calcular_cuota_mensual(),
+                'frontend_url': settings.FRONTEND_URL,
+            }
+            asunto = 'Tu financiamiento fue aprobado — Victal Speed'
+            template = 'emails/financiamiento_aprobado.html'
+            text_content = (
+                f'Tu financiamiento para la compra #{instance.venta.id} fue aprobado: '
+                f'${instance.monto_financiado} a {instance.plazo_meses} meses, '
+                f'{instance.tasa_interes}% de interés anual.'
+            )
+        else:
+            context = {
+                'cliente': cliente,
+                'financiamiento': instance,
+                'venta': instance.venta,
+                'frontend_url': settings.FRONTEND_URL,
+            }
+            asunto = 'Tu solicitud de financiamiento fue rechazada — Victal Speed'
+            template = 'emails/financiamiento_rechazado.html'
+            text_content = (
+                f'Tu solicitud de financiamiento para la compra #{instance.venta.id} fue rechazada. '
+                f'Contáctate con tu vendedor o acude a la sucursal más cercana.'
+            )
+
+        html_content = render_to_string(template, context)
+        email = EmailMultiAlternatives(
+            subject=asunto,
+            body=text_content,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[correo_destino],
+        )
+        email.attach_alternative(html_content, 'text/html')
+        email.send(fail_silently=True)
+
+    transaction.on_commit(_enviar)
 
 
 @receiver(pre_save, sender=Financiamiento)

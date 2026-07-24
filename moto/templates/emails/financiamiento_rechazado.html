@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financiamiento no aprobado - Victal Speed</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 30px auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .header { background: #1a1a2e; color: white; padding: 30px; text-align: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header p { margin: 5px 0 0; opacity: 0.8; }
+        .body { padding: 30px; }
+        .info-box { background: #f8f9fa; border-radius: 6px; padding: 16px; margin-bottom: 20px; }
+        .info-box p { margin: 4px 0; font-size: 14px; color: #555; }
+        .info-box strong { color: #333; }
+        .badge { display: inline-block; background: #b42318; color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; margin-bottom: 10px; }
+        .footer { background: #f8f9fa; padding: 20px 30px; text-align: center; font-size: 12px; color: #888; }
+        .btn { display: inline-block; margin-top: 16px; padding: 12px 24px; background: #1a1a2e; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏍️ Victal Speed</h1>
+            <p>Solicitud de financiamiento</p>
+        </div>
+
+        <div class="body">
+            <span class="badge">✕ No aprobado</span>
+            <p style="font-size:16px; color:#333;">Hola <strong>{{ cliente.nombre }} {{ cliente.apellido }}</strong>,</p>
+            <p style="color:#555;">Tu solicitud de financiamiento para la compra #{{ venta.id }} no fue aprobada.</p>
+
+            <div class="info-box">
+                <p><strong>Monto solicitado:</strong> ${{ financiamiento.monto_financiado }}</p>
+                <p><strong>Plazo solicitado:</strong> {{ financiamiento.plazo_meses }} meses</p>
+            </div>
+
+            <p style="color:#555; font-size:14px;">Contáctate con tu vendedor o acude a la sucursal más cercana para más información sobre esta decisión y conocer otras opciones disponibles.</p>
+
+            <a href="{{ frontend_url }}" class="btn">Contactar</a>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 Victal Speed. Todos los derechos reservados.</p>
+            <p>Este correo fue enviado automáticamente, por favor no respondas a este mensaje.</p>
+        </div>
+    </div>
+</body>
+</html>

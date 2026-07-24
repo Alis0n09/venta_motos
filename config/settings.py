@@ -167,6 +167,13 @@ EMAIL_HOST_USER  = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Venta Motos <noreply@ventamotos.com>')
 FRONTEND_URL     = config('FRONTEND_URL', default='http://localhost:3000')
+# Dominio público del backend, usado SOLO para armar URLs absolutas de
+# imágenes dentro de los correos (ej. la foto de la moto en la factura).
+# Un cliente de correo abre el mensaje desde fuera de tu red, así que una
+# ruta relativa como "/media/motos/foto.jpg" no le sirve — necesita el
+# dominio completo. En producción, poné acá la IP o dominio real de tu
+# droplet (ej. 'https://tudominio.com' o 'http://TU_IP_DEL_DROPLET').
+BACKEND_URL      = config('BACKEND_URL', default='http://localhost:8000')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

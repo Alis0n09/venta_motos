@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Factura #{{ venta.id }} - Victal Speed</title>
+    <title>Financiamiento aprobado - Victal Speed</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 30px auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -18,8 +18,7 @@
         th { background: #1a1a2e; color: white; padding: 10px 12px; text-align: left; font-size: 13px; }
         td { padding: 10px 12px; border-bottom: 1px solid #eee; font-size: 14px; color: #444; }
         tr:last-child td { border-bottom: none; }
-        .total-row { background: #f8f9fa; }
-        .total-row td { font-weight: bold; font-size: 16px; color: #1a1a2e; }
+        .badge { display: inline-block; background: #1a7f37; color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; margin-bottom: 10px; }
         .footer { background: #f8f9fa; padding: 20px 30px; text-align: center; font-size: 12px; color: #888; }
         .btn { display: inline-block; margin-top: 16px; padding: 12px 24px; background: #1a1a2e; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; }
     </style>
@@ -28,57 +27,45 @@
     <div class="container">
         <div class="header">
             <h1>🏍️ Victal Speed</h1>
-            <p>Factura de compra #{{ venta.id }}</p>
+            <p>Financiamiento aprobado</p>
         </div>
 
         <div class="body">
+            <span class="badge">✔ Aprobado</span>
             <p style="font-size:16px; color:#333;">Hola <strong>{{ cliente.nombre }} {{ cliente.apellido }}</strong>,</p>
-            <p style="color:#555;">Gracias por tu compra. Aquí está el detalle de tu pedido:</p>
+            <p style="color:#555;">¡Buenas noticias! Tu financiamiento para la compra #{{ venta.id }} fue aprobado. Este es el detalle de tu plan de pagos:</p>
 
             <div class="info-box">
-                <p><strong>Número de orden:</strong> #{{ venta.id }}</p>
-                <p><strong>Fecha:</strong> {{ venta.fecha_venta|date:"d/m/Y H:i" }}</p>
-                <p><strong>Método de pago:</strong> {{ metodo_pago }}</p>
-                {% if venta.vendedor %}
-                <p><strong>Atendido por:</strong> {{ venta.vendedor.usuario.first_name }} {{ venta.vendedor.usuario.last_name }}</p>
-                {% endif %}
+                <p><strong>Monto financiado:</strong> ${{ financiamiento.monto_financiado }}</p>
+                <p><strong>Tasa de interés anual:</strong> {{ financiamiento.tasa_interes }}%</p>
+                <p><strong>Plazo:</strong> {{ financiamiento.plazo_meses }} meses</p>
+                <p><strong>Cuota mensual:</strong> ${{ cuota_mensual }}</p>
+                <p><strong>Fecha de inicio:</strong> {{ financiamiento.fecha_inicio|date:"d/m/Y" }}</p>
+                <p><strong>Fecha de fin:</strong> {{ financiamiento.fecha_fin|date:"d/m/Y" }}</p>
             </div>
 
             <table>
                 <thead>
                     <tr>
-                        <th>Moto</th>
-                        <th>Cantidad</th>
-                        <th>Precio unitario</th>
-                        <th>Subtotal</th>
+                        <th>Cuota</th>
+                        <th>Vencimiento</th>
+                        <th>Monto</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for detalle in detalles %}
+                    {% for cuota in cuotas %}
                     <tr>
-                        <td>
-                            {% if detalle.moto.imagen_url_absoluta %}
-                            <img src="{{ detalle.moto.imagen_url_absoluta }}" alt="{{ detalle.moto.modelo }}"
-                                 width="50" height="50"
-                                 style="object-fit:cover; border-radius:6px; vertical-align:middle; margin-right:10px;">
-                            {% endif %}
-                            {{ detalle.moto.marca.nombre }} {{ detalle.moto.modelo }} ({{ detalle.moto.anio }})
-                        </td>
-                        <td>{{ detalle.cantidad }}</td>
-                        <td>${{ detalle.precio_unitario }}</td>
-                        <td>${{ detalle.subtotal }}</td>
+                        <td>#{{ cuota.numero_cuota }}</td>
+                        <td>{{ cuota.fecha_vencimiento|date:"d/m/Y" }}</td>
+                        <td>${{ cuota.monto }}</td>
                     </tr>
                     {% endfor %}
-                    <tr class="total-row">
-                        <td colspan="3">Total</td>
-                        <td>${{ total }}</td>
-                    </tr>
                 </tbody>
             </table>
 
-            <p style="color:#555; font-size:14px;">Si tienes alguna pregunta sobre tu compra, no dudes en contactarnos.</p>
+            <p style="color:#555; font-size:14px;">Si tienes alguna pregunta sobre tu plan de pagos, no dudes en contactarnos.</p>
 
-            <a href="{{ frontend_url }}" class="btn">Ver mis compras</a>
+            <a href="{{ frontend_url }}" class="btn">Ver mi financiamiento</a>
         </div>
 
         <div class="footer">
